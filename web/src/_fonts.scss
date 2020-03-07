@@ -1,0 +1,164 @@
+@font-face {
+  font-family: "Bookinsanity";
+  src: url("../fonts/Bookinsanity/Bookinsanity.woff2") format("woff2"),
+  url("../fonts/Bookinsanity/Bookinsanity.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Bookinsanity";
+  src: url("../fonts/Bookinsanity/Bookinsanity Bold Italic.woff2") format("woff2"),
+  url("../fonts/Bookinsanity/Bookinsanity Bold Italic.otf") format("opentype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Bookinsanity";
+  src: url("../fonts/Bookinsanity/Bookinsanity Bold.woff2") format("woff2"),
+  url("../fonts/Bookinsanity/Bookinsanity Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Bookinsanity";
+  src: url("../fonts/Bookinsanity/Bookinsanity Italic.woff2") format("woff2"),
+  url("../fonts/Bookinsanity/Bookinsanity Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zatanna Misdirection";
+  src: url("../fonts/Zatanna Misdirection/Zatanna Misdirection.woff2") format("woff2"),
+  url("../fonts/Zatanna Misdirection/Zatanna Misdirection.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Zatanna Misdirection";
+  src: url("../fonts/Zatanna Misdirection/Zatanna Misdirection Bold Italic.woff2") format("woff2"),
+  url("../fonts/Zatanna Misdirection/Zatanna Misdirection Bold Italic.otf") format("opentype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Zatanna Misdirection";
+  src: url("../fonts/Zatanna Misdirection/Zatanna Misdirection Bold.woff2") format("woff2"),
+  url("../fonts/Zatanna Misdirection/Zatanna Misdirection Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zatanna Misdirection";
+  src: url("../fonts/Zatanna Misdirection/Zatanna Misdirection Italic.woff2") format("woff2"),
+  url("../fonts/Zatanna Misdirection/Zatanna Misdirection Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  src: url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed.woff2") format("woff2"),
+  url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  src: url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed Bold Italic.woff2") format("woff2"),
+  url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed Bold Italic.otf") format("opentype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  src: url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed Bold.woff2") format("woff2"),
+  url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  src: url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed Italic.woff2") format("woff2"),
+  url("../fonts/Nodesto Caps Condensed/Nodesto Caps Condensed Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Mr Eaves Small Caps";
+  src: url("../fonts/Mr Eaves/Mr Eaves Small Caps.woff2") format("woff2"),
+  url("../fonts/Mr Eaves/Mr Eaves Small Caps.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Scaly Sans";
+  src: url("../fonts/Scaly Sans/Scaly Sans.woff2") format("woff2"),
+  url("../fonts/Scaly Sans/Scaly Sans.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Scaly Sans";
+  src: url("../fonts/Scaly Sans/Scaly Sans Bold Italic.woff2") format("woff2"),
+  url("../fonts/Scaly Sans/Scaly Sans Bold Italic.otf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Scaly Sans";
+  src: url("../fonts/Scaly Sans/Scaly Sans Bold.woff2") format("woff2"),
+  url("../fonts/Scaly Sans/Scaly Sans Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Scaly Sans";
+  src: url("../fonts/Scaly Sans/Scaly Sans Italic.woff2") format("woff2"),
+  url("../fonts/Scaly Sans/Scaly Sans Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Scaly Sans Caps";
+  src: url("../fonts/Scaly Sans Caps/Scaly Sans Caps.woff2") format("woff2"),
+  url("../fonts/Scaly Sans Caps/Scaly Sans Caps.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Scaly Sans Caps";
+  src: url("../fonts/Scaly Sans Caps/Scaly Sans Caps Bold Italic.woff2") format("woff2"),
+  url("../fonts/Scaly Sans Caps/Scaly Sans Caps Bold Italic.otf") format("opentype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Scaly Sans Caps";
+  src: url("../fonts/Scaly Sans Caps/Scaly Sans Caps Bold.woff2") format("woff2"),
+  url("../fonts/Scaly Sans Caps/Scaly Sans Caps Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Scaly Sans Caps";
+  src: url("../fonts/Scaly Sans Caps/Scaly Sans Caps Italic.woff2") format("woff2"),
+  url("../fonts/Scaly Sans Caps/Scaly Sans Caps Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Solbera Imitation";
+  src: url("../fonts/Solbera Imitation/Solbera Imitation.woff2") format("woff2"),
+  url("../fonts/Solbera Imitation/Solbera Imitation.otf") format("opentype");
+  font-weight: normal;
+}

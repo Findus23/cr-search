@@ -1,0 +1,45 @@
+// strongly inspired by
+// https://github.com/trevoreyre/autocomplete/blob/master/packages/style.css
+.autocomplete-input {
+  @extend .form-control;
+}
+
+.autocomplete-result-list {
+  background: url("assets/Old_papertest.jpg");
+  list-style: none;
+  padding: 0;
+  border: solid 2px $border-color;
+}
+
+/* Loading spinner */
+.autocomplete[data-loading="true"]::after {
+  content: "";
+  border: 3px solid rgba(0, 0, 0, 0.12);
+  border-right: 3px solid rgba(0, 0, 0, 0.48);
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: rotate 1s infinite linear;
+}
+
+.autocomplete-result {
+  padding: 0 10px;
+
+  &:hover,
+  &[aria-selected="true"] {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateY(-50%) rotate(359deg);
+  }
+}

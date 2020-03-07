@@ -1,0 +1,94 @@
+@import "colors";
+@import '~bootstrap';
+@import '~bootstrap-vue';
+@import "fonts";
+@import "videoframe";
+@import "autocomplete";
+
+body {
+  background: $background-color;
+  background: url("assets/Old_papertest.jpg");
+  font-family: "Scaly Sans", sans-serif;
+}
+
+.title {
+  h1 {
+    font-size: 4rem;
+    text-align: center;
+  }
+
+  span {
+    font-size: 2rem;
+    font-style: italic;
+  }
+
+  font-family: "Nodesto Caps Condensed", cursive;
+}
+
+.inputlist, .inputlist input {
+  font-family: "Mr Eaves Small Caps";
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.inputlist {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  input {
+    background: transparent;
+    color: $body-color;
+
+    &:focus, &:active {
+      background: transparent;
+      color: $body-color;
+    }
+  }
+
+  input[type=number] {
+    max-width: 5rem;
+  }
+}
+
+
+.entry {
+  .person {
+    font-weight: bold;
+  }
+
+  .line {
+    padding-left: 5px;
+    border-left: solid 5px $background-color;
+
+    &.note {
+      font-style: italic;
+    }
+  }
+
+  .title {
+    font-size: .529cm;
+    border-bottom: 2px solid $border-color;
+    margin-top: .2em;
+    margin-bottom: .2em;
+    font-family: "Mr Eaves Small Caps", serif;
+    font-weight: 800;
+    color: $headings-color;
+
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      font-family: serif;
+    }
+  }
+}
+
+p {
+  font-family: "Bookinsanity", serif;
+}
+
+
+pre {
+  white-space: pre-wrap;
+}
