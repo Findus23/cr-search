@@ -239,20 +239,6 @@ tornado = ["tornado (>=5)"]
 
 [[package]]
 category = "main"
-description = "python client for sonic search backend"
-develop = true
-name = "sonic-client"
-optional = false
-python-versions = "*"
-version = "0.0.5"
-
-[package.source]
-reference = ""
-type = "directory"
-url = "python-sonic-client"
-
-[[package]]
-category = "main"
 description = "Industrial-strength Natural Language Processing (NLP) in Python"
 name = "spacy"
 optional = false
@@ -382,7 +368,7 @@ python-versions = "*"
 version = "2020.2.16"
 
 [metadata]
-content-hash = "99f0ade4553c864959a79089176ecda0a9358dcaee08902649efbd0a22e105f0"
+content-hash = "7edbb99b94dd505828ad532bda828ca45a607a87b7719042332c0257f5d0a03e"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -577,7 +563,6 @@ sentry-sdk = [
     {file = "sentry-sdk-0.14.2.tar.gz", hash = "sha256:480eee754e60bcae983787a9a13bc8f155a111aef199afaa4f289d6a76aa622a"},
     {file = "sentry_sdk-0.14.2-py2.py3-none-any.whl", hash = "sha256:a920387dc3ee252a66679d0afecd34479fb6fc52c2bc20763793ed69e5b0dcc0"},
 ]
-sonic-client = []
 spacy = [
     {file = "spacy-2.2.3-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:ce7fad73de7aed7ca2ee7c2404c77c72005f67ca95edae6f19f08947fb0f8ab3"},
     {file = "spacy-2.2.3-cp35-cp35m-win_amd64.whl", hash = "sha256:3c83c061597b5dc94c939c511d3b72c2971257204f21976afc117a350e8fa92b"},

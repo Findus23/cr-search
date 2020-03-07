@@ -9,7 +9,6 @@ python = "^3.8"
 peewee = "^3.13.1"
 PyMySQL = "^0.9.3"
 srt = "^3.0.0"
-sonic-client = {path = "python-sonic-client"}
 psycopg2 = "^2.8.4"
 youtube-dl = "^2020.2.16"
 spacy = "^2.2.3"
