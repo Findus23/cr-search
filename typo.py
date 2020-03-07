@@ -1,3 +1,7 @@
+"""
+replace common typos of names to unify them in the database
+"""
+
 typos = {
     "Matt": {"Mat", "Mattt", "\"Matt"},
     "Sam": {"San", "Nott", "Sma", "Sasm", "Sm"},

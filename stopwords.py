@@ -1,3 +1,8 @@
+"""
+from https://github.com/explosion/spaCy/blob/master/spacy/lang/en/stop_words.py
+
+without contractions
+"""
 STOP_WORDS = set(
     """
 a about above across after afterwards again against all almost alone along
