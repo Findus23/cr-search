@@ -64,7 +64,6 @@ spacy = ">=2.2.2"
 reference = ""
 type = "url"
 url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"
-
 [[package]]
 category = "main"
 description = "A simple framework for building complex web applications."
@@ -277,7 +276,7 @@ description = "Modern high-performance serialization utilities for Python"
 name = "srsly"
 optional = false
 python-versions = "*"
-version = "1.0.1"
+version = "1.0.2"
 
 [[package]]
 category = "main"
@@ -365,7 +364,7 @@ description = "YouTube video downloader"
 name = "youtube-dl"
 optional = false
 python-versions = "*"
-version = "2020.2.16"
+version = "2020.3.6"
 
 [metadata]
 content-hash = "7edbb99b94dd505828ad532bda828ca45a607a87b7719042332c0257f5d0a03e"
@@ -578,18 +577,18 @@ spacy = [
     {file = "spacy-2.2.3.tar.gz", hash = "sha256:1d14c9e7d65b2cecd56c566d9ffac8adbcb9ce2cff2274cbfdcf5468cd940e6a"},
 ]
 srsly = [
-    {file = "srsly-1.0.1-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:ca1ec20ea6e14ad56ccaa84aa6c79d6e51fccf32e0040372b4d06c6e5dbb7fee"},
-    {file = "srsly-1.0.1-cp35-cp35m-win_amd64.whl", hash = "sha256:c6bdf53a87770139c6a9d75b3e664505bd81c022312fafca35ed38714e4ecdf1"},
-    {file = "srsly-1.0.1-cp36-cp36m-macosx_10_6_intel.whl", hash = "sha256:c82e6dc3727454edc6ccdb1d07d5bc0aab3f43539fb8d9f973cf769135d2c7e4"},
-    {file = "srsly-1.0.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:d5c0c718b2f67fc425d9bb3cc26b6141cb2f53251cdc145f58b70095241a3308"},
-    {file = "srsly-1.0.1-cp36-cp36m-win_amd64.whl", hash = "sha256:4ce9d6ab6d1c617150455ef5ba8abd5107a8e65956f06c2efc86697f4cb4b431"},
-    {file = "srsly-1.0.1-cp37-cp37m-macosx_10_6_intel.whl", hash = "sha256:de329ba0ff451308d59e40c39372f5231e7c364f4933d7457788203630bdede2"},
-    {file = "srsly-1.0.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:3ceae42dbbda49b57a4937e0ca28f56c2a121c89008cc7ec09e0a9d8d705c03e"},
-    {file = "srsly-1.0.1-cp37-cp37m-win_amd64.whl", hash = "sha256:a672ffaa77680f355933cf424739ae9ecff767908a374ad194692b53040fda01"},
-    {file = "srsly-1.0.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1c4354095f63f59fc52a4362960faaddebcfa7a240f07209eb50e8f9ec39e700"},
-    {file = "srsly-1.0.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:51c47f98dc06d5c2d1d7806cd38dcc834ab9906dc12170bc21105e5a9590a6fd"},
-    {file = "srsly-1.0.1-cp38-cp38-win_amd64.whl", hash = "sha256:abe3d98d9ea8f7dac898119cd9861466c49cfe0f16287c9f859e0d4cab43a7a4"},
-    {file = "srsly-1.0.1.tar.gz", hash = "sha256:1102b4984f9f56364540e47d83fac3e7543903dfbb92f0d0e5dd3bfd40528934"},
+    {file = "srsly-1.0.2-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:7c553a709fd56a37a07f969e849f55a0aeabaeb7677bebc588a640ab8ec134aa"},
+    {file = "srsly-1.0.2-cp35-cp35m-win_amd64.whl", hash = "sha256:21cfb0e5dea2c4515b5c2daa78402d5782c6425b4f58af40d2e2cb45e4778d8c"},
+    {file = "srsly-1.0.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:46213d8f094b348a9433c825ac1eba36a21aa25a8bae6f29c2f9f053e15be961"},
+    {file = "srsly-1.0.2-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:2179cf1e88c250e89e40227bd5848341011c170079b3d424987d067de6a73f42"},
+    {file = "srsly-1.0.2-cp36-cp36m-win_amd64.whl", hash = "sha256:b94d8a13c60e3298a9ba12b1b211026e8378c7d087efd7ce46a3f2d8d4678d94"},
+    {file = "srsly-1.0.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:c8beff52c104a7ffe4a15513a05dc0497998cf83aa1ca39454489994d18c1c07"},
+    {file = "srsly-1.0.2-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:95849d84e8929be248a180e672c8ce1ed98b1341263bc983efdf8427465584f1"},
+    {file = "srsly-1.0.2-cp37-cp37m-win_amd64.whl", hash = "sha256:3f3975e8cb67194d26dd03508469b1303f8b994f30e7782f7eae25fef6dc4aad"},
+    {file = "srsly-1.0.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d409beb7257208633c974c01f9dc3265562fb6802caee7de21880761ba87c3ed"},
+    {file = "srsly-1.0.2-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:18bad26c34cf5a8853fbf018fd168a7bf2ea7ce661e66476c25dac711cb79c9b"},
+    {file = "srsly-1.0.2-cp38-cp38-win_amd64.whl", hash = "sha256:29434753a77481ec6129991f4116f983085cc8005c1ad963261124842e8c05fc"},
+    {file = "srsly-1.0.2.tar.gz", hash = "sha256:59258b81d567df207f8a0a33c4b5fa232afccf1d927c8ce3ba5395bfd64c0ed8"},
 ]
 srt = [
     {file = "srt-3.0.0.tar.gz", hash = "sha256:deed9a52b1f1bc2c290f0de49c2204a892952d972a2a08bc5a08861e240a05c2"},
@@ -626,6 +625,6 @@ werkzeug = [
     {file = "Werkzeug-1.0.0.tar.gz", hash = "sha256:169ba8a33788476292d04186ab33b01d6add475033dfc07215e6d219cc077096"},
 ]
 youtube-dl = [
-    {file = "youtube_dl-2020.2.16-py2.py3-none-any.whl", hash = "sha256:3ba5a9258a33b537392f3dfd3f8868631c63a437d17524555922020ba19c4102"},
-    {file = "youtube_dl-2020.2.16.tar.gz", hash = "sha256:b98d240c928a1bd0412b270ccf0d776aae5448672ea374e0af45f6daa3984009"},
+    {file = "youtube_dl-2020.3.6-py2.py3-none-any.whl", hash = "sha256:41c074fee3203df603cf6a81c65de16bde31173326872f6abf75ead934e7482f"},
+    {file = "youtube_dl-2020.3.6.tar.gz", hash = "sha256:771e1ef757f1d31f6bce8e2584839234cbb749282fdf67111bd7272f7183e08e"},
 ]

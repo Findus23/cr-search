@@ -7,24 +7,31 @@ from app import app
 from models import *
 
 
+# logger = logging.getLogger('peewee')
+# logger.addHandler(logging.StreamHandler())
+# logger.setLevel(logging.DEBUG)
+
+
 def add_cors(response):
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
     return response
 
 
-@app.route("/suggest")
+@app.route("/api/suggest")
 def question():
-    query:str = request.args.get('query')
+    query: str = request.args.get('query')
     until = request.args.get('until')
     if not query or not until:
         return "no suggest query", 400
-    phrases = Phrase.select().where((Phrase.until_episode == until) & (fn.LOWER(Phrase.text) % ("%" + query.lower() + "%"))).order_by(
-        Phrase.count.desc()).limit(10)
+    phrases = Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).where(
+        (Phrase.episode <= until) &
+        (fn.LOWER(Phrase.text) % ("%" + query.lower() + "%"))
+    ).group_by(Phrase.text).order_by(SQL("total_count DESC")).limit(10)
     return jsonify([p.text for p in phrases])
 
 
-@app.route("/search")
+@app.route("/api/search")
 def search():
     query = request.args.get('query')
     until = request.args.get('until')
@@ -47,9 +54,9 @@ def search():
         if not parsed:
             return jsonify({"status": "warning", "message": "Only stop words were used"})
         else:
-            a: Response = jsonify({"status": "warning", "message": f"No results were found for \"{parsed}\""})
-            a.status_code = 404
-            return a
+            resp: Response = jsonify({"status": "warning", "message": f"No results were found for \"{parsed}\""})
+            resp.status_code = 404
+            return resp
 
     data = []
     d: Line
@@ -63,7 +70,7 @@ def search():
     return jsonify(data)
 
 
-@app.route("/expand")
+@app.route("/api/expand")
 def expand():
     center_id = request.args.get('centerID')
     offset = int(request.args.get('offset', 1))

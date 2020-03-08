@@ -55,6 +55,8 @@
 
   Vue.use(VueYoutube);
 
+  const baseURL = (process.env.NODE_ENV === "production") ? "/api/" : "http://127.0.0.1:5000/api/";
+
   export default Vue.extend({
     name: "home",
     components: {
@@ -87,7 +89,7 @@
     },
     methods: {
       suggest(input: string) {
-        const url = "http://127.0.0.1:5000/suggest?query=" + input + "&until=" + this.episode;
+        const url = baseURL + "suggest?query=" + input + "&until=" + this.episode;
 
         return new Promise(resolve => {
           if (input.length < 1) {
@@ -112,7 +114,7 @@
         if (!keyword) {
           return;
         }
-        const url = "http://127.0.0.1:5000/search?query=" + keyword + "&until=" + this.episode;
+        const url = baseURL + "http://127.0.0.1:5000/search?query=" + keyword + "&until=" + this.episode;
 
         fetch(url)
           .then(response => response.json())
@@ -128,7 +130,7 @@
       },
       expand(result: Result) {
         const offset = result.offset ? result.offset : 1;
-        const url = "http://127.0.0.1:5000/expand?centerID=" + result.centerID + "&offset=" + offset;
+        const url = baseURL + "http://127.0.0.1:5000/expand?centerID=" + result.centerID + "&offset=" + offset;
 
         fetch(url)
           .then(response => response.json())
@@ -170,6 +172,7 @@
           this.showYT = true;
           this.ytResult = result;
         } else {
+          // @ts-ignore
           const player = this.$refs.youtube.player;
           if (firstLine) {
             if (this.ytVideoID === newYtVideoID) {

@@ -15,10 +15,11 @@ class BaseModel(Model):
 class Episode(BaseModel):
     season = IntegerField()
     episode_number = IntegerField()
+    video_number = IntegerField()
     youtube_id = CharField(max_length=11)
 
     class Meta:
-        indexes = ((("season", "episode_number"), True),)
+        indexes = ((("season", "video_number"), True),)
 
     @property
     def name(self) -> str:
@@ -66,7 +67,7 @@ class Line(BaseModel):
 class Phrase(BaseModel):
     text = CharField()
     count = IntegerField()
-    until_episode = ForeignKeyField(Episode, backref="phrase")
+    episode = ForeignKeyField(Episode, backref="phrase")
 
     class Meta:
-        indexes = ((("text", "until_episode"), True),)
+        indexes = ((("text", "episode"), True),)
