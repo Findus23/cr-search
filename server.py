@@ -31,7 +31,7 @@ def question():
     phrases = Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).join(Episode).where(
         (Episode.season == season) &
         (Episode.episode_number <= until) &
-        (fn.LOWER(Phrase.text) % ("%" + query.lower() + "%"))
+        (Phrase.text.contains(query))
     ).group_by(Phrase.text).order_by(SQL("total_count DESC")).limit(10)
     return jsonify([p.text for p in phrases])
 

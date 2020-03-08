@@ -88,7 +88,7 @@
     mounted(): void {
       document.title = "CR Search";
       if (this.keyword) {
-        this.search(this.keyword);
+        this.search();
       }
     },
     methods: {

@@ -20,3 +20,6 @@ elif mode == "phrases":
     confirm("Delete all Phrases? ")
     db.drop_tables([Phrase])
     db.create_tables([Phrase])
+
+if mode in ["all", "phrases"]:
+    db.execute_sql("CREATE INDEX phrases_text_index ON phrase USING gin (text gin_trgm_ops)")
