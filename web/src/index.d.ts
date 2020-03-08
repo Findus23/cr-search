@@ -17,7 +17,7 @@ export class Props {
      * @param baseClass string
      */
     constructor(index: string, selectedIndex: string, baseClass: string);
-    toString(): string;
+    public toString(): string;
 }
 
 // --------------------------------------------------------------------------------------
@@ -25,17 +25,17 @@ export class Props {
 // --------------------------------------------------------------------------------------
 
 export interface AutocompleteOptions {
+
+    /**
+     * Controls whether first result should be highlighted after input
+     this.foo = val* Defaults to false, optional
+     */
+    autoSelect?: boolean;
     /**
      * The search function to be executed on user input. Can be a synchronous function or a Promise.
      * @param input
      */
     search(input: string): object | Promise<object>;
-
-    /**
-     * Controls whether first result should be highlighted after input
-     * Defaults to false, optional
-     */
-    autoSelect?: boolean;
 
     /**
      * Sets the value of the calling component's input element
@@ -100,7 +100,7 @@ export interface EventHandlers {
 
 declare global {
     class Autocomplete<TElement = HTMLElement> {
+        public options: AutocompleteOptions;
         constructor(inputSelector: string, options?: AutocompleteOptions);
-        options: AutocompleteOptions;
     }
 }

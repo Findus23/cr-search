@@ -16,6 +16,11 @@
             <input title="search until episode number"
                    class="form-control" type="number" v-model="episode"
                    min="1" max="300">
+            <span>in</span>
+            <select title="campaign selection" class="custom-select" v-model="season">
+                <option value="1">Campaign 1</option>
+                <option value="2">Campaign 2</option>
+            </select>
         </div>
         <b-alert v-if="error" show :variant="error.status">{{error.message}}</b-alert>
         <div class="entry" v-for="result in searchResult">
@@ -42,16 +47,14 @@
 
 <script lang="ts">
   import Vue from "vue";
-  import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
   // @ts-ignore
   import Autocomplete from "@trevoreyre/autocomplete-vue";
   // import "@trevoreyre/autocomplete-vue/dist/style.css";
   import {Line, Result, ServerMessage} from "@/interfaces";
-  import {BAlert} from "bootstrap-vue";
+  import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
   // @ts-ignore
   import VueYoutube from "vue-youtube";
   import {debounce} from "lodash";
-  import {BIcon, BIconPlayFill} from "bootstrap-vue";
 
   Vue.use(VueYoutube);
 
@@ -65,13 +68,17 @@
       BIcon,
       BIconPlayFill,
     },
-    props: {
-      keyword: String
-    },
+    // props: {
+    //   keyword: String,
+    //   season: String,
+    //   episode: String
+    // },
     data() {
       return {
         searchResult: [] as Result[],
-        episode: 10,
+        keyword: this.$route.params.keyword,
+        season: this.$route.params.season,
+        episode: this.$route.params.episode,
         error: undefined as ServerMessage | undefined,
         ytVideoID: undefined as string | undefined,
         showYT: false,
@@ -80,23 +87,20 @@
     },
     mounted(): void {
       document.title = "CR Search";
-      if (localStorage.episode) {
-        this.episode = localStorage.episode;
-      }
       if (this.keyword) {
         this.search(this.keyword);
       }
     },
     methods: {
       suggest(input: string) {
-        const url = baseURL + "suggest?query=" + input + "&until=" + this.episode;
+        const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&season=" + this.season;
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           if (input.length < 1) {
             return resolve([]);
           }
           fetch(url)
-            .then(response => response.json())
+            .then((response) => response.json())
             .then((data: string[]) => {
               resolve(data);
             });
@@ -104,20 +108,13 @@
       },
       handleSubmit(result: string) {
         // @ts-ignore
-        const q = result || this.$refs.searchInput.value;
-        this.handleSearch(q);
+        this.keyword = result || this.$refs.searchInput.value;
       },
-      handleSearch(keyword: string) {
-        this.$router.replace({name: "search", params: {keyword: keyword}});
-      },
-      search(keyword: string): void {
-        if (!keyword) {
-          return;
-        }
-        const url = baseURL + "http://127.0.0.1:5000/search?query=" + keyword + "&until=" + this.episode;
+      search(): void {
+        const url = baseURL + "search?query=" + this.keyword + "&until=" + this.episode + "&season=" + this.season;
 
         fetch(url)
-          .then(response => response.json())
+          .then((response) => response.json())
           .then((data) => {
             if (data.status) {
               this.error = data;
@@ -130,16 +127,14 @@
       },
       expand(result: Result) {
         const offset = result.offset ? result.offset : 1;
-        const url = baseURL + "http://127.0.0.1:5000/expand?centerID=" + result.centerID + "&offset=" + offset;
+        const url = baseURL + "expand?centerID=" + result.centerID + "&offset=" + offset;
 
         fetch(url)
-          .then(response => response.json())
+          .then((response) => response.json())
           .then((data: Line[]) => {
 
             this.searchResult[result.resultID].lines.push(...data);
-            this.searchResult[result.resultID].lines.sort(function(a, b) {
-              return a.order - b.order;
-            });
+            this.searchResult[result.resultID].lines.sort((a, b) => a.order - b.order);
             this.searchResult[result.resultID].offset = offset + 1;
           });
 
@@ -161,8 +156,7 @@
         }
         return line.person.color;
       },
-      playVideo: function(result: Result): void {
-        console.info(!!result);
+      playVideo(result: Result): void {
         if (!result && this.ytResult) {
           result = this.ytResult;
         }
@@ -176,7 +170,6 @@
           const player = this.$refs.youtube.player;
           if (firstLine) {
             if (this.ytVideoID === newYtVideoID) {
-              console.log("just seek");
               player.seekTo(firstLine.starttime / 1000);
             } else {
               player.loadVideoById(
@@ -196,14 +189,18 @@
       }
     },
     watch: {
-      episode: debounce(function(newValue: number): void {
-        localStorage.episode = newValue;
+      episode: debounce(function(val: number): void {
         // @ts-ignore
-        this.search(this.keyword);
-
+        this.$router.replace({params: {...this.$route.params, episode: val}});
       }, 300),
+      season(val: string): void {
+        this.$router.replace({params: {...this.$route.params, season: val}});
+      },
       keyword(val: string): void {
-        this.search(this.keyword);
+        this.$router.replace({params: {...this.$route.params, keyword: val}});
+      },
+      '$route.params': function(val) {
+        this.search();
       }
     },
   });

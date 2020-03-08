@@ -10,13 +10,13 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/search/",
+      redirect: "/search/2/10/",
     },
     {
-      path: "/search/:keyword?",
+      path: "/search/:season/:episode/:keyword?",
       name: "search",
       component: Home,
-      props: true,
+      // props: true,
     },
     {
       path: "/about",

@@ -1,6 +1,6 @@
 from models import Person
 
-colors = {
+colors_c2 = {
     "Laura": "#59c3f9",
     "Marisha": "#00146e",
     "Liam": "#fe8413",
@@ -14,7 +14,7 @@ colors = {
 p: Person
 for p in Person.select():
     print(p)
-    if p.name in colors.keys():
+    if p.name in colors_c2.keys() and p.season == 2:
         print(p.name)
-        p.color = colors[p.name]
+        p.color = colors_c2[p.name]
         p.save()

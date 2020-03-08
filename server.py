@@ -1,3 +1,5 @@
+import logging
+
 from flask import request, jsonify, Response
 from peewee import fn, Alias, SQL, DoesNotExist
 from playhouse.shortcuts import model_to_dict
@@ -6,10 +8,9 @@ from psycopg2._psycopg import cursor
 from app import app
 from models import *
 
-
-# logger = logging.getLogger('peewee')
-# logger.addHandler(logging.StreamHandler())
-# logger.setLevel(logging.DEBUG)
+logger = logging.getLogger('peewee')
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
 
 
 def add_cors(response):
@@ -22,10 +23,14 @@ def add_cors(response):
 def question():
     query: str = request.args.get('query')
     until = request.args.get('until')
-    if not query or not until:
+    season = request.args.get('season')
+    if not query or not until or not season:
         return "no suggest query", 400
-    phrases = Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).where(
-        (Phrase.episode <= until) &
+    if len(query) > 50:
+        return "too long query", 400
+    phrases = Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).join(Episode).where(
+        (Episode.season == season) &
+        (Episode.episode_number <= until) &
         (fn.LOWER(Phrase.text) % ("%" + query.lower() + "%"))
     ).group_by(Phrase.text).order_by(SQL("total_count DESC")).limit(10)
     return jsonify([p.text for p in phrases])
@@ -35,8 +40,11 @@ def question():
 def search():
     query = request.args.get('query')
     until = request.args.get('until')
-    if not query or not until:
+    season = request.args.get('season')
+    if not query or not until or not season:
         return "no suggest query", 400
+    if len(query) > 50:
+        return "too long query", 400
 
     a = Alias(fn.ts_rank(Line.search_text, fn.plainto_tsquery('english', query)), "rank")
 
@@ -45,7 +53,7 @@ def search():
         &
         (Episode.episode_number <= until)
         &
-        (Episode.season == 2)
+        (Episode.season == season)
     ).order_by(SQL("rank DESC")).join(Person).switch(Line).join(Episode).limit(20)
 
     if len(results) == 0:

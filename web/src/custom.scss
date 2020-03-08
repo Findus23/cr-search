@@ -25,8 +25,8 @@ body {
   font-family: "Nodesto Caps Condensed", cursive;
 }
 
-.inputlist, .inputlist input {
-  font-family: "Mr Eaves Small Caps";
+.inputlist, .inputlist input, .inputlist select {
+  font-family: "Mr Eaves Small Caps", serif;
   font-weight: bold;
   font-size: 2rem;
 }
@@ -36,7 +36,7 @@ body {
   flex-wrap: wrap;
   align-items: center;
 
-  input {
+  input, select {
     background: transparent;
     color: $body-color;
 
@@ -48,6 +48,10 @@ body {
 
   input[type=number] {
     max-width: 5rem;
+  }
+
+  select {
+    max-width: 15rem;
   }
 }
 

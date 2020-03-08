@@ -17,6 +17,8 @@ class Episode(BaseModel):
     episode_number = IntegerField()
     video_number = IntegerField()
     youtube_id = CharField(max_length=11)
+    text_imported = BooleanField(default=False)
+    phrases_imported = BooleanField(default=False)
 
     class Meta:
         indexes = ((("season", "video_number"), True),)
@@ -27,8 +29,11 @@ class Episode(BaseModel):
 
 
 class Person(BaseModel):
-    name = CharField(unique=True)
+    name = CharField()
     color = CharField(null=True)
+    season = IntegerField()
+    class Meta:
+        indexes = ((("name", "season"), True),)
 
 
 FULL_TEXT_SEARCH = '''SELECT id, text, ts_rank_cd(search_text, query) AS rank

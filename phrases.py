@@ -11,9 +11,8 @@ from stopwords import STOP_WORDS
 
 nlp: English = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
-campaign = 2
-for episode in Episode.select().where(Episode.season == campaign):
-    print(f"Episode {episode}")
+for episode in Episode.select().where(Episode.phrases_imported == False):
+    print(f"Campaign {episode.season} Episode {episode.episode_number}")
     person = None
     text = ""
     line_select = Line.select().where(Line.episode == episode)
