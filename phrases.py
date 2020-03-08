@@ -46,3 +46,5 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
                 if len(phrase) < 4:
                     continue
                 Phrase.create(text=phrase, count=count, episode=episode)
+    episode.phrases_imported = True
+    episode.save()

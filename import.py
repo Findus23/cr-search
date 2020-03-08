@@ -65,6 +65,8 @@ def main():
                     dbline.episode = episode
                     dbline.order = line.index
                     dbline.save()
+            episode.text_imported = True
+            episode.save()
 
 
 if __name__ == '__main__':
