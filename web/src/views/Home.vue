@@ -6,7 +6,7 @@
         </div>
         <div v-if="showYT" class="ytwrapper">
             <button class="btn" @click="closeVideo">Hide</button>
-            <youtube :nocookie="true" ref="youtube" @ready="playVideo(false)"></youtube>
+            <youtube :nocookie="true" ref="youtube" @ready="playVideo(false)" :width="ytWidth"></youtube>
         </div>
         <div class="inputlist">
             <span>Search for</span>
@@ -82,7 +82,8 @@
         error: undefined as ServerMessage | undefined,
         ytVideoID: undefined as string | undefined,
         showYT: false,
-        ytResult: undefined as Result | undefined
+        ytResult: undefined as Result | undefined,
+        ytWidth: 640
       };
     },
     mounted(): void {
@@ -90,6 +91,8 @@
       if (this.keyword) {
         this.search();
       }
+      const max = 640;
+      this.ytWidth = (window.innerWidth < max ? window.innerWidth : max) - 2 * 2;
     },
     methods: {
       suggest(input: string) {
@@ -186,7 +189,7 @@
         this.showYT = false;
         this.ytVideoID = undefined;
         this.ytResult = undefined;
-      }
+      },
     },
     watch: {
       episode: debounce(function(val: number): void {
@@ -199,7 +202,7 @@
       keyword(val: string): void {
         this.$router.replace({params: {...this.$route.params, keyword: val}});
       },
-      '$route.params': function(val) {
+      "$route.params": function(val) {
         this.search();
       }
     },
