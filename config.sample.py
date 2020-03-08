@@ -7,3 +7,5 @@ dbauth = {
 }
 
 sentryDSN = None
+
+skip_download = False

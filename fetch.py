@@ -3,6 +3,7 @@ from subprocess import run
 
 import youtube_dl
 
+import config
 from models import Episode
 from utils import srtdir
 
@@ -11,7 +12,6 @@ campaign_playlists = {
     2: "https://www.youtube.com/playlist?list=PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2"
 }
 
-skip_download = True
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
                     raise
             e.youtube_id = video["url"]
             e.save()
-            if skip_download:
+            if config.skip_download:
                 continue
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([f'https://www.youtube.com/watch?v={e.youtube_id}'])
