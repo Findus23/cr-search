@@ -1,7 +1,7 @@
 from collections import Counter
 
 import spacy as spacy
-from progress.bar import IncrementalBar
+from alive_progress import alive_bar
 from spacy.lang.en import English
 from spacy.tokens.span import Span
 from spacy.tokens.token import Token
@@ -16,9 +16,9 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
     person = None
     text = ""
     line_select = Line.select().where(Line.episode == episode)
-    with IncrementalBar('Parsing lines', max=line_select.count(), suffix="%(percent).1f%% - %(eta)ds") as bar:
+    with alive_bar(line_select.count(), title='Parsing lines') as bar:
         for line in Line.select().where(Line.episode == episode):
-            bar.next()
+            bar()
             if line.person == person:
                 text += " " + line.text
             else:
@@ -38,9 +38,9 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
         nouns.add(noun_chunk)
     cnt = Counter(nouns)
     with db.atomic():
-        with IncrementalBar('inserting phrases', max=len(cnt)) as bar:
+        with alive_bar(len(cnt), title='inserting phrases') as bar:
             for phrase, count in cnt.items():
-                bar.next()
+                bar()
                 if "\n" in phrase:
                     continue
                 if len(phrase) < 4:

@@ -13,10 +13,10 @@ psycopg2 = "^2.8.4"
 youtube-dl = "^2020.2.16"
 spacy = "^2.2.3"
 en-core-web-sm = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"}
-progress = "^1.5"
 flask = "^1.1.1"
 sentry_sdk = "^0.14.2"
 gunicorn = "^20.0.4"
+alive-progress = "^1.4.1"
 
 [tool.poetry.dev-dependencies]
 

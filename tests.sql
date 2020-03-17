@@ -1,9 +1,13 @@
-select name, count(name) as count
+select name, count(name) as count, sum(length(text)) as chars
 from line
          join person p on line.person_id = p.id
 group by name
-order by count desc;
+order by chars desc;
 
+select text, sum(count) as count
+from phrase
+group by text
+order by count desc;
 
 select text, char_length(phrase.text) as len
 from phrase

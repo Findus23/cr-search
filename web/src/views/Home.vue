@@ -87,7 +87,17 @@
       };
     },
     mounted(): void {
-      document.title = "CR Search";
+      console.log("test");
+      console.log(this.season);
+      if (this.season == null) {
+        this.season = "2";
+      }
+      if (this.episode == null) {
+        this.episode = "10";
+      }
+      if (this) {
+        document.title = "CR Search";
+      }
       if (this.keyword) {
         this.search();
       }
@@ -114,6 +124,9 @@
         this.keyword = result || this.$refs.searchInput.value;
       },
       search(): void {
+        if (!this.keyword) {
+          return;
+        }
         const url = baseURL + "search?query=" + this.keyword + "&until=" + this.episode + "&season=" + this.season;
 
         fetch(url)
