@@ -19,6 +19,9 @@ def add_cors(response):
     return response
 
 
+global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported]
+
+
 @app.route("/api/suggest")
 def question():
     query: str = request.args.get('query')
@@ -70,7 +73,7 @@ def search():
     d: Line
     ri = 0
     for d in results:
-        entry = model_to_dict(d, extra_attrs=["rank"], exclude=[Line.search_text])
+        entry = model_to_dict(d, extra_attrs=["rank"], exclude=global_excludes)
         entry["rank"] = float(entry["rank"])
         data.append({"centerID": d.id, "resultID": ri, "offset": 1, "lines": [entry]})
         ri += 1
@@ -97,7 +100,7 @@ def expand():
     l: Line
     data = []
     for l in lines:
-        entry = model_to_dict(l, exclude=[Line.search_text])
+        entry = model_to_dict(l, exclude=global_excludes)
         data.append(entry)
 
     return jsonify(data)
