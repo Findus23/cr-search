@@ -4,6 +4,27 @@
             <h1>Critical Role Search</h1>
             <span>Find your favourite Critical Role quote!</span>
         </div>
+        <div v-if="showIntro" class="showIntro popup">
+            <div><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet aspernatur at deleniti dignissimos
+                est
+                facilis hic in mollitia nam odit, porro provident quis quisquam rem sit tempora? Alias aperiam
+                blanditiis est, ex hic iste minus molestiae nobis nostrum odit perferendis porro quaerat rem repellat
+                sapiente sequi sit. Accusamus animi assumenda in maiores recusandae! A autem commodi cumque ipsam iste
+                magnam magni nostrum, numquam perferendis quibusdam rem sequi. Amet asperiores beatae consequatur cum
+                dicta earum eligendi enim eum explicabo in libero, mollitia neque nihil nisi nulla odio, quaerat quas
+                quo rem repellat sequi sint tempora temporibus totam unde? Maiores, nam?</p></div>
+            <div class="buttonrow">
+                <button class="btn" @click="showIntro=false">Close</button>
+            </div>
+        </div>
+        <div v-if="showYtOptIn" class="ytoptin popup">
+            <div><p>Youtube placeholder text <a>Link</a></p></div>
+            <div class="buttonrow">
+                <button class="btn" @click="showYtOptIn=false">abort</button>
+                <a class="btn" :href="ytLink" target="youtube" rel="noopener" @click="showYtOptIn=false">YouTube</a>
+                <button class="btn" @click="doYtOptIn">continue</button>
+            </div>
+        </div>
         <div v-if="showYT" class="ytwrapper">
             <button class="btn" @click="closeVideo">Hide</button>
             <youtube :nocookie="true" ref="youtube" @ready="playVideo(false)" :width="ytWidth"></youtube>
@@ -27,20 +48,23 @@
             <div class="title">
                 <div>{{episodeName(firstLine(result))}} {{formatTimestamp(firstLine(result).starttime)}}</div>
                 <div class="buttons">
-                    <button class="btn" @click="playVideo(result)">
+                    <button class="btn" @click="playVideo(result)" aria-label="view video on YouTube">
                         <b-icon-play-fill></b-icon-play-fill>
                     </button>
-                    <button class="btn" v-if="result.offset<10" @click="expand(result)">
+                    <button class="btn" v-if="result.offset<10" @click="expand(result)" aria-label="Load more context">
                         +
                     </button>
                 </div>
             </div>
-            <p :class="{line:true,note:line.isnote|line.ismeta}" :style="{borderLeftColor:getColor(line)}"
+            <p :class="{line:true,note:line.isnote,meta:line.ismeta}" :style="{borderLeftColor:getColor(line)}"
                v-for="line in result.lines" :key="line.id">
                 <span v-if="line.person" class="person">{{line.person.name}}: </span><span v-html="line.text"></span>
             </p>
         </div>
-        <pre>{{searchResult}}</pre>
+        <details>
+            <summary>Raw Data</summary>
+            <pre>{{searchResult}}</pre>
+        </details>
 
     </div>
 </template>
@@ -80,15 +104,22 @@
         season: this.$route.params.season,
         episode: this.$route.params.episode,
         error: undefined as ServerMessage | undefined,
+        ytOptIn: false,
+        showYtOptIn: false,
         ytVideoID: undefined as string | undefined,
         showYT: false,
         ytResult: undefined as Result | undefined,
-        ytWidth: 640
+        ytWidth: 640,
+        showIntro: true
       };
     },
     mounted(): void {
-      console.log("test");
-      console.log(this.season);
+      if (localStorage.showIntro) {
+        this.showIntro = localStorage.showIntro;
+      }
+      if (localStorage.ytOptIn) {
+        this.ytOptIn = localStorage.ytOptIn;
+      }
       if (this.season == null) {
         this.season = "2";
       }
@@ -172,9 +203,22 @@
         }
         return line.person.color;
       },
-      playVideo(result: Result): void {
+      doYtOptIn() {
+        this.showYtOptIn = false;
+        this.ytOptIn = true;
+        this.playVideo(undefined);
+      },
+      playVideo(result: Result | undefined): void {
+        if (!this.ytOptIn) {
+          this.ytResult = result;
+          this.showYtOptIn = true;
+          return;
+        }
         if (!result && this.ytResult) {
           result = this.ytResult;
+        }
+        if (!result) {
+          return;
         }
         const firstLine = this.firstLine(result);
         const newYtVideoID = firstLine.episode.youtube_id;
@@ -204,6 +248,19 @@
         this.ytResult = undefined;
       },
     },
+    computed: {
+      ytLink(): string {
+        if (!this.ytResult) {
+          return "";
+        }
+        const firstline = this.firstLine(this.ytResult);
+        const starttime = firstline.starttime / 1000;
+        const id = firstline.episode.youtube_id;
+        const min = Math.floor(starttime / 60);
+        const sec = Math.floor(starttime % 60);
+        return `https://www.youtube.com/watch?v=${id}&t=${min}m${sec}s`;
+      }
+    },
     watch: {
       episode: debounce(function(val: number): void {
         // @ts-ignore
@@ -217,6 +274,9 @@
       },
       "$route.params": function(val) {
         this.search();
+      },
+      ytOptIn(value: boolean): void {
+        localStorage.ytOptIn = value;
       }
     },
   });

@@ -1,0 +1,44 @@
+.ytwrapper {
+  font-family: "Mr Eaves Small Caps", serif;
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  right: 0;
+  background: url("assets/Old_papertest.jpg");
+  border: 2px solid $border-color;
+
+  button {
+    display: block;
+    width: 100%;
+  }
+}
+.popup {
+  font-family: "ScalySans", sans-serif;
+  background: url("assets/Old_papertest.jpg");
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid $border-color;
+
+
+
+  div {
+    padding: 5px;
+  }
+  p {
+    font-family: inherit;
+  }
+  box-shadow: 10px 10px transparentize(black, .5);
+  .buttonrow {
+    display: flex;
+    padding: 0;
+
+    button{
+      width: 100%;
+    }
+  }
+
+}
+.ytoptin {
+}
