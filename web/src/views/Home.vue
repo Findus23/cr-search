@@ -4,21 +4,61 @@
             <h1>Critical Role Search</h1>
             <span>Find your favourite Critical Role quote!</span>
         </div>
+        <transition name="fade">
+            <div id="page-mask" v-if="showIntro || showYtOptIn"></div>
+        </transition>
         <div v-if="showIntro" class="showIntro popup">
-            <div><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet aspernatur at deleniti dignissimos
-                est
-                facilis hic in mollitia nam odit, porro provident quis quisquam rem sit tempora? Alias aperiam
-                blanditiis est, ex hic iste minus molestiae nobis nostrum odit perferendis porro quaerat rem repellat
-                sapiente sequi sit. Accusamus animi assumenda in maiores recusandae! A autem commodi cumque ipsam iste
-                magnam magni nostrum, numquam perferendis quibusdam rem sequi. Amet asperiores beatae consequatur cum
-                dicta earum eligendi enim eum explicabo in libero, mollitia neque nihil nisi nulla odio, quaerat quas
-                quo rem repellat sequi sint tempora temporibus totam unde? Maiores, nam?</p></div>
+            <div class="title"><h1>Critical Role Search</h1></div>
+            <div>
+
+                <p>
+                    This website is licensed under the
+                    <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-3.0</a>.
+                    You can find the source <a href="#">here</a>.
+                </p>
+                <dl>
+                    <dt>Fonts</dt>
+                    <dd>
+                        <a href="https://github.com/jonathonf/solbera-dnd-fonts" target="_blank" rel="noopener">
+                            by Solbera and Ryrok
+                        </a> (CC BY-SA 4.0)
+                    </dd>
+                    <dt>Design</dt>
+                    <dd>
+                        Inspired by
+                        <a href="https://homebrewery.naturalcrit.com/" target="_blank" rel="noopener">
+                            The Homebrewery
+                        </a>
+                        (MIT License)
+                    </dd>
+                </dl>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet aspernatur at deleniti dignissimos
+                    est
+                    facilis hic in mollitia nam odit, porro provident quis quisquam rem sit tempora? Alias aperiam
+                    blanditiis est, ex hic iste minus molestiae nobis nostrum odit perferendis porro quaerat rem
+                    repellat
+                    sapiente sequi sit. Accusamus animi assumenda in maiores recusandae! A autem commodi cumque ipsam
+                    iste
+                    magnam magni nostrum, numquam perferendis quibusdam rem sequi. Amet asperiores beatae consequatur
+                    cum
+                    dicta earum eligendi enim eum explicabo in libero, mollitia neque nihil nisi nulla odio, quaerat
+                    quas
+                    quo rem repellat sequi sint tempora temporibus totam unde? Maiores, nam?</p></div>
             <div class="buttonrow">
                 <button class="btn" @click="showIntro=false">Close</button>
             </div>
         </div>
         <div v-if="showYtOptIn" class="ytoptin popup">
-            <div><p>Youtube placeholder text <a>Link</a></p></div>
+            <div>
+                <p>This play button allows you to watch the exact timestamp of this quote on YouTube.
+                    This means that the YouTube video is loaded on this page and data is sent to YouTube/Google.
+                    (<a href="https://lw1.at/i">Privacy Policy</a>)
+                </p>
+                <p>
+                    If you expected this to happen, simply continue and you won't be asked again. Otherwise you can
+                    abort or watch this timestamp directly on YouTube.
+                </p>
+            </div>
             <div class="buttonrow">
                 <button class="btn" @click="showYtOptIn=false">abort</button>
                 <a class="btn" :href="ytLink" target="youtube" rel="noopener" @click="showYtOptIn=false">YouTube</a>
@@ -48,10 +88,10 @@
             <div class="title">
                 <div>{{episodeName(firstLine(result))}} {{formatTimestamp(firstLine(result).starttime)}}</div>
                 <div class="buttons">
-                    <button class="btn" @click="playVideo(result)" aria-label="view video on YouTube">
+                    <button class="btn" @click="playVideo(result)" title="View video on YouTube">
                         <b-icon-play-fill></b-icon-play-fill>
                     </button>
-                    <button class="btn" v-if="result.offset<10" @click="expand(result)" aria-label="Load more context">
+                    <button class="btn" v-if="result.offset<10" @click="expand(result)" title="Load more context">
                         +
                     </button>
                 </div>
@@ -92,11 +132,6 @@
       BIcon,
       BIconPlayFill,
     },
-    // props: {
-    //   keyword: String,
-    //   season: String,
-    //   episode: String
-    // },
     data() {
       return {
         searchResult: [] as Result[],
@@ -272,7 +307,7 @@
       keyword(val: string): void {
         this.$router.replace({params: {...this.$route.params, keyword: val}});
       },
-      "$route.params": function(val) {
+      "$route.params"(val) {
         this.search();
       },
       ytOptIn(value: boolean): void {

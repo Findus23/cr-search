@@ -8,7 +8,7 @@
 body {
   background: $background-color;
   background: url("assets/Old_papertest.jpg");
-  font-family: "Scaly Sans", sans-serif;
+  font-family: "Scaly Sans", $font-family-sans-serif;
 }
 
 .title {
@@ -28,13 +28,16 @@ body {
 .inputlist, .inputlist input, .inputlist select {
   font-family: "Mr Eaves Small Caps", serif;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 .inputlist {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+@include media-breakpoint-down(md) {
+  justify-content: space-between;
+}
 
   input, select {
     background: transparent;
@@ -51,7 +54,8 @@ body {
   }
 
   select {
-    max-width: 15rem;
+    width: auto;
+
   }
 }
 
