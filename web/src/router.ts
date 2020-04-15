@@ -21,7 +21,7 @@ export default new Router({
       redirect: "/search/2/10/",
     },
     {
-      path: "/search/:season/:episode/:keyword?",
+      path: "/search/:series/:episode/:keyword?",
       name: "search",
       component: Home,
       // props: true,

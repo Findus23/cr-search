@@ -1,5 +1,8 @@
 from datetime import timedelta
 from pathlib import Path
+from typing import Optional
+
+from data import single_speaker
 
 srtdir = Path("./data/subtitles/")
 
@@ -12,5 +15,8 @@ def milliseconds_to_td(ms: int) -> timedelta:
     return timedelta(milliseconds=ms)
 
 
-def get_filename(campaign: int, episode: int) -> Path:
-    return srtdir / f"C{campaign}E{episode}.srt"
+def episode_speaker(series_title: str, episode: int) -> Optional[str]:
+    series = single_speaker[series_title]
+    if episode in series:
+        return series[episode]
+    return None

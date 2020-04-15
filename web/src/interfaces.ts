@@ -4,10 +4,18 @@ export interface Person {
   "color": string;
 }
 
+export interface Series {
+  "id": number;
+  "is_campaign": boolean;
+  "title": string;
+}
+
 export interface Episode {
   "episode_number": number;
   "id": number;
-  "season": number;
+  "series": Series;
+  "title": string;
+  "video_number": number;
   "youtube_id": string;
 }
 
@@ -33,4 +41,14 @@ export interface Result {
 export interface ServerMessage {
   status: string;
   message: string;
+}
+
+export interface SeriesNames {
+  "id": number;
+  "title": string;
+}
+
+export interface ServerData {
+  "series": SeriesNames[];
+
 }

@@ -1,15 +1,5 @@
+from data import colors_c2
 from models import Person
-
-colors_c2 = {
-    "Laura": "#59c3f9",
-    "Marisha": "#00146e",
-    "Liam": "#fe8413",
-    "Taliesin": "#be1c0d",
-    "Ashley": "#868984",
-    "Sam": "#dae1dd",
-    "Travis": "#076708",
-    "Matt": "#471f0e"  # random color
-}
 
 p: Person
 for p in Person.select():

@@ -78,15 +78,16 @@
                    class="form-control" type="number" v-model="episode"
                    min="1" max="300">
             <span>in</span>
-            <select title="campaign selection" class="custom-select" v-model="season">
-                <option value="1">Campaign 1</option>
-                <option value="2">Campaign 2</option>
+            <select title="campaign selection" class="custom-select" v-model="series">
+                <option v-for="series in serverData.series" v-bind:value="series.id">
+                    {{ series.title }}
+                </option>
             </select>
         </div>
         <b-alert v-if="error" show :variant="error.status">{{error.message}}</b-alert>
         <div class="entry" v-for="result in searchResult">
             <div class="title">
-                <div>{{episodeName(firstLine(result))}} {{formatTimestamp(firstLine(result).starttime)}}</div>
+                <div>{{formatTimestamp(firstLine(result).starttime)}} {{episodeName(firstLine(result))}}</div>
                 <div class="buttons">
                     <button class="btn" @click="playVideo(result)" title="View video on YouTube">
                         <b-icon-play-fill></b-icon-play-fill>
@@ -114,7 +115,7 @@
   // @ts-ignore
   import Autocomplete from "@trevoreyre/autocomplete-vue";
   // import "@trevoreyre/autocomplete-vue/dist/style.css";
-  import {Line, Result, ServerMessage} from "@/interfaces";
+  import {Line, Result, ServerData, ServerMessage} from "@/interfaces";
   import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
   // @ts-ignore
   import VueYoutube from "vue-youtube";
@@ -134,9 +135,10 @@
     },
     data() {
       return {
+        serverData : require("../../data.json") as ServerData,
         searchResult: [] as Result[],
         keyword: this.$route.params.keyword,
-        season: this.$route.params.season,
+        series: this.$route.params.series,
         episode: this.$route.params.episode,
         error: undefined as ServerMessage | undefined,
         ytOptIn: false,
@@ -155,8 +157,8 @@
       if (localStorage.ytOptIn) {
         this.ytOptIn = localStorage.ytOptIn;
       }
-      if (this.season == null) {
-        this.season = "2";
+      if (this.series == null) {
+        this.series = "2";
       }
       if (this.episode == null) {
         this.episode = "10";
@@ -172,7 +174,7 @@
     },
     methods: {
       suggest(input: string) {
-        const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&season=" + this.season;
+        const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&series=" + this.series;
 
         return new Promise((resolve) => {
           if (input.length < 1) {
@@ -193,7 +195,7 @@
         if (!this.keyword) {
           return;
         }
-        const url = baseURL + "search?query=" + this.keyword + "&until=" + this.episode + "&season=" + this.season;
+        const url = baseURL + "search?query=" + this.keyword + "&until=" + this.episode + "&series=" + this.series;
 
         fetch(url)
           .then((response) => response.json())
@@ -225,7 +227,10 @@
         return result.lines[0];
       },
       episodeName(line: Line): string {
-        return `C${line.episode.season}E${line.episode.episode_number}`;
+        if (line.episode.series.is_campaign) {
+          return `Episode ${line.episode.episode_number}`;
+        }
+        return line.episode.title;
       },
       formatTimestamp(ts: number) {
         return new Date(ts).toISOString().substr(11, 8);
@@ -301,8 +306,8 @@
         // @ts-ignore
         this.$router.replace({params: {...this.$route.params, episode: val}});
       }, 300),
-      season(val: string): void {
-        this.$router.replace({params: {...this.$route.params, season: val}});
+      series(val: string): void {
+        this.$router.replace({params: {...this.$route.params, series: val}});
       },
       keyword(val: string): void {
         this.$router.replace({params: {...this.$route.params, keyword: val}});

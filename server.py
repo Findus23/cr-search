@@ -19,20 +19,20 @@ def add_cors(response):
     return response
 
 
-global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported]
+global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported, Person.series]
 
 
 @app.route("/api/suggest")
 def question():
     query: str = request.args.get('query')
     until = request.args.get('until')
-    season = request.args.get('season')
-    if not query or not until or not season:
+    series = request.args.get('series')
+    if not query or not until or not series:
         return "no suggest query", 400
     if len(query) > 50:
         return "too long query", 400
     phrases = Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).join(Episode).where(
-        (Episode.season == season) &
+        (Episode.series == series) &
         (Episode.episode_number <= until) &
         (Phrase.text.contains(query))
     ).group_by(Phrase.text).order_by(SQL("total_count DESC")).limit(10)
@@ -43,8 +43,8 @@ def question():
 def search():
     query = request.args.get('query')
     until = request.args.get('until')
-    season = request.args.get('season')
-    if not query or not until or not season:
+    series = request.args.get('series')
+    if not query or not until or not series:
         return "no suggest query", 400
     if len(query) > 50:
         return "too long query", 400
@@ -56,7 +56,7 @@ def search():
         &
         (Episode.episode_number <= until)
         &
-        (Episode.season == season)
+        (Episode.series == series)
     ).order_by(SQL("rank DESC")).join(Person).switch(Line).join(Episode).limit(20)
 
     if len(results) == 0:

@@ -12,16 +12,24 @@ class BaseModel(Model):
         database = db
 
 
+class Series(BaseModel):
+    title = CharField(max_length=100)
+    is_campaign = BooleanField()
+    single_speaker = BooleanField()
+
+
 class Episode(BaseModel):
-    season = IntegerField()
+    series = ForeignKeyField(Series, backref="episodes")
     episode_number = IntegerField()
     video_number = IntegerField()
     youtube_id = CharField(max_length=11)
+    title = CharField(max_length=100)
+    downloaded = BooleanField(default=False)
     text_imported = BooleanField(default=False)
     phrases_imported = BooleanField(default=False)
 
     class Meta:
-        indexes = ((("season", "video_number"), True),)
+        indexes = ((("series", "video_number"), True),)
 
     @property
     def name(self) -> str:
@@ -31,9 +39,10 @@ class Episode(BaseModel):
 class Person(BaseModel):
     name = CharField()
     color = CharField(null=True)
-    season = IntegerField()
+    series = ForeignKeyField(Series)
+
     class Meta:
-        indexes = ((("name", "season"), True),)
+        indexes = ((("name", "series"), True),)
 
 
 FULL_TEXT_SEARCH = '''SELECT id, text, ts_rank_cd(search_text, query) AS rank

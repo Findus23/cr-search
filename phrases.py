@@ -12,7 +12,7 @@ from stopwords import STOP_WORDS
 nlp: English = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
 for episode in Episode.select().where((Episode.phrases_imported == False) & (Episode.text_imported == True)):
-    print(f"Campaign {episode.season} Episode {episode.episode_number}")
+    print(episode.video_number, episode.title)
     person = None
     text = ""
     line_select = Line.select().where(Line.episode == episode)

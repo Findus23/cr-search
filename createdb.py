@@ -1,6 +1,6 @@
 from sys import argv
 
-from models import db, Phrase, Episode, Person, Line
+from models import db, Series, Phrase, Episode, Person, Line
 
 
 def confirm(message: str) -> None:
@@ -14,8 +14,8 @@ mode = argv[1]
 
 if mode == "all":
     confirm("Delete all Data? ")
-    db.drop_tables([Episode, Person, Line, Phrase])
-    db.create_tables([Episode, Person, Line, Phrase])
+    db.drop_tables([Series, Episode, Person, Line, Phrase])
+    db.create_tables([Series, Episode, Person, Line, Phrase])
 elif mode == "phrases":
     confirm("Delete all Phrases? ")
     db.drop_tables([Phrase])
