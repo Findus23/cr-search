@@ -51,13 +51,16 @@ def search():
 
     a = Alias(fn.ts_rank(Line.search_text, fn.plainto_tsquery('english', query)), "rank")
 
-    results = Line.select(Line, Person, Episode, a).where(
+    results = Line.select(Line, Person, Episode, Series, a).where(
         (Line.search_text.match(query, language="english", plain=True))
         &
         (Episode.episode_number <= until)
         &
         (Episode.series == series)
-    ).order_by(SQL("rank DESC")).join(Person).switch(Line).join(Episode).limit(20)
+    ).order_by(SQL("rank DESC")) \
+        .join(Person).switch(Line) \
+        .join(Episode).join(Series) \
+        .limit(20)
 
     if len(results) == 0:
         result: cursor = db.execute_sql("select plainto_tsquery('english',%s)", [query])

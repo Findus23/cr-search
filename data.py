@@ -1,3 +1,14 @@
+colors_c1 = {
+    "Travis": "#7592a4",
+    "Marisha": "#bd6b1e",
+    "Taliesin": "#3c487d",
+    "Ashley": "#fdd9be",
+    "Sam": "#781485",
+    "Liam": "#3d7580",
+    "Laura": "#28607d",
+    "Orion": "#933326"
+}
+
 colors_c2 = {
     "Laura": "#59c3f9",
     "Marisha": "#00146e",
@@ -6,7 +17,8 @@ colors_c2 = {
     "Ashley": "#868984",
     "Sam": "#dae1dd",
     "Travis": "#076708",
-    "Matt": "#471f0e"  # random color
+    "Matt": "#005d73",  # random color
+    "Khary": "#bcc9e3"
 }
 
 single_speaker = {
