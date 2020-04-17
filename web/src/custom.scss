@@ -35,13 +35,14 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-@include media-breakpoint-down(md) {
-  justify-content: space-between;
-}
+  @include media-breakpoint-down(md) {
+    justify-content: space-between;
+  }
 
   input, select {
     background: transparent;
     color: $body-color;
+    border: 1px dashed $border-color;
 
     &:focus, &:active {
       background: transparent;
@@ -100,3 +101,27 @@ p {
 pre {
   white-space: pre-wrap;
 }
+
+footer {
+  display: flex;
+  justify-content: space-between;
+
+  button.btn-link {
+    padding: 0;
+  }
+}
+
+#app, body, html, #contentwrapper, .container {
+  height: 100%;
+}
+
+#contentwrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.home {
+  flex: 1 0 auto;
+}
+
+
