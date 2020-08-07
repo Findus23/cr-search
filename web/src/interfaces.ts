@@ -7,6 +7,7 @@ export interface Person {
 export interface Series {
   "id": number;
   "is_campaign": boolean;
+  "single_speaker": boolean;
   "title": string;
 }
 
@@ -50,5 +51,15 @@ export interface SeriesNames {
 
 export interface ServerData {
   "series": SeriesNames[];
+}
 
+export interface EpisodeDetailed extends Episode {
+  "downloaded": boolean;
+  "text_imported": boolean;
+  "phrases_imported": boolean;
+}
+
+export interface SeriesData {
+  "meta": Series;
+  "episodes": EpisodeDetailed[];
 }

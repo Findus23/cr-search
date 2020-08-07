@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from flask import request, jsonify, Response
 from peewee import fn, Alias, SQL, DoesNotExist, Expression
@@ -109,6 +110,27 @@ def expand():
     for l in lines:
         entry = model_to_dict(l, exclude=global_excludes)
         data.append(entry)
+
+    return jsonify(data)
+
+
+@app.route("/api/episodes")
+def episodes():
+    all_series: List[Series] = Series.select()
+    data = []
+    for series in all_series:
+
+        episodes: List[Episode] = Episode.select().where(Episode.series == series).order_by(Episode.video_number)
+
+        series_data = []
+        for episode in episodes:
+            entry = model_to_dict(episode, exclude=[Episode.series])
+            entry["title"] = entry["title"].split("|")[0].strip()
+            series_data.append(entry)
+        data.append({
+            "meta": model_to_dict(series),
+            "episodes": series_data
+        })
 
     return jsonify(data)
 

@@ -5,7 +5,6 @@ import youtube_dl
 from peewee import DoesNotExist
 
 from models import Episode, Series
-# https://www.youtube.com/playlist?list=
 from utils import srtdir
 
 series_data = [
@@ -86,7 +85,7 @@ def main():
                 continue
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([f'https://www.youtube.com/watch?v={e.youtube_id}'])
-                run(["ffmpeg", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")])
+                run(["ffmpeg", "-y", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")])
                 e.downloaded = True
                 try:
                     vttfile.with_suffix(".en.vtt").unlink()

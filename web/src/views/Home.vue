@@ -82,10 +82,10 @@
                     </option>
                 </select>
             </div>
-            <b-alert v-if="error" show :variant="error.status">{{error.message}}</b-alert>
+            <b-alert v-if="error" show :variant="error.status">{{ error.message }}</b-alert>
             <div class="entry" v-for="result in searchResult">
                 <div class="title">
-                    <div>{{formatTimestamp(firstLine(result).starttime)}} {{episodeName(firstLine(result))}}</div>
+                    <div>{{ formatTimestamp(firstLine(result).starttime) }} {{ episodeName(firstLine(result)) }}</div>
                     <div class="buttons">
                         <button class="btn" @click="playVideo(result)" title="View video on YouTube">
                             <b-icon-play-fill></b-icon-play-fill>
@@ -97,13 +97,13 @@
                 </div>
                 <p :class="{line:true,note:line.isnote,meta:line.ismeta}" :style="{borderLeftColor:getColor(line)}"
                    v-for="line in result.lines" :key="line.id">
-                    <span v-if="line.person" class="person">{{line.person.name}}: </span><span
+                    <span v-if="line.person" class="person">{{ line.person.name }}: </span><span
                         v-html="line.text"></span>
                 </p>
             </div>
             <details>
                 <summary>Raw Data</summary>
-                <pre>{{searchResult}}</pre>
+                <pre>{{ searchResult }}</pre>
             </details>
 
         </div>
@@ -116,213 +116,214 @@
 </template>
 
 <script lang="ts">
-  import Vue from "vue";
-  // @ts-ignore
-  import Autocomplete from "@trevoreyre/autocomplete-vue";
-  // import "@trevoreyre/autocomplete-vue/dist/style.css";
-  import {Line, Result, ServerData, ServerMessage} from "@/interfaces";
-  import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
-  // @ts-ignore
-  import VueYoutube from "vue-youtube";
-  import {debounce} from "lodash";
+import Vue from "vue";
+// @ts-ignore
+import Autocomplete from "@trevoreyre/autocomplete-vue";
+// import "@trevoreyre/autocomplete-vue/dist/style.css";
+import {Line, Result, ServerData, ServerMessage} from "@/interfaces";
+import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
+// @ts-ignore
+import VueYoutube from "vue-youtube";
+import {debounce} from "lodash";
 
-  Vue.use(VueYoutube);
+import {baseURL} from "@/utils";
 
-  const baseURL = (process.env.NODE_ENV === "production") ? "/api/" : "http://127.0.0.1:5000/api/";
+Vue.use(VueYoutube);
 
-  export default Vue.extend({
-    name: "home",
-    components: {
-      Autocomplete,
-      BAlert,
-      BIcon,
-      BIconPlayFill,
+
+export default Vue.extend({
+  name: "home",
+  components: {
+    Autocomplete,
+    BAlert,
+    BIcon,
+    BIconPlayFill,
+  },
+  data() {
+    return {
+      serverData: require("../../data.json") as ServerData,
+      searchResult: [] as Result[],
+      keyword: this.$route.params.keyword,
+      series: this.$route.params.series,
+      episode: this.$route.params.episode,
+      error: undefined as ServerMessage | undefined,
+      ytOptIn: false,
+      showYtOptIn: false,
+      ytVideoID: undefined as string | undefined,
+      showYT: false,
+      ytResult: undefined as Result | undefined,
+      ytWidth: 640,
+      showIntro: true
+    };
+  },
+  mounted(): void {
+    if (localStorage.showIntro) {
+      this.showIntro = localStorage.showIntro;
+    }
+    if (localStorage.ytOptIn) {
+      this.ytOptIn = localStorage.ytOptIn;
+    }
+    if (this.series == null) {
+      this.series = "2";
+    }
+    if (this.episode == null) {
+      this.episode = "10";
+    }
+    if (this) {
+      document.title = "CR Search";
+    }
+    if (this.keyword) {
+      this.search();
+    }
+    const max = 640;
+    this.ytWidth = (window.innerWidth < max ? window.innerWidth : max) - 2 * 2;
+  },
+  methods: {
+    suggest(input: string) {
+      const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&series=" + this.series;
+
+      return new Promise((resolve) => {
+        if (input.length < 1) {
+          return resolve([]);
+        }
+        fetch(url)
+          .then((response) => response.json())
+          .then((data: string[]) => {
+            resolve(data);
+          });
+      });
     },
-    data() {
-      return {
-        serverData: require("../../data.json") as ServerData,
-        searchResult: [] as Result[],
-        keyword: this.$route.params.keyword,
-        series: this.$route.params.series,
-        episode: this.$route.params.episode,
-        error: undefined as ServerMessage | undefined,
-        ytOptIn: false,
-        showYtOptIn: false,
-        ytVideoID: undefined as string | undefined,
-        showYT: false,
-        ytResult: undefined as Result | undefined,
-        ytWidth: 640,
-        showIntro: true
-      };
+    handleSubmit(result: string) {
+      // @ts-ignore
+      this.keyword = result || this.$refs.searchInput.value;
     },
-    mounted(): void {
-      if (localStorage.showIntro) {
-        this.showIntro = localStorage.showIntro;
+    search(): void {
+      if (!this.keyword) {
+        return;
       }
-      if (localStorage.ytOptIn) {
-        this.ytOptIn = localStorage.ytOptIn;
-      }
-      if (this.series == null) {
-        this.series = "2";
-      }
-      if (this.episode == null) {
-        this.episode = "10";
-      }
-      if (this) {
-        document.title = "CR Search";
-      }
-      if (this.keyword) {
-        this.search();
-      }
-      const max = 640;
-      this.ytWidth = (window.innerWidth < max ? window.innerWidth : max) - 2 * 2;
-    },
-    methods: {
-      suggest(input: string) {
-        const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&series=" + this.series;
+      const url = baseURL + "search?query=" + this.keyword + "&until=" + this.episode + "&series=" + this.series;
 
-        return new Promise((resolve) => {
-          if (input.length < 1) {
-            return resolve([]);
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status) {
+            this.error = data;
+            this.searchResult = [];
+          } else {
+            this.error = undefined;
+            this.searchResult = data;
           }
-          fetch(url)
-            .then((response) => response.json())
-            .then((data: string[]) => {
-              resolve(data);
-            });
         });
-      },
-      handleSubmit(result: string) {
+    },
+    expand(result: Result) {
+      const offset = result.offset ? result.offset : 1;
+      const url = baseURL + "expand?centerID=" + result.centerID + "&offset=" + offset;
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data: Line[]) => {
+
+          this.searchResult[result.resultID].lines.push(...data);
+          this.searchResult[result.resultID].lines.sort((a, b) => a.order - b.order);
+          this.searchResult[result.resultID].offset = offset + 1;
+        });
+
+    },
+    firstLine(result: Result): Line {
+      return result.lines[0];
+    },
+    episodeName(line: Line): string {
+      if (line.episode.series.is_campaign) {
+        return `Episode ${line.episode.episode_number}`;
+      }
+      return line.episode.title;
+    },
+    formatTimestamp(ts: number) {
+      return new Date(ts).toISOString().substr(11, 8);
+    },
+    getColor(line: Line): string {
+      if (line.ismeta) {
+        return "pink";
+      } else if (line.isnote) {
+        return "purple";
+      }
+      return line.person.color;
+    },
+    doYtOptIn() {
+      this.showYtOptIn = false;
+      this.ytOptIn = true;
+      this.playVideo(undefined);
+    },
+    playVideo(result: Result | undefined): void {
+      if (!this.ytOptIn) {
+        this.ytResult = result;
+        this.showYtOptIn = true;
+        return;
+      }
+      if (!result && this.ytResult) {
+        result = this.ytResult;
+      }
+      if (!result) {
+        return;
+      }
+      const firstLine = this.firstLine(result);
+      const newYtVideoID = firstLine.episode.youtube_id;
+      if (!this.$refs.youtube) {
+        this.showYT = true;
+        this.ytResult = result;
+      } else {
         // @ts-ignore
-        this.keyword = result || this.$refs.searchInput.value;
-      },
-      search(): void {
-        if (!this.keyword) {
-          return;
-        }
-        const url = baseURL + "search?query=" + this.keyword + "&until=" + this.episode + "&series=" + this.series;
-
-        fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status) {
-              this.error = data;
-              this.searchResult = [];
-            } else {
-              this.error = undefined;
-              this.searchResult = data;
-            }
-          });
-      },
-      expand(result: Result) {
-        const offset = result.offset ? result.offset : 1;
-        const url = baseURL + "expand?centerID=" + result.centerID + "&offset=" + offset;
-
-        fetch(url)
-          .then((response) => response.json())
-          .then((data: Line[]) => {
-
-            this.searchResult[result.resultID].lines.push(...data);
-            this.searchResult[result.resultID].lines.sort((a, b) => a.order - b.order);
-            this.searchResult[result.resultID].offset = offset + 1;
-          });
-
-      },
-      firstLine(result: Result): Line {
-        return result.lines[0];
-      },
-      episodeName(line: Line): string {
-        if (line.episode.series.is_campaign) {
-          return `Episode ${line.episode.episode_number}`;
-        }
-        return line.episode.title;
-      },
-      formatTimestamp(ts: number) {
-        return new Date(ts).toISOString().substr(11, 8);
-      },
-      getColor(line: Line): string {
-        if (line.ismeta) {
-          return "pink";
-        } else if (line.isnote) {
-          return "purple";
-        }
-        return line.person.color;
-      },
-      doYtOptIn() {
-        this.showYtOptIn = false;
-        this.ytOptIn = true;
-        this.playVideo(undefined);
-      },
-      playVideo(result: Result | undefined): void {
-        if (!this.ytOptIn) {
-          this.ytResult = result;
-          this.showYtOptIn = true;
-          return;
-        }
-        if (!result && this.ytResult) {
-          result = this.ytResult;
-        }
-        if (!result) {
-          return;
-        }
-        const firstLine = this.firstLine(result);
-        const newYtVideoID = firstLine.episode.youtube_id;
-        if (!this.$refs.youtube) {
-          this.showYT = true;
-          this.ytResult = result;
-        } else {
-          // @ts-ignore
-          const player = this.$refs.youtube.player;
-          if (firstLine) {
-            if (this.ytVideoID === newYtVideoID) {
-              player.seekTo(firstLine.starttime / 1000);
-            } else {
-              player.loadVideoById(
-                newYtVideoID,
-                firstLine.starttime / 1000,
-                firstLine.endtime / 1000
-              );
-              this.ytVideoID = newYtVideoID;
-            }
+        const player = this.$refs.youtube.player;
+        if (firstLine) {
+          if (this.ytVideoID === newYtVideoID) {
+            player.seekTo(firstLine.starttime / 1000);
+          } else {
+            player.loadVideoById(
+              newYtVideoID,
+              firstLine.starttime / 1000,
+              firstLine.endtime / 1000
+            );
+            this.ytVideoID = newYtVideoID;
           }
         }
-      },
-      closeVideo(): void {
-        this.showYT = false;
-        this.ytVideoID = undefined;
-        this.ytResult = undefined;
-      },
-    },
-    computed: {
-      ytLink(): string {
-        if (!this.ytResult) {
-          return "";
-        }
-        const firstline = this.firstLine(this.ytResult);
-        const starttime = firstline.starttime / 1000;
-        const id = firstline.episode.youtube_id;
-        const min = Math.floor(starttime / 60);
-        const sec = Math.floor(starttime % 60);
-        return `https://www.youtube.com/watch?v=${id}&t=${min}m${sec}s`;
       }
     },
-    watch: {
-      episode: debounce(function(val: number): void {
-        // @ts-ignore
-        this.$router.replace({params: {...this.$route.params, episode: val}});
-      }, 300),
-      series(val: string): void {
-        this.$router.replace({params: {...this.$route.params, series: val}});
-      },
-      keyword(val: string): void {
-        this.$router.replace({params: {...this.$route.params, keyword: val}});
-      },
-      "$route.params"(val) {
-        this.search();
-      },
-      ytOptIn(value: boolean): void {
-        localStorage.ytOptIn = value;
-      }
+    closeVideo(): void {
+      this.showYT = false;
+      this.ytVideoID = undefined;
+      this.ytResult = undefined;
     },
-  });
+  },
+  computed: {
+    ytLink(): string {
+      if (!this.ytResult) {
+        return "";
+      }
+      const firstline = this.firstLine(this.ytResult);
+      const starttime = firstline.starttime / 1000;
+      const id = firstline.episode.youtube_id;
+      const min = Math.floor(starttime / 60);
+      const sec = Math.floor(starttime % 60);
+      return `https://www.youtube.com/watch?v=${id}&t=${min}m${sec}s`;
+    }
+  },
+  watch: {
+    episode: debounce(function(val: number): void {
+      // @ts-ignore
+      this.$router.replace({params: {...this.$route.params, episode: val}});
+    }, 300),
+    series(val: string): void {
+      this.$router.replace({params: {...this.$route.params, series: val}});
+    },
+    keyword(val: string): void {
+      this.$router.replace({params: {...this.$route.params, keyword: val}});
+    },
+    "$route.params"(val) {
+      this.search();
+    },
+    ytOptIn(value: boolean): void {
+      localStorage.ytOptIn = value;
+    }
+  },
+});
 </script>

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
+import Episodes from "@/views/Episodes.vue";
 
 Vue.use(Router);
 
@@ -11,6 +12,11 @@ export default new Router({
     {
       path: "/",
       redirect: "/search/2/10/",
+    },
+    {
+      path: "/episodes",
+      name: "episodes",
+      component: Episodes,
     },
     {
       path: "/:something/",
