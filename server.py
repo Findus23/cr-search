@@ -1,7 +1,8 @@
 import logging
 
 from flask import request, jsonify, Response
-from peewee import fn, Alias, SQL, DoesNotExist
+from peewee import fn, Alias, SQL, DoesNotExist, Expression
+from playhouse.postgres_ext import TS_MATCH
 from playhouse.shortcuts import model_to_dict
 from psycopg2._psycopg import cursor
 
@@ -49,10 +50,10 @@ def search():
     if len(query) > 50:
         return "too long query", 400
 
-    a = Alias(fn.ts_rank_cd(Line.search_text, fn.plainto_tsquery('english', query), 1 + 4), "rank")
+    a = Alias(fn.ts_rank_cd(Line.search_text, fn.websearch_to_tsquery('english', query), 1 + 4), "rank")
 
     results = Line.select(Line, Person, Episode, Series, a).where(
-        (Line.search_text.match(query, language="english", plain=True))
+        Expression(Line.search_text, TS_MATCH, fn.websearch_to_tsquery('english', query))
         &
         (Episode.episode_number <= until)
         &
@@ -63,10 +64,13 @@ def search():
         .limit(50)
 
     if len(results) == 0:
-        result: cursor = db.execute_sql("select plainto_tsquery('english',%s)", [query])
+        result: cursor = db.execute_sql("select websearch_to_tsquery('english',%s)", [query])
         parsed = result.fetchone()[0]
         if not parsed:
-            return jsonify({"status": "warning", "message": "Only stop words were used"})
+            return jsonify({
+                "status": "warning",
+                "message": "Only stop words were used. Please try to add a less common word to the search."
+            })
         else:
             resp: Response = jsonify({"status": "warning", "message": f"No results were found for \"{parsed}\""})
             resp.status_code = 404
