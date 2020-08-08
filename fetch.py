@@ -1,4 +1,5 @@
 import hashlib
+import os
 import re
 from subprocess import run
 
@@ -27,6 +28,7 @@ series_data = [
 
 
 def main():
+    os.nice(15)
     for series in series_data:
         name = series["name"]
         playlist_id = series["playlist_id"]

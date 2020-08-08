@@ -1,3 +1,4 @@
+import os
 import re
 from html import unescape
 
@@ -18,6 +19,7 @@ def is_invalid_name(name: str) -> bool:
 
 
 def main():
+    os.nice(15)
     all_people = set()
     for series in Series.select():
         for episode in Episode.select().where(

@@ -1,3 +1,4 @@
+import os
 from collections import Counter
 
 import spacy as spacy
@@ -8,6 +9,8 @@ from spacy.tokens.token import Token
 
 from models import Episode, Line, db, Phrase
 from stopwords import STOP_WORDS
+
+os.nice(15)
 
 nlp: English = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
