@@ -63,15 +63,15 @@ description = "English multi-task CNN trained on OntoNotes. Assigns context-spec
 name = "en_core_web_sm"
 optional = false
 python-versions = "*"
-version = "2.2.5"
+version = "2.3.1"
 
 [package.dependencies]
-spacy = ">=2.2.2"
+spacy = ">=2.3.0,<2.4.0"
 
 [package.source]
 reference = ""
 type = "url"
-url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"
+url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz"
 [[package]]
 category = "main"
 description = "A simple framework for building complex web applications."
@@ -378,7 +378,7 @@ python-versions = "*"
 version = "2020.7.28"
 
 [metadata]
-content-hash = "86d931340fda1b5136ecd6937a913c66b9ed2eb48fb389d0dd26fafa6fe9763a"
+content-hash = "637405d9cdc541a227653b6f05437a2e582436e374ae8bffdd95d665f6331183"
 lock-version = "1.0"
 python-versions = "^3.8"
 
