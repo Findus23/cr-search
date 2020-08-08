@@ -30,7 +30,7 @@ class Episode(BaseModel):
     downloaded = BooleanField(default=False)
     text_imported = BooleanField(default=False)
     phrases_imported = BooleanField(default=False)
-    subtitle_hash = CharField(max_length=64)
+    subtitle_hash = CharField(max_length=64, null=True)
     last_updated = DateTimeField(default=datetime.now)
 
     class Meta:
