@@ -1,4 +1,6 @@
-from peewee import PostgresqlDatabase, Model, IntegerField, CharField, BooleanField, ForeignKeyField
+from datetime import datetime
+
+from peewee import PostgresqlDatabase, Model, IntegerField, CharField, BooleanField, ForeignKeyField, DateTimeField
 from playhouse.postgres_ext import TSVectorField
 
 from config import dbauth
@@ -24,9 +26,12 @@ class Episode(BaseModel):
     video_number = IntegerField()
     youtube_id = CharField(max_length=11)
     title = CharField(max_length=100)
+    pretty_title = CharField(max_length=100)
     downloaded = BooleanField(default=False)
     text_imported = BooleanField(default=False)
     phrases_imported = BooleanField(default=False)
+    subtitle_hash = CharField(max_length=64)
+    last_updated = DateTimeField(default=datetime.now)
 
     class Meta:
         indexes = ((("series", "video_number"), True),)

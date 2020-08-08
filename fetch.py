@@ -1,11 +1,12 @@
+import hashlib
 import re
 from subprocess import run
 
 import youtube_dl
 from peewee import DoesNotExist
 
-from models import Episode, Series
-from utils import srtdir
+from models import Episode, Series, Line, Phrase
+from utils import srtdir, pretty_title
 
 series_data = [
     {
@@ -66,6 +67,7 @@ def main():
                 e.series = s
                 e.video_number = nr
             e.title = video["title"]
+            e.pretty_title = pretty_title(video["title"])
             if s.is_campaign:
                 try:
                     match = regex.search(video["title"])
@@ -81,17 +83,28 @@ def main():
             e.save()
             vttfile = srtdir / str(e.id)
             ydl_opts["outtmpl"] = str(vttfile)
-            if e.downloaded:
-                continue
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([f'https://www.youtube.com/watch?v={e.youtube_id}'])
-                run(["ffmpeg", "-y", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")])
-                e.downloaded = True
-                try:
-                    vttfile.with_suffix(".en.vtt").unlink()
-                except FileNotFoundError:
-                    e.downloaded = False
-                e.save()
+            run(["ffmpeg", "-y", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")])
+            e.downloaded = True
+            try:
+                vttfile.with_suffix(".en.vtt").unlink()
+                with vttfile.with_suffix(".srt").open("rb") as f:
+                    file_hash = hashlib.sha256()
+                    while True:
+                        chunk = f.read(8192)
+                        if not chunk:
+                            break
+                        file_hash.update(chunk)
+                if e.subtitle_hash != file_hash.hexdigest():
+                    Line.delete().where(Line.episode == e)
+                    Phrase.delete().where(Phrase.episode == e)
+                    e.phrases_imported = False
+                    e.text_imported = False
+                    e.subtitle_hash = file_hash.hexdigest()
+            except FileNotFoundError:
+                e.downloaded = False
+            e.save()
 
 
 if __name__ == '__main__':

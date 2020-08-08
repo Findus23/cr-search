@@ -15,7 +15,7 @@ export interface Episode {
   "episode_number": number;
   "id": number;
   "series": Series;
-  "title": string;
+  "pretty_title": string;
   "video_number": number;
   "youtube_id": string;
 }

@@ -20,3 +20,14 @@ def episode_speaker(series_title: str, episode: int) -> Optional[str]:
     if episode in series:
         return series[episode]
     return None
+
+
+def pretty_title(title: str) -> str:
+    if "|" in title:
+        return title.split("|")[0].strip()
+    if "Handbooker Helper:" in title:
+        return title.replace("Handbooker Helper:", "").strip()
+    if "Critical Role RPG Show" in title:
+        return title.split("-")[0].strip()
+    else:
+        return title.strip()

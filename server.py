@@ -21,7 +21,7 @@ def add_cors(response):
     return response
 
 
-global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported, Person.series]
+global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported, Person.series, Episode.title]
 
 
 @app.route("/api/suggest")
@@ -116,7 +116,7 @@ def expand():
 
 @app.route("/api/episodes")
 def episodes():
-    all_series: List[Series] = Series.select()
+    all_series: List[Series] = Series.select().order_by(Series.id)
     data = []
     for series in all_series:
 
@@ -124,8 +124,7 @@ def episodes():
 
         series_data = []
         for episode in episodes:
-            entry = model_to_dict(episode, exclude=[Episode.series])
-            entry["title"] = entry["title"].split("|")[0].strip()
+            entry = model_to_dict(episode, exclude=[Episode.series, Episode.title])
             series_data.append(entry)
         data.append({
             "meta": model_to_dict(series),

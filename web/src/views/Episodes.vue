@@ -22,7 +22,7 @@
                 <tbody>
                 <tr v-for="episode in series.episodes" :key="episode.id">
                     <td><a :href="youtubeLink(episode)" target="youtube" rel="noopener">
-                        {{ episode.title }}
+                        {{ episode.pretty_title }}
                     </a>
                     </td>
                     <td>{{ episode.episode_number }}</td>
@@ -40,7 +40,6 @@
                 </tbody>
             </table>
         </div>
-        <pre>{{ series_data }}</pre>
     </div>
 </template>
 

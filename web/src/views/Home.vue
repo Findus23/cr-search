@@ -124,7 +124,7 @@ import {Line, Result, ServerData, ServerMessage} from "@/interfaces";
 import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
 // @ts-ignore
 import VueYoutube from "vue-youtube";
-import {debounce} from "lodash";
+import debounce from "lodash-es/debounce";
 
 import {baseURL} from "@/utils";
 
@@ -234,9 +234,9 @@ export default Vue.extend({
     },
     episodeName(line: Line): string {
       if (line.episode.series.is_campaign) {
-        return `Episode ${line.episode.episode_number}`;
+        return `Episode ${line.episode.episode_number}: ${line.episode.pretty_title}`;
       }
-      return line.episode.title;
+      return line.episode.pretty_title;
     },
     formatTimestamp(ts: number) {
       return new Date(ts).toISOString().substr(11, 8);
