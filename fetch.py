@@ -1,6 +1,7 @@
 import hashlib
 import os
 import re
+from datetime import datetime
 from shutil import move
 from subprocess import run
 
@@ -108,6 +109,7 @@ def main():
                     e.phrases_imported = False
                     e.text_imported = False
                     e.subtitle_hash = file_hash.hexdigest()
+                    e.last_updated = datetime.now()
             except FileNotFoundError:
                 e.downloaded = False
             e.save()
