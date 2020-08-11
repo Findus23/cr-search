@@ -3,6 +3,7 @@ from collections import Counter
 
 import spacy as spacy
 from alive_progress import alive_bar
+from peewee import chunked
 from spacy.lang.en import English
 from spacy.tokens.span import Span
 from spacy.tokens.token import Token
@@ -15,6 +16,8 @@ os.nice(15)
 nlp: English = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
 for episode in Episode.select().where((Episode.phrases_imported == False) & (Episode.text_imported == True)):
+    if episode.id != 167:
+        continue
     print(episode.video_number, episode.title)
     person = None
     text = ""
@@ -32,22 +35,31 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
     for string in delete:
         text = text.replace(string, "")
     print("run nlp")
+    print(text)
     doc = nlp(text)
+    print("nlp finished")
     nouns = set()
     span: Span
-    for span in doc.noun_chunks:
+    for chunk in doc.noun_chunks:
         tok: Token
-        noun_chunk = "".join([tok.text_with_ws for tok in span if not tok.is_stop]).strip()
+        noun_chunk = chunk.text
         nouns.add(noun_chunk)
     cnt = Counter(nouns)
     with db.atomic():
-        with alive_bar(len(cnt), title='inserting phrases') as bar:
-            for phrase, count in cnt.items():
+        phrases = []
+        for phrase, count in cnt.items():
+            if "\n" in phrase:
+                continue
+            if len(phrase) < 4:
+                continue
+            phrases.append(Phrase(text=phrase, count=count, episode=episode))
+
+        num_per_chunk = 100
+        chunks = chunked(phrases, num_per_chunk)
+        with alive_bar(len(phrases) // num_per_chunk + 1) as bar:
+            for chunk in chunks:
                 bar()
-                if "\n" in phrase:
-                    continue
-                if len(phrase) < 4:
-                    continue
-                Phrase.create(text=phrase, count=count, episode=episode)
-    episode.phrases_imported = True
-    episode.save()
+                Phrase.bulk_create(chunk)
+
+        episode.phrases_imported = True
+        episode.save()
