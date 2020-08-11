@@ -1,6 +1,7 @@
 import hashlib
 import os
 import re
+from shutil import move
 from subprocess import run
 
 import youtube_dl
@@ -53,7 +54,7 @@ def main():
 
         ydl_opts = {
             "writesubtitles": True,
-            "subtitleslangs": ["en"],
+            "subtitleslangs": ["en", "en-US"],
             "skip_download": True,
         }
         regex = re.compile(r"Ep(?:is|si)ode (\d+)")
@@ -87,6 +88,9 @@ def main():
             ydl_opts["outtmpl"] = str(vttfile)
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([f'https://www.youtube.com/watch?v={e.youtube_id}'])
+            if vttfile.with_suffix(".en-US.vtt").exists():
+                # few videos have en-US as language code instead of en
+                move(vttfile.with_suffix(".en-US.vtt"), vttfile.with_suffix(".en.vtt"))
             run(["ffmpeg", "-y", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")])
             e.downloaded = True
             try:
