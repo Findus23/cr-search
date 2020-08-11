@@ -13,8 +13,11 @@ from utils import td_to_milliseconds, srtdir, episode_speaker
 
 
 def is_invalid_name(name: str) -> bool:
-    for a in ["PS", "P.S.", "\"P.S", "II", "The US", "Metal Gear", "D&amp;D", "LARP", "D&D", "A", "B"]:
-        if a.lower() in name.lower():
+    for substr in ["PS", "P.S.", "\"P.S", "II", "The US", "Metal Gear", "D&amp;D", "LARP", "D&D"]:
+        if substr.lower() in name.lower():
+            return True
+    for string in ["A", "B"]:
+        if string.lower() == name.lower():
             return True
     return False
 
