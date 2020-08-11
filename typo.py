@@ -3,19 +3,23 @@ replace common typos of names to unify them in the database
 """
 
 typos = {
-    "Matt": {"Mat", "Mattt", "\"Matt", "Matr"},
-    "Sam": {"San", "Nott", "Sma", "Sasm", "Sm"},
-    "Travis": {"Tarvis", "Travs", "Travia", "Traivs"},
+    "Matt": {"Mat", "Mattt", "\"Matt", "Matr", "Mtt"},
+    "Sam": {"San", "Nott", "Sma", "Sasm", "Sm", "Ssam"},
+    "Travis": {"Tarvis", "Travs", "Travia", "Traivs", "Tavis", "Trvis"},
     "Taliesin": {"Taiesin", "Talisin", "Talisen", "Taleisn", "Talisein", "Talieisin", "Talesin", "Talisan", "Taleisin",
-                 "Talieisn", "Talisien"},
+                 "Talieisn", "Talisien", "Tailesin"},
     "Marisha": {"Beau", "Mariasha", "Maisha", "Marisa", "Marish", "Marihsa", "Marsha", "Marsisha", "Marishaa",
-                "Marihsha", "\\Marisha", "Marisah", "Marissa"},
+                "Marihsha", "\\Marisha", "Marisah", "Marissa", "Marirsha", "Marisaha", "Mairsha", "Marshia", "Marsiha",
+                "Marishia", "Marsiah", "Matisha", "Mraisha", "Amrisha", "<Arisha"},
     "Laura": {"Lauda", "Lauren", "Larua", "Laur", "Lauar", "Vex", "Laira"},
     "Liam": {"Caleb", "Laim", "Vax"},
-    "Ashley": {"Ashly", "Ashely", "Ashey"},
+    "Ashley": {"Ashly", "Ashely", "Ashey", "Aslhey", "Ahsley"},
     "All": {"Everyone", "Everybody"},
     "Mark": {"Marik"},
     "Brian": {"Brain"},
+    "Joe": {"Jroe"},
+    "Man Off-Camera": {"Man Off Camera"},
+    "Off-Screen": {"Offscreen"}
 }
 replacements = {}
 for correct, typoset in typos.items():
