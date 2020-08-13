@@ -56,8 +56,6 @@ def main():
             with open("names.txt", "w") as f:
                 f.write("\n".join(sorted(p for p in all_people if "\n" not in p)))
             file = srtdir / f"{episode.id}.srt"
-            if episode.id != 167:
-                continue
             strtext = file.read_text()
             subtitlelines: List[Subtitle] = list(parse(strtext))
             print(episode.video_number, episode.title)
