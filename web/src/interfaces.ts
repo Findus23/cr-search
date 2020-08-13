@@ -28,7 +28,7 @@ export interface Line {
   "starttime": number;
   "endtime": number;
   "text": string;
-  "person": Person;
+  "person": Person | null;
   "episode": Episode;
 }
 

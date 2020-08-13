@@ -47,7 +47,7 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
             if noun_chunk in lemma_cache:
                 lemmas = lemma_cache[noun_chunk]
             else:
-                lemmas = "|".join([token.lemma_ for token in nlp(noun_chunk)])
+                lemmas = "|".join([token.lemma_ for token in nlp(noun_chunk)]).lower()
                 lemma_cache[noun_chunk] = lemmas
             if lemmas not in nouns:
                 nouns[lemmas] = {

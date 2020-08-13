@@ -247,7 +247,10 @@ export default Vue.extend({
       } else if (line.isnote) {
         return "purple";
       }
-      return line.person.color;
+      if (line.person) {
+        return line.person.color;
+      }
+      return "white";
     },
     doYtOptIn() {
       this.showYtOptIn = false;

@@ -8,25 +8,9 @@ from subprocess import run
 import youtube_dl
 from peewee import DoesNotExist
 
+from data import series_data
 from models import Episode, Series, Line, Phrase
 from utils import srtdir, pretty_title
-
-series_data = [
-    {
-        "name": "Campaign 1",
-        "playlist_id": "PL1tiwbzkOjQz7D0l_eLJGAISVtcL7oRu_",
-    },
-    {
-        "name": "Campaign 2",
-        "playlist_id": "PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2"
-
-    },
-    {
-        "name": "Handbooker Helper",
-        "playlist_id": "PL1tiwbzkOjQyr6-gqJ8r29j_rJkR49uDN",
-        "single_speaker": True
-    }
-]
 
 
 def main():
@@ -61,11 +45,10 @@ def main():
         regex = re.compile(r"Ep(?:is|si)ode (\d+)")
 
         for nr, video in enumerate(videos, 1):
-            # if Episode.select().where((Episode.season == campaign) & (Episode.video_number == nr)).count() == 1:
-            #     print(f"already imported {vttfile}")
-            #     continue
             try:
                 e = Episode.select().where((Episode.series == s) & (Episode.video_number == nr)).get()
+                if e.downloaded:
+                    continue
             except DoesNotExist:
                 e = Episode()
                 e.series = s
