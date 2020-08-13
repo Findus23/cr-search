@@ -71,4 +71,3 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
 
         episode.phrases_imported = True
         episode.save()
-    exit()
