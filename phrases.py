@@ -11,6 +11,7 @@ from models import Episode, Line, db, Phrase
 from stopwords import STOP_WORDS
 
 os.nice(15)
+lemma_cache = {}
 
 nlp: English = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
@@ -37,13 +38,17 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
     print("nlp finished")
     nouns = {}
     chunk: Span
-    noun_chunks=list(doc.noun_chunks)
+    noun_chunks = list(doc.noun_chunks)
     with alive_bar(len(noun_chunks), title='lemmatizing and counting') as bar:
         for chunk in noun_chunks:
             bar()
             tok: Token
             noun_chunk = "".join([tok.text_with_ws for tok in chunk if not tok.is_stop]).strip()
-            lemmas = "|".join([token.lemma_ for token in nlp(noun_chunk)])
+            if noun_chunk in lemma_cache:
+                lemmas = lemma_cache[noun_chunk]
+            else:
+                lemmas = "|".join([token.lemma_ for token in nlp(noun_chunk)])
+                lemma_cache[noun_chunk] = lemmas
             if lemmas not in nouns:
                 nouns[lemmas] = {
                     "count": 1,
