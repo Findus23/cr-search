@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from flask import request, jsonify, Response
-from peewee import fn, Alias, SQL, DoesNotExist, Expression
+from peewee import fn, Alias, SQL, DoesNotExist, Expression, ModelSelect
 from playhouse.postgres_ext import TS_MATCH
 from playhouse.shortcuts import model_to_dict
 from psycopg2._psycopg import cursor
@@ -10,9 +10,9 @@ from psycopg2._psycopg import cursor
 from app import app
 from models import *
 
-logger = logging.getLogger('peewee')
-logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG)
+# logger = logging.getLogger('peewee')
+# logger.addHandler(logging.StreamHandler())
+# logger.setLevel(logging.DEBUG)
 
 
 def add_cors(response):
@@ -21,39 +21,18 @@ def add_cors(response):
     return response
 
 
-global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported, Person.series, Episode.title]
-
-
-@app.route("/api/suggest")
-def question():
-    query: str = request.args.get('query')
-    until = request.args.get('until')
-    series = request.args.get('series')
-    if not query or not until or not series:
-        return "no suggest query", 400
-    if len(query) > 50:
-        return "too long query", 400
-    phrases = Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).join(Episode).where(
+def suggest(query: str, until: int, series: int, limit: int = 10) -> ModelSelect:
+    return Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).join(Episode).where(
         (Episode.series == series) &
         (Episode.episode_number <= until) &
         (Phrase.text.contains(query))
-    ).group_by(Phrase.text).order_by(SQL("total_count DESC")).limit(10)
-    return jsonify([p.text for p in phrases])
+    ).group_by(Phrase.text).order_by(SQL("total_count DESC")).limit(limit)
 
 
-@app.route("/api/search")
-def search():
-    query = request.args.get('query')
-    until = request.args.get('until')
-    series = request.args.get('series')
-    if not query or not until or not series:
-        return "no suggest query", 400
-    if len(query) > 50:
-        return "too long query", 400
-
+def search(query: str, until: int, series: int, limit: int = 50) -> ModelSelect:
     a = Alias(fn.ts_rank_cd(Line.search_text, fn.websearch_to_tsquery('english', query), 1 + 4), "rank")
 
-    results = Line.select(Line, Person, Episode, Series, a).where(
+    return Line.select(Line, Person, Episode, Series, a).where(
         Expression(Line.search_text, TS_MATCH, fn.websearch_to_tsquery('english', query))
         &
         (Episode.episode_number <= until)
@@ -62,7 +41,36 @@ def search():
     ).order_by(SQL("rank DESC")) \
         .join(Person).switch(Line) \
         .join(Episode).join(Series) \
-        .limit(50)
+        .limit(limit)
+
+
+global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported, Person.series, Episode.title]
+
+
+@app.route("/api/suggest")
+def api_question():
+    query: str = request.args.get('query')
+    until = request.args.get('until')
+    series = request.args.get('series')
+    if not query or not until or not series:
+        return "no suggest query", 400
+    if len(query) > 50:
+        return "too long query", 400
+    phrases = suggest(query, until, series)
+    return jsonify([p.text for p in phrases])
+
+
+@app.route("/api/search")
+def api_search():
+    query = request.args.get('query')
+    until = request.args.get('until')
+    series = request.args.get('series')
+    if not query or not until or not series:
+        return "no suggest query", 400
+    if len(query) > 50:
+        return "too long query", 400
+
+    results = search(query, until, series)
 
     if len(results) == 0:
         result: cursor = db.execute_sql("select websearch_to_tsquery('english',%s)", [query])
@@ -90,7 +98,7 @@ def search():
 
 
 @app.route("/api/expand")
-def expand():
+def api_expand():
     center_id = request.args.get('centerID')
     offset = int(request.args.get('offset', 1))
     if not center_id:
@@ -115,7 +123,7 @@ def expand():
 
 
 @app.route("/api/episodes")
-def episodes():
+def api_episodes():
     all_series: List[Series] = Series.select().order_by(Series.id)
     data = []
     for series in all_series:
