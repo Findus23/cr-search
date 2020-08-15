@@ -50,14 +50,6 @@ class Person(BaseModel):
         indexes = ((("name", "series"), True),)
 
 
-FULL_TEXT_SEARCH = '''SELECT id, text, ts_rank_cd(search_text, query) AS rank
-FROM line,
-     to_tsquery('english', %s) query
-WHERE search_text @@ query
-ORDER BY rank DESC
-'''
-
-
 class Line(BaseModel):
     text = CharField()
     search_text = TSVectorField()
@@ -71,16 +63,6 @@ class Line(BaseModel):
 
     class Meta:
         indexes = ((("episode", "order"), True),)
-
-    @classmethod
-    def full_text_search(cls, query_string: str):
-        cursor = cls._meta.database.execute_sql(
-            FULL_TEXT_SEARCH,
-            (query_string,)
-        )
-        result = cursor.fetchall()
-        cursor.close()
-        return result
 
 
 class Phrase(BaseModel):
