@@ -61,7 +61,7 @@ def main() -> None:
                     if not match:
                         raise ValueError("No episode number found in title")
                     e.episode_number = int(match.group(1))
-                except AttributeError:
+                except ValueError:
                     if s.title == "Campaign 1":  # one-shots at the end of campaign 1
                         e.episode_number = e.video_number - 3
                     else:
