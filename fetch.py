@@ -81,8 +81,6 @@ def main():
                 ["ffmpeg", "-y", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")],
                 capture_output=True
             )
-            if output.returncode:
-                raise RuntimeError(output.stderr.decode())
             e.downloaded = True
             try:
                 vttfile.with_suffix(".en.vtt").unlink()
