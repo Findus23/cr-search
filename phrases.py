@@ -53,7 +53,7 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
         for chunk in noun_chunks:
             bar()
             tok: Token
-            noun_chunk = "".join([tok.text_with_ws for tok in chunk if not tok.is_stop]).strip()
+            noun_chunk = str(chunk).strip()
             if noun_chunk in lemma_cache:
                 lemmas = lemma_cache[noun_chunk]
             else:
