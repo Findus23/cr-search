@@ -1,4 +1,6 @@
 import os
+from dataclasses import dataclass
+from typing import Dict
 
 import spacy as spacy
 from alive_progress import alive_bar
@@ -11,7 +13,15 @@ from models import Episode, Line, db, Phrase
 from stopwords import STOP_WORDS
 
 os.nice(15)
-lemma_cache = {}
+
+
+@dataclass
+class Noun:
+    name: str
+    count: int = 1
+
+
+lemma_cache: Dict[str, str] = {}
 
 nlp: English = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
@@ -36,7 +46,7 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
     print("run nlp")
     doc = nlp(text)
     print("nlp finished")
-    nouns = {}
+    nouns: Dict[str, Noun] = {}
     chunk: Span
     noun_chunks = list(doc.noun_chunks)
     with alive_bar(len(noun_chunks), title='lemmatizing and counting') as bar:
@@ -50,22 +60,17 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
                 lemmas = "|".join([token.lemma_ for token in nlp(noun_chunk)]).lower()
                 lemma_cache[noun_chunk] = lemmas
             if lemmas not in nouns:
-                nouns[lemmas] = {
-                    "count": 1,
-                    "name": noun_chunk
-                }
+                nouns[lemmas] = Noun(noun_chunk)
             else:
-                nouns[lemmas]["count"] += 1
+                nouns[lemmas].count += 1
     with db.atomic():
         phrases = []
         for lemmas, data in nouns.items():
-            phrase = data["name"]
-            count = data["count"]
-            if "\n" in phrase:
+            if "\n" in data.name:
                 continue
-            if len(phrase) < 4:
+            if len(data.name) < 4:
                 continue
-            phrases.append(Phrase(text=phrase, count=count, episode=episode))
+            phrases.append(Phrase(text=data.name, count=data.count, episode=episode))
 
         num_per_chunk = 100
         chunks = chunked(phrases, num_per_chunk)
