@@ -47,8 +47,8 @@ def main():
         for nr, video in enumerate(videos, 1):
             try:
                 e = Episode.select().where((Episode.series == s) & (Episode.video_number == nr)).get()
-                if e.downloaded:
-                    continue
+                # if e.downloaded:
+                #     continue
             except DoesNotExist:
                 e = Episode()
                 e.series = s
@@ -68,6 +68,8 @@ def main():
                 e.episode_number = e.video_number
             e.youtube_id = video["url"]
             e.save()
+            print(e.series.id, e.episode_number, e.pretty_title)
+
             vttfile = srtdir / str(e.id)
             ydl_opts["outtmpl"] = str(vttfile)
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -75,7 +77,12 @@ def main():
             if vttfile.with_suffix(".en-US.vtt").exists():
                 # few videos have en-US as language code instead of en
                 move(vttfile.with_suffix(".en-US.vtt"), vttfile.with_suffix(".en.vtt"))
-            run(["ffmpeg", "-y", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")])
+            output = run(
+                ["ffmpeg", "-y", "-i", vttfile.with_suffix(".en.vtt"), vttfile.with_suffix(".srt")],
+                capture_output=True
+            )
+            if output.returncode:
+                raise RuntimeError(output.stderr.decode())
             e.downloaded = True
             try:
                 vttfile.with_suffix(".en.vtt").unlink()
@@ -87,6 +94,7 @@ def main():
                             break
                         file_hash.update(chunk)
                 if e.subtitle_hash != file_hash.hexdigest():
+                    print("subtitle hash changed, deleting imported data")
                     Line.delete().where(Line.episode == e)
                     Phrase.delete().where(Phrase.episode == e)
                     e.phrases_imported = False
