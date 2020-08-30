@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+from typing import Optional
+
 colors_c1 = {
     "Travis": "#7592a4",
     "Marisha": "#bd6b1e",
@@ -72,24 +75,32 @@ single_speaker = {
 
 assert set(single_speaker["Handbooker Helper"].keys()) == set(range(1, 44 + 1))
 
-series_data = [
-    {
-        "name": "Campaign 1",
-        "playlist_id": "PL1tiwbzkOjQz7D0l_eLJGAISVtcL7oRu_",
-    },
-    {
-        "name": "Campaign 2",
-        "playlist_id": "PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2"
 
-    },
-    {
-        "name": "Handbooker Helper",
-        "playlist_id": "PL1tiwbzkOjQyr6-gqJ8r29j_rJkR49uDN",
-        "single_speaker": True
-    },
-    {
-        "name": "Mini Primetime",
-        "playlist_id": "PL1tiwbzkOjQz9kKDaPRPrX2E7RPTaxEZd",
-        "initial_speaker": "Will"
-    }
+@dataclass
+class SeriesData:
+    name: str
+    playlist_id: str
+    single_speaker: bool = False
+    initial_speaker: Optional[str] = None
+
+
+series_data = [
+    SeriesData(
+        name="Campaign 1",
+        playlist_id="PL1tiwbzkOjQz7D0l_eLJGAISVtcL7oRu_"
+    ),
+    SeriesData(
+        name="Campaign 2",
+        playlist_id="PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2"
+    ),
+    SeriesData(
+        name="Handbooker Helper",
+        playlist_id="PL1tiwbzkOjQyr6-gqJ8r29j_rJkR49uDN",
+        single_speaker=True
+    ),
+    SeriesData(
+        name="Mini Primetime",
+        playlist_id="PL1tiwbzkOjQz9kKDaPRPrX2E7RPTaxEZd",
+        initial_speaker="Will"
+    ),
 ]

@@ -28,7 +28,7 @@ def benchmark_query(query: SelectQuery, filename: str = None) -> Tuple[float, fl
     return result["Planning Time"], result["Execution Time"]
 
 
-def statistics(query: SelectQuery, filename: str, repeats: int = 500):
+def statistics(query: SelectQuery, filename: str, repeats: int = 500) -> None:
     ts = shutil.get_terminal_size((80, 20))
     print(filename.center(ts.columns, "-"))
     planning_times = []

@@ -1,7 +1,7 @@
 import os
 import re
 from html import unescape
-from typing import List, Optional
+from typing import List, Optional, Set
 
 from alive_progress import alive_bar
 from peewee import fn, chunked
@@ -28,7 +28,7 @@ def add_to_text(text: str, add: str) -> str:
     return add
 
 
-def insert_subtitle(text: str, person: str, subline: Subtitle, episode: Episode, order: int,
+def insert_subtitle(text: str, person: Optional[Person], subline: Subtitle, episode: Episode, order: int,
                     isnote: bool = False, ismeta: bool = False) -> Line:
     dbline = Line()
     if not text:
@@ -46,9 +46,9 @@ def insert_subtitle(text: str, person: str, subline: Subtitle, episode: Episode,
     return dbline
 
 
-def main():
+def main() -> None:
     os.nice(15)
-    all_people = set()
+    all_people: Set[str] = set()
     for series in Series.select().order_by(Series.id):
         for episode in Episode.select().where(
                 (Episode.text_imported == False) & (Episode.series == series) & (Episode.downloaded)

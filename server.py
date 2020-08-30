@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from flask import request, jsonify, Response
@@ -10,12 +9,13 @@ from psycopg2._psycopg import cursor
 from app import app
 from models import *
 
+
 # logger = logging.getLogger('peewee')
 # logger.addHandler(logging.StreamHandler())
 # logger.setLevel(logging.DEBUG)
 
 
-def add_cors(response):
+def add_cors(response: Response) -> Response:
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
     return response

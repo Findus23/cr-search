@@ -13,11 +13,11 @@ from models import Episode, Series, Line, Phrase
 from utils import srtdir, pretty_title
 
 
-def main():
+def main() -> None:
     os.nice(15)
     for series in series_data:
-        name = series["name"]
-        playlist_id = series["playlist_id"]
+        name = series.name
+        playlist_id = series.playlist_id
         is_campaign = "Campaign" in name
         try:
             s = Series.select().where(Series.title == name).get()
@@ -26,7 +26,7 @@ def main():
             s.title = name
 
         s.is_campaign = is_campaign
-        s.single_speaker = "single_speaker" in series and series["single_speaker"]
+        s.single_speaker = series.single_speaker
         s.save()
         ydl_opts = {
             'extract_flat': True
@@ -37,7 +37,7 @@ def main():
 
         print(v["url"] for v in videos)
 
-        ydl_opts = {
+        ydl_opts_download = {
             "writesubtitles": True,
             "subtitleslangs": ["en", "en-US"],
             "skip_download": True,
@@ -58,6 +58,8 @@ def main():
             if s.is_campaign:
                 try:
                     match = regex.search(video["title"])
+                    if not match:
+                        raise ValueError("No episode number found in title")
                     e.episode_number = int(match.group(1))
                 except AttributeError:
                     if s.title == "Campaign 1":  # one-shots at the end of campaign 1
@@ -71,8 +73,8 @@ def main():
             print(e.series.id, e.episode_number, e.pretty_title)
 
             vttfile = srtdir / str(e.id)
-            ydl_opts["outtmpl"] = str(vttfile)
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl_opts_download["outtmpl"] = str(vttfile)
+            with youtube_dl.YoutubeDL(ydl_opts_download) as ydl:
                 ydl.download([f'https://www.youtube.com/watch?v={e.youtube_id}'])
             if vttfile.with_suffix(".en-US.vtt").exists():
                 # few videos have en-US as language code instead of en
