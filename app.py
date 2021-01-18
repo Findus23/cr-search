@@ -1,14 +1,14 @@
-import sentry_sdk
 from flask import Flask
 from playhouse.flask_utils import FlaskDB
 from playhouse.pool import PooledPostgresqlDatabase
-from sentry_sdk.integrations.flask import FlaskIntegration
 
 import config
 
 DATABASE = PooledPostgresqlDatabase(**config.dbauth)
 
 if config.sentryDSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.flask import FlaskIntegration
     sentry_sdk.init(
         dsn=config.sentryDSN,
         integrations=[FlaskIntegration()]
