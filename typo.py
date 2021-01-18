@@ -7,7 +7,7 @@ typos = {
     "Sam": {"San", "Nott", "Sma", "Sasm", "Sm", "Ssam"},
     "Travis": {"Tarvis", "Travs", "Travia", "Traivs", "Tavis", "Trvis"},
     "Taliesin": {"Taiesin", "Talisin", "Talisen", "Taleisn", "Talisein", "Talieisin", "Talesin", "Talisan", "Taleisin",
-                 "Talieisn", "Talisien", "Tailesin"},
+                 "Talieisn", "Talisien", "Tailesin", "Tlaiesin"},
     "Marisha": {"Beau", "Mariasha", "Maisha", "Marisa", "Marish", "Marihsa", "Marsha", "Marsisha", "Marishaa",
                 "Marihsha", "\\Marisha", "Marisah", "Marissa", "Marirsha", "Marisaha", "Mairsha", "Marshia", "Marsiha",
                 "Marishia", "Marsiah", "Matisha", "Mraisha", "Amrisha", "<Arisha"},
