@@ -2,10 +2,10 @@ import os
 from dataclasses import dataclass
 from typing import Dict
 
-import spacy as spacy
+import en_core_web_md
 from alive_progress import alive_bar
 from peewee import chunked
-from spacy.lang.en import English
+from spacy.lang.en import Language
 from spacy.tokens.span import Span
 from spacy.tokens.token import Token
 
@@ -23,7 +23,7 @@ class Noun:
 
 lemma_cache: Dict[str, str] = {}
 
-nlp: English = spacy.load("en_core_web_sm", disable=["ner", "textcat"])
+nlp: Language = en_core_web_md.load(disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
 for episode in Episode.select().where((Episode.phrases_imported == False) & (Episode.text_imported == True)).order_by(
         Episode.id):
