@@ -7,6 +7,14 @@ optional = false
 python-versions = ">=2.7, <4"
 
 [[package]]
+name = "blinker"
+version = "1.4"
+description = "Fast, simple object-to-object and broadcast signaling"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "blis"
 version = "0.7.4"
 description = "The Blis BLAS-like linear algebra library, as a self-contained C-extension."
@@ -71,6 +79,7 @@ spacy-nightly = ">=3.0.0a41,<3.1.0"
 [package.source]
 type = "url"
 url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.0.0a0/en_core_web_md-3.0.0a0.tar.gz"
+
 [[package]]
 name = "flask"
 version = "1.1.2"
@@ -261,7 +270,9 @@ optional = false
 python-versions = "*"
 
 [package.dependencies]
+blinker = {version = ">=1.1", optional = true, markers = "extra == \"flask\""}
 certifi = "*"
+flask = {version = ">=0.11", optional = true, markers = "extra == \"flask\""}
 urllib3 = ">=1.10.0"
 
 [package.extras]
@@ -486,12 +497,15 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f6c68fc63ab0d4b4ae84fb8ac8b034370c4f9ad281e32a065da4095cb73e8404"
+content-hash = "45d05781701d898578f333cde9ef28bb6acc3ec35b0ba279f2be050865af5aff"
 
 [metadata.files]
 alive-progress = [
     {file = "alive-progress-1.6.2.tar.gz", hash = "sha256:642e1ce98becf226c8c36bf24e10221085998c5465a357a66fb83b7dc618b43e"},
     {file = "alive_progress-1.6.2-py3-none-any.whl", hash = "sha256:0f1111f56b1b870f5e5edd57e89fc97dc1ca0a73eb5c5a09533494c7e850a818"},
+]
+blinker = [
+    {file = "blinker-1.4.tar.gz", hash = "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"},
 ]
 blis = [
     {file = "blis-0.7.4-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:5b403deb2ad5515e1edb3c0867bccb5b974b461f24283d9219a3a761fd6dacc6"},
