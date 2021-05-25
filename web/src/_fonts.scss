@@ -162,3 +162,9 @@
   url("../fonts/Solbera Imitation/Solbera Imitation.otf") format("opentype");
   font-weight: normal;
 }
+
+@font-face {
+  font-family: "Dungeon Drop Case";
+  src: url("../fonts/Dungeon Drop Case/Dungeon Drop Case.woff2") format("woff2"),
+  url("../fonts/Dungeon Drop Case/Dungeon Drop Case.otf") format("opentype");
+}
