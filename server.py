@@ -89,7 +89,7 @@ def api_search():
     d: Line
     ri = 0
     for d in results:
-        entry = model_to_dict(d, extra_attrs=["rank"], exclude=global_excludes)
+        entry = model_to_dict(d, extra_attrs=["rank"], exclude=global_excludes + [Episode.subtitle_hash])
         entry["rank"] = float(entry["rank"])
         data.append({"centerID": d.id, "resultID": ri, "offset": 1, "lines": [entry]})
         ri += 1
@@ -120,6 +120,17 @@ def api_expand():
         data.append(entry)
 
     return jsonify(data)
+
+
+@app.route("/api/series")
+def series():
+    series_list = []
+
+    for series in Series.select():
+        series_list.append({"title": series.title, "id": series.id})
+    return jsonify({
+        "series": series_list
+    })
 
 
 @app.route("/api/episodes")

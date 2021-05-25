@@ -141,7 +141,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      serverData: require("../../data.json") as ServerData,
+      serverData: {"series": []} as ServerData,
       searchResult: [] as Result[],
       keyword: this.$route.params.keyword,
       series: this.$route.params.series,
@@ -177,6 +177,12 @@ export default Vue.extend({
     }
     const max = 640;
     this.ytWidth = (window.innerWidth < max ? window.innerWidth : max) - 2 * 2;
+    fetch(baseURL + "series")
+      .then((response) => response.json())
+      .then((data: ServerData) => {
+        this.serverData = data;
+      });
+
   },
   methods: {
     suggest(input: string) {

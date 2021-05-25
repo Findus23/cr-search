@@ -103,4 +103,13 @@ series_data = [
         playlist_id="PL1tiwbzkOjQz9kKDaPRPrX2E7RPTaxEZd",
         initial_speaker="Will"
     ),
+    SeriesData(
+        name="The Legend of The Legend of Vox Machina",
+        playlist_id="PL1tiwbzkOjQwJdoNetaNJE1zZVOE7xi8u"
+    ),
+    SeriesData(
+        name="Crit Recap Animated",
+        playlist_id="PL1tiwbzkOjQy8yF8esjgVomDXKD-XmG20",
+        initial_speaker="?"
+    )
 ]

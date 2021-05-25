@@ -1,6 +1,5 @@
 import hashlib
 import os
-import re
 from datetime import datetime
 from shutil import move
 from subprocess import run
@@ -10,7 +9,7 @@ from peewee import DoesNotExist
 
 from data import series_data
 from models import Episode, Series, Line, Phrase
-from utils import srtdir, pretty_title
+from utils import srtdir, pretty_title, title_to_episodenumber
 
 
 def main() -> None:
@@ -42,11 +41,12 @@ def main() -> None:
             "subtitleslangs": ["en", "en-US"],
             "skip_download": True,
         }
-        regex = re.compile(r"Ep(?:is|si)ode (\d+)")
 
         for nr, video in enumerate(videos, 1):
             try:
                 e = Episode.select().where((Episode.series == s) & (Episode.video_number == nr)).get()
+                if (e.series.id == 1) or (e.series.id == 2 and e.video_number < 90):
+                    continue
                 # if e.downloaded:
                 #     continue
             except DoesNotExist:
@@ -56,16 +56,7 @@ def main() -> None:
             e.title = video["title"]
             e.pretty_title = pretty_title(video["title"])
             if s.is_campaign:
-                try:
-                    match = regex.search(video["title"])
-                    if not match:
-                        raise ValueError("No episode number found in title")
-                    e.episode_number = int(match.group(1))
-                except ValueError:
-                    if s.title == "Campaign 1":  # one-shots at the end of campaign 1
-                        e.episode_number = e.video_number - 3
-                    else:
-                        raise
+                e.episode_number = title_to_episodenumber(e.title, e.video_number)
             else:
                 e.episode_number = e.video_number
             e.youtube_id = video["url"]
