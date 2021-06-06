@@ -56,7 +56,7 @@ def main() -> None:
             e.title = video["title"]
             e.pretty_title = pretty_title(video["title"])
             if s.is_campaign:
-                if e.series == 1 and "One-Shot" in e.title:
+                if e.series.id == 1 and "One-Shot" in e.title:
                     continue
                 e.episode_number = title_to_episodenumber(e.title, e.video_number)
             else:
