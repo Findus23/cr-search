@@ -45,8 +45,8 @@ def main() -> None:
         for nr, video in enumerate(videos, 1):
             try:
                 e = Episode.select().where((Episode.series == s) & (Episode.video_number == nr)).get()
-                if (e.series.id == 1) or (e.series.id == 2 and e.video_number < 90):
-                    continue
+                # if (e.series.id == 1) or (e.series.id == 2 and e.video_number < 90):
+                #     continue
                 # if e.downloaded:
                 #     continue
             except DoesNotExist:
