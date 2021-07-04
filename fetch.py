@@ -63,12 +63,11 @@ def main(args) -> None:
             video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
             if nr == 1:
                 file = static_path / f"{s.slug}.webp"
-                if file.exists():
-                    continue
-                r = requests.get(f"https://i.ytimg.com/vi_webp/{e.youtube_id}/maxresdefault.webp")
-                r.raise_for_status()
-                with file.open("wb")as f:
-                    f.write(r.content)
+                if not file.exists():
+                    r = requests.get(f"https://i.ytimg.com/vi_webp/{e.youtube_id}/maxresdefault.webp")
+                    r.raise_for_status()
+                    with file.open("wb")as f:
+                        f.write(r.content)
             e.upload_date = datetime.strptime(video_info["upload_date"], "%Y%m%d")
             e.title = video_info["title"]
             e.pretty_title = pretty_title(video_info["title"])
