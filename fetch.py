@@ -1,9 +1,12 @@
+import argparse
 import hashlib
 import os
 from datetime import datetime
+from pathlib import Path
 from shutil import move
 from subprocess import run
 
+import requests
 import youtube_dl
 from peewee import DoesNotExist
 
@@ -11,8 +14,10 @@ from data import series_data
 from models import Episode, Series, Line, Phrase
 from utils import srtdir, pretty_title, title_to_episodenumber
 
+static_path = Path("static")
 
-def main() -> None:
+
+def main(args) -> None:
     os.nice(15)
     for series in series_data:
         name = series.name
@@ -26,42 +31,53 @@ def main() -> None:
 
         s.is_campaign = is_campaign
         s.single_speaker = series.single_speaker
+        s.slug = series.slug
         s.save()
         ydl_opts = {
             'extract_flat': True
         }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            playlist = ydl.extract_info("https://www.youtube.com/playlist?list=" + playlist_id, download=False)
-            videos = playlist["entries"]
+        if series.playlist_id:
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                playlist = ydl.extract_info("https://www.youtube.com/playlist?list=" + playlist_id, download=False)
+                videos = playlist["entries"]
 
-        print(v["url"] for v in videos)
-
+            urls = [v["url"] for v in videos]
+        else:
+            urls = series.videos
         ydl_opts_download = {
             "writesubtitles": True,
             "subtitleslangs": ["en", "en-US"],
             "skip_download": True,
         }
 
-        for nr, video in enumerate(videos, 1):
+        for nr, url in enumerate(urls, 1):
             try:
-                e = Episode.select().where((Episode.series == s) & (Episode.video_number == nr)).get()
-                # if (e.series.id == 1) or (e.series.id == 2 and e.video_number < 90):
-                #     continue
-                # if e.downloaded:
-                #     continue
+                e = Episode.select().where((Episode.youtube_id == url)).get()
+                if args.skip_existing and e.downloaded:
+                    continue
             except DoesNotExist:
                 e = Episode()
                 e.series = s
                 e.video_number = nr
-            e.title = video["title"]
-            e.pretty_title = pretty_title(video["title"])
-            if s.is_campaign:
-                if e.series.id == 1 and ("Search For Grog" in e.title or "Search For Bob" in e.title):
+            e.youtube_id = url
+            video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
+            if nr == 1:
+                file = static_path / f"{s.slug}.webp"
+                if file.exists():
+                    continue
+                r = requests.get(f"https://i.ytimg.com/vi_webp/{e.youtube_id}/maxresdefault.webp")
+                r.raise_for_status()
+                with file.open("wb")as f:
+                    f.write(r.content)
+            e.upload_date = datetime.strptime(video_info["upload_date"], "%Y%m%d")
+            e.title = video_info["title"]
+            e.pretty_title = pretty_title(video_info["title"])
+            if s.is_campaign or "Exandria" in e.title:
+                if e.series.id == 1 and ("One-Shot" in e.title or "Search For Bob" in e.title):
                     continue
                 e.episode_number = title_to_episodenumber(e.title, e.video_number)
             else:
                 e.episode_number = e.video_number
-            e.youtube_id = video["url"]
             e.save()
             print(e.series.id, e.episode_number, e.pretty_title)
 
@@ -100,4 +116,8 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description="fetch episode data from YouTube")
+    parser.add_argument("--skip-existing", dest="skip_existing", action="store_true",
+                        help="don't check for update on existing videos")
+    args = parser.parse_args()
+    main(args)

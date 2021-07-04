@@ -9,6 +9,12 @@ export interface Series {
   "is_campaign": boolean;
   "single_speaker": boolean;
   "title": string;
+  "slug": string;
+}
+
+export interface SeriesData extends Series {
+  "last_upload": string;
+  "length": number;
 }
 
 export interface Episode {
@@ -44,19 +50,15 @@ export interface ServerMessage {
   message: string;
 }
 
-export interface SeriesNames {
-  "id": number;
-  "title": string;
-}
-
 export interface ServerData {
-  "series": SeriesNames[];
+  "series": SeriesData[];
 }
 
 export interface EpisodeDetailed extends Episode {
   "downloaded": boolean;
   "text_imported": boolean;
   "phrases_imported": boolean;
+  "upload_date": string;
 }
 
 export interface SeriesData {

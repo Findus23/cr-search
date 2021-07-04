@@ -17,7 +17,10 @@ def milliseconds_to_td(ms: int) -> timedelta:
 
 
 def episode_speaker(series_title: str, episode: int) -> Optional[str]:
-    series = single_speaker[series_title]
+    try:
+        series = single_speaker[series_title]
+    except KeyError:
+        return "?"
     if episode in series:
         return series[episode]
     return None
@@ -41,6 +44,8 @@ def title_to_episodenumber(title: str, video_number: int) -> int:
     except ValueError:
         if title == "Campaign 1":  # one-shots at the end of campaign 1
             return video_number - 3
+        elif "Exandria" in title:
+            return 1
         else:
             raise
 

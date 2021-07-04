@@ -1,14 +1,17 @@
+-- number of subtitle lines per person
 select name, count(name) as count, sum(length(text)) as chars
 from line
          join person p on line.person_id = p.id
 group by name
 order by chars desc;
 
+-- most common noun chunks
 select text, sum(count) as count
 from phrase
 group by text
 order by count desc;
 
+-- longest noun chunks
 select text, char_length(phrase.text) as len
 from phrase
 order by len desc;
@@ -72,4 +75,4 @@ FROM "line" AS "t1"
 WHERE ((("t1"."search_text" @@ websearch_to_tsquery('english', 'house')) AND ("t3"."episode_number" <= 1000)) AND
        ("t3"."season" = 1))
 ORDER BY rank DESC
-LIMIT 20
+LIMIT 20;

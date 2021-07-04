@@ -7,7 +7,7 @@ typos = {
     "Sam": {"San", "Nott", "Sma", "Sasm", "Sm", "Ssam"},
     "Travis": {"Tarvis", "Travs", "Travia", "Traivs", "Tavis", "Trvis"},
     "Taliesin": {"Taiesin", "Talisin", "Talisen", "Taleisn", "Talisein", "Talieisin", "Talesin", "Talisan", "Taleisin",
-                 "Talieisn", "Talisien", "Tailesin", "Tlaiesin"},
+                 "Talieisn", "Talisien", "Tailesin", "Tlaiesin", "Tlaiesin"},
     "Marisha": {"Beau", "Mariasha", "Maisha", "Marisa", "Marish", "Marihsa", "Marsha", "Marsisha", "Marishaa",
                 "Marihsha", "\\Marisha", "Marisah", "Marissa", "Marirsha", "Marisaha", "Mairsha", "Marshia", "Marsiha",
                 "Marishia", "Marsiah", "Matisha", "Mraisha", "Amrisha", "<Arisha"},
@@ -16,10 +16,16 @@ typos = {
     "Ashley": {"Ashly", "Ashely", "Ashey", "Aslhey", "Ahsley"},
     "All": {"Everyone", "Everybody"},
     "Mark": {"Marik"},
-    "Brian": {"Brain"},
+    "Brian": {"Brain", "\"Brian"},
     "Joe": {"Jroe"},
     "Man Off-Camera": {"Man Off Camera"},
-    "Off-Screen": {"Offscreen"}
+    "Off-Screen": {"Offscreen"},
+    "Anjali": {"Anajli"},
+    "H. Michael": {"H Michael", "H.Michael"},
+    "Allura": {"Alura"},
+    "Krystina": {"Krystin"},
+    "Michelle":{"Michlle"},
+    "Alicia":{"Alica"}
 }
 replacements = {}
 for correct, typoset in typos.items():

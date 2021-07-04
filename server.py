@@ -21,15 +21,15 @@ def add_cors(response: Response) -> Response:
     return response
 
 
-def suggest(query: str, until: int, series: int, limit: int = 10) -> ModelSelect:
-    return Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).join(Episode).where(
-        (Episode.series == series) &
+def suggest(query: str, until: int, series: str, limit: int = 10) -> ModelSelect:
+    return Phrase.select(Phrase.text, Alias(fn.SUM(Phrase.count), "total_count")).join(Episode).join(Series).where(
+        (Episode.series.slug == series) &
         (Episode.episode_number <= until) &
         (Phrase.text.contains(query))
     ).group_by(Phrase.text).order_by(SQL("total_count DESC")).limit(limit)
 
 
-def search(query: str, until: int, series: int, limit: int = 50) -> ModelSelect:
+def search(query: str, until: int, series: str, limit: int = 50) -> ModelSelect:
     a = Alias(fn.ts_rank_cd(Line.search_text, fn.websearch_to_tsquery('english', query), 1 + 4), "rank")
 
     return Line.select(Line, Person, Episode, Series, a).where(
@@ -37,7 +37,7 @@ def search(query: str, until: int, series: int, limit: int = 50) -> ModelSelect:
         &
         (Episode.episode_number <= until)
         &
-        (Episode.series == series)
+        (Episode.series.slug == series)
     ).order_by(SQL("rank DESC")) \
         .join(Person).switch(Line) \
         .join(Episode).join(Series) \
@@ -127,7 +127,13 @@ def series():
     series_list = []
 
     for series in Series.select():
-        series_list.append({"title": series.title, "id": series.id})
+        last_episode: Episode = Episode.select().where(Episode.series == series).order_by(
+            Episode.upload_date.desc()).limit(
+            1).get()
+        series_data = model_to_dict(series)
+        series_data["last_upload"] = last_episode.upload_date.strftime("%Y-%m-%d")
+        series_data["length"] = Episode.select().where(Episode.series == series).count()
+        series_list.append(series_data)
     return jsonify({
         "series": series_list
     })
@@ -144,6 +150,8 @@ def api_episodes():
         series_data = []
         for episode in episodes:
             entry = model_to_dict(episode, exclude=[Episode.series, Episode.title])
+            if entry["upload_date"]:
+                entry["upload_date"] = entry["upload_date"].strftime("%Y-%m-%d")
             series_data.append(entry)
         data.append({
             "meta": model_to_dict(series),

@@ -6,8 +6,9 @@
                 <span>Find your favourite Critical Role quote!</span>
             </div>
             <transition name="fade">
-                <div id="page-mask" v-if="showIntro || showYtOptIn"></div>
+                <div id="page-mask" v-if="showIntro || showYtOptIn|| showSeriesSelector"></div>
             </transition>
+            <SeriesSelector v-if="showSeriesSelector" :serverData="serverData"></SeriesSelector>
             <div v-if="showIntro" class="showIntro popup">
                 <div class="title"><h1>Critical Role Search</h1></div>
                 <div>
@@ -76,11 +77,15 @@
                        class="form-control" type="number" v-model="episode"
                        min="1" max="300">
                 <span>in</span>
-                <select title="campaign selection" class="custom-select" v-model="series">
-                    <option v-for="series in serverData.series" v-bind:value="series.id">
-                        {{ series.title }}
-                    </option>
-                </select>
+                <!--                <select title="campaign selection" class="custom-select" v-model="series">-->
+                <!--                    <option v-for="series in serverData.series" v-bind:value="series.slug">-->
+                <!--                        {{ series.title }}-->
+                <!--                    </option>-->
+                <!--                </select>-->
+                <button class="btn btn-outline-primary" @click="showSeriesSelector=true">
+                    {{ seriesTitle }}
+                </button>
+
             </div>
             <b-alert v-if="error" show :variant="error.status">{{ error.message }}</b-alert>
             <div class="entry" v-for="result in searchResult">
@@ -120,13 +125,14 @@ import Vue from "vue";
 // @ts-ignore
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 // import "@trevoreyre/autocomplete-vue/dist/style.css";
-import {Line, Result, ServerData, ServerMessage} from "@/interfaces";
+import {Line, Result, Series, ServerData, ServerMessage} from "@/interfaces";
 import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
 // @ts-ignore
 import VueYoutube from "vue-youtube";
 import debounce from "lodash-es/debounce";
 
 import {baseURL} from "@/utils";
+import SeriesSelector from "@/components/SeriesSelector.vue";
 
 Vue.use(VueYoutube);
 
@@ -134,6 +140,7 @@ Vue.use(VueYoutube);
 export default Vue.extend({
   name: "home",
   components: {
+    SeriesSelector,
     Autocomplete,
     BAlert,
     BIcon,
@@ -141,7 +148,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      serverData: {"series": []} as ServerData,
+      serverData: {series: []} as ServerData,
       searchResult: [] as Result[],
       keyword: this.$route.params.keyword,
       series: this.$route.params.series,
@@ -153,7 +160,8 @@ export default Vue.extend({
       showYT: false,
       ytResult: undefined as Result | undefined,
       ytWidth: 640,
-      showIntro: true
+      showIntro: true,
+      showSeriesSelector: false
     };
   },
   mounted(): void {
@@ -164,7 +172,7 @@ export default Vue.extend({
       this.ytOptIn = localStorage.ytOptIn;
     }
     if (this.series == null) {
-      this.series = "2";
+      this.series = "campaign2";
     }
     if (this.episode == null) {
       this.episode = "10";
@@ -302,6 +310,10 @@ export default Vue.extend({
       this.ytVideoID = undefined;
       this.ytResult = undefined;
     },
+    selectSeries(series: Series): void {
+      this.series = series.slug;
+      this.showSeriesSelector = false;
+    }
   },
   computed: {
     ytLink(): string {
@@ -314,6 +326,22 @@ export default Vue.extend({
       const min = Math.floor(starttime / 60);
       const sec = Math.floor(starttime % 60);
       return `https://www.youtube.com/watch?v=${id}&t=${min}m${sec}s`;
+    },
+    seriesFromSlug(): Series | undefined {
+      if (!this.series) {
+        return undefined;
+      }
+      return this.serverData.series.find((series) => {
+        return series.slug === this.series;
+      });
+    },
+    seriesTitle(): string {
+      const series = this.seriesFromSlug;
+      if (series) {
+        return series.title;
+      } else {
+        return this.series;
+      }
     }
   },
   watch: {

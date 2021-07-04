@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
 colors_c1 = {
     "Travis": "#7592a4",
@@ -79,7 +79,9 @@ assert set(single_speaker["Handbooker Helper"].keys()) == set(range(1, 44 + 1))
 @dataclass
 class SeriesData:
     name: str
-    playlist_id: str
+    slug: str
+    playlist_id: Optional[str] = None
+    videos: Optional[List[str]] = None
     single_speaker: bool = False
     initial_speaker: Optional[str] = None
 
@@ -87,29 +89,197 @@ class SeriesData:
 series_data = [
     SeriesData(
         name="Campaign 1",
+        slug="campaign1",
         playlist_id="PL1tiwbzkOjQz7D0l_eLJGAISVtcL7oRu_"
     ),
     SeriesData(
         name="Campaign 2",
+        slug="campaign2",
         playlist_id="PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2"
     ),
     SeriesData(
         name="Handbooker Helper",
+        slug="HandbookerHelper",
         playlist_id="PL1tiwbzkOjQyr6-gqJ8r29j_rJkR49uDN",
         single_speaker=True
     ),
     SeriesData(
         name="Mini Primetime",
+        slug="MiniPrimetime",
         playlist_id="PL1tiwbzkOjQz9kKDaPRPrX2E7RPTaxEZd",
         initial_speaker="Will"
     ),
     SeriesData(
         name="The Legend of The Legend of Vox Machina",
+        slug="TheLegendofTheLegendofVoxMachina",
         playlist_id="PL1tiwbzkOjQwJdoNetaNJE1zZVOE7xi8u"
     ),
     SeriesData(
         name="Crit Recap Animated",
+        slug="CritRecapAnimated",
         playlist_id="PL1tiwbzkOjQy8yF8esjgVomDXKD-XmG20",
         initial_speaker="?"
+    ),
+    SeriesData(
+        name="Exandria Unlimited",
+        slug="ExandriaUnlimited",
+        playlist_id="PL1tiwbzkOjQzSnYHVT8X4pyMIbSX3i4gz"
+    ),
+    SeriesData(
+        name="Critter Hug",
+        slug="CritterHug",
+        playlist_id="PL1tiwbzkOjQw6CxZVgtRsY_0WqK5DsNE1",
+        single_speaker=True  # no names in subtitles
+    ),
+    SeriesData(
+        name="UnDeadwood",
+        slug="UnDeadwood",
+        # playlist_id="PL1tiwbzkOjQwuwLkGnqVdJnzQ-YNX2_qz"
+        videos=["AEIGOY6WDoA", "JlAW2qeLsL0", "jSGw5L9xds0", "WHxuuQ-P2Cg"]
+    ),
+    SeriesData(
+        name="The Adventures of the Darrington Brigade",
+        slug="darringtonBrigade",
+        videos=["pVu_Ib1fpVI"]
+    ),
+    SeriesData(
+        name="Dalen's Closet",
+        slug="DalensCloset",
+        videos=["0oclW3MXABA"]
+    ),
+    SeriesData(
+        name="Call of Cthulhu: Shadow of the Crystal Palace",
+        slug="CallOfCthulhu",
+        videos=["0uhqZdJ8swQ"],
+        single_speaker=True  # no names in subtitles
+    ),
+    SeriesData(
+        name="The Search For Bob",
+        slug="TheSearchForBob",
+        videos=["AfEZF5G9HV4"]
+    ),
+    # Tails of Equestria One-Shot
+    SeriesData(
+        name="Stephen Colbert's D&D Adventure with Matthew Mercer",
+        slug="StephenColbertOneShot",
+        videos=["3658C2y4LlA"],
+        single_speaker=True  # no names in subtitles
+    ),
+    SeriesData(
+        name="The Search For Grog",
+        slug="TheSearchForGrog",
+        videos=["hi5pEHs76TE"]
+    ),
+    SeriesData(
+        name="The Night Before Critmas",
+        slug="TheNightBeforeCritmas",
+        videos=["8zxeGydXY98"],
+        single_speaker=True  # no names in subtitles
+    ),
+    SeriesData(
+        name="Honey Heist",
+        slug="HoneyHeist",
+        videos=["9jbGshiuFs4", "MSNK4ThPHqc", "whbc64O0Yik"]
+    ),
+    SeriesData(
+        name="Epic Level Battle Royale One-Shot",
+        slug="EpicLevelBattleRoyaleOneShot",
+        videos=["q3BGg0d8DvU"]
+    ),
+    SeriesData(
+        name="Sam's One-Shot",
+        slug="SamsOneShot",
+        videos=["LfeAYN8f1AU"]
+    ),
+    SeriesData(
+        name="Hearthstone One-Shot",
+        slug="HearthstoneOneShot",
+        videos=["qA4-q4gk_yY"]
+    ),
+    SeriesData(
+        name="Grog's One-Shot",
+        slug="GrogsOneShot",
+        videos=["kLnvrocetq8"]
+    ),
+    SeriesData(
+        name="Bar Room Blitz",
+        slug="BarRoomBlitz",
+        videos=["rnq3VBQu_kI"]
+    ),
+    SeriesData(
+        name="Thursday By Night",
+        slug="ThursdayByNight",
+        videos=["rnq3VBQu_kI", "eXPu1wk-Ev4"]
+    ),
+    SeriesData(
+        name="Shadow of War",
+        slug="ShadowofWar",
+        videos=["c9lC5_qjkFE", "Mk21j54rX-M"]
+    ),
+    SeriesData(
+        name="Battle Royale One-Shot",
+        slug="BattleRoyaleOneShot",
+        videos=["tasz1xUVLhg"]
+    ),
+    SeriesData(
+        name="Liam's Quest: Full Circle",
+        slug="LiamsQuestFullCircle",
+        videos=["LHita2t54xY"]
+    ),
+    SeriesData(
+        name="The Return of Liam!",
+        slug="TheReturnofLiam",
+        videos=["LgHm3Ct0Zh0"]
+    ),
+    SeriesData(
+        name="Show Q&A and Battle Royale",
+        slug="ShowQnAandBattleRoyale",
+        videos=["4FI8qB-yh-w"]
+    ),
+    SeriesData(
+        name="Liam's Quest!",
+        slug="LiamsQuest",
+        videos=["7Tdl6GhiSI8"]
+    ),
+    SeriesData(
+        name="Deadlands One-Shot",
+        slug="DeadlandsOneShot",
+        videos=["q0hjGf2bK08"]
+    ),
+    SeriesData(
+        name="TO THE POOP! - The Goblins",
+        slug="ToThePoop",
+        videos=["u8MRyyFDX3c"]
+    ),
+    SeriesData(
+        name="Critical Trolls",
+        slug="CriticalTrolls",
+        videos=["EjimabBvZgw"]
+    ),
+    SeriesData(
+        name="Cinderbrush: A Monsterhearts Story",
+        slug="Cinderbrush",
+        videos=["51ykIVq9KcM"]
+    ),
+    SeriesData(
+        name="DOOM Eternal One-Shot",
+        slug="DOOMEternalOneShot",
+        videos=["CX8I4M7MPo4"]
+    ),
+    SeriesData(
+        name="Diablo One Shot",
+        slug="DiabloOneShot",
+        videos=["yODMT1m85FQ"]
+    ),
+    SeriesData(
+        name="The Elder Scrolls Online: Blackwood",
+        slug="TheElderScrollsOnline",
+        videos=["E-YCzpYDIyA"]
+    ),
+    SeriesData(
+        name="Vox Machina vs. Mighty Nein",
+        slug="VoxMachinaVsMightyNein",
+        videos=["LpBIQhWAhuM"]
     )
+
 ]

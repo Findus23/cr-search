@@ -14,6 +14,7 @@
                     <th>Title</th>
                     <th>Episode</th>
                     <th>Video</th>
+                    <th>Upload Date</th>
                     <th>Subtitles available and fetched</th>
                     <th>Subtitles imported in search</th>
                     <th>Phrases imported for search suggestions</th>
@@ -27,6 +28,7 @@
                     </td>
                     <td>{{ episode.episode_number }}</td>
                     <td>{{ episode.video_number }}</td>
+                    <td>{{episode.upload_date}}</td>
                     <td class="text-center">
                         <CheckMark :status="episode.downloaded"></CheckMark>
                     </td>

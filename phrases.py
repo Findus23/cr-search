@@ -74,7 +74,7 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
 
         num_per_chunk = 100
         chunks = chunked(phrases, num_per_chunk)
-        with alive_bar(len(phrases) // num_per_chunk + 1) as bar:
+        with alive_bar(len(phrases) // num_per_chunk + 1, title="saving") as bar:
             for chunk in chunks:
                 bar()
                 Phrase.bulk_create(chunk)
