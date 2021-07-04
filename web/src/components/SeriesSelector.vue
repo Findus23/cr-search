@@ -11,7 +11,7 @@
         <transition-group name="flip-list" class="seriesList" tag="div">
             <div class="series" v-for="series in sortedSeries" @click="selectSeries(series)" :key="series.id">
                 <span>{{ series.title }}</span>
-                <img :src="'http://127.0.0.1:5000/static/'+series.slug+'.webp'">
+                <img :src="'https://cr-search.lw1.at/static/'+series.slug+'.webp'">
             </div>
         </transition-group>
     </div>
