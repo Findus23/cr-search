@@ -58,7 +58,7 @@ def main() -> None:
             file = srtdir / f"{episode.id}.srt"
             strtext = file.read_text()
             subtitlelines: List[Subtitle] = list(parse(strtext))
-            print(episode.video_number, episode.title)
+            print(episode.video_number, episode.pretty_title)
             person: Optional[Person] = None
             with db.atomic():
                 dblines = []

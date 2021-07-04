@@ -27,7 +27,7 @@ nlp: Language = en_core_web_md.load(disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
 for episode in Episode.select().where((Episode.phrases_imported == False) & (Episode.text_imported == True)).order_by(
         Episode.id):
-    print(episode.video_number, episode.title)
+    print(episode.video_number, episode.pretty_title)
     person = None
     text = ""
     line_select = Line.select().where(Line.episode == episode)
