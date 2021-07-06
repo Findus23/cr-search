@@ -9,17 +9,18 @@
         <label for="search">search</label>
 
         <transition-group name="flip-list" class="seriesList" tag="div">
-            <div class="series" v-for="series in sortedSeries" @click="selectSeries(series)" :key="series.id">
-                <span>{{ series.title }}</span>
+            <router-link class="series" v-for="series in sortedSeries" :to="createLink(series)"
+                         @click.native="selectSeries" :key="series.id">
+                <div>{{ series.title }}</div>
                 <img :src="'https://cr-search.lw1.at/static/'+series.slug+'.webp'">
-            </div>
+            </router-link>
         </transition-group>
     </div>
 </template>
 
 <script lang="ts">
 import Vue, {PropType} from "vue";
-import {Series, SeriesData, ServerData} from "@/interfaces";
+import {SeriesData, ServerData} from "@/interfaces";
 
 export default Vue.extend({
   name: "SeriesSelector",
@@ -35,9 +36,7 @@ export default Vue.extend({
   },
   computed: {
     sortedSeries(): SeriesData[] {
-      console.log(this.search);
       return this.serverData.series.filter((series) => {
-        console.log(series.title.includes(this.search))
         if (!series.is_campaign && this.onlyCampaigns) {
           return false;
         }
@@ -52,9 +51,17 @@ export default Vue.extend({
     }
   },
   methods: {
-    selectSeries(series: SeriesData): void {
+    selectSeries(): void {
       // @ts-ignore
-      this.$parent.selectSeries(series);
+      this.$parent.showSeriesSelector = false;
+    },
+    createLink(series: SeriesData) {
+
+      const episode = (series.length === 1) ? "-" : 10;
+      return {
+        name: "search",
+        params: {series: series.slug, episode: episode}
+      };
     }
   }
 });

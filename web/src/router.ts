@@ -11,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/search/campaign2/10/",
+      redirect: "/campaign2/10/",
     },
     {
       path: "/episodes",
@@ -20,14 +20,10 @@ export default new Router({
     },
     {
       path: "/:something/",
-      redirect: "/search/campaign2/10/",
+      redirect: "/campaign2/10/",
     },
     {
-      path: "/:something/:somethingElse/",
-      redirect: "/search/campaign2/10/",
-    },
-    {
-      path: "/search/:series/:episode/:keyword?",
+      path: "/:series/:episode/:keyword?",
       name: "search",
       component: Home,
       // props: true,

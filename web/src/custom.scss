@@ -25,7 +25,10 @@ body {
   font-family: "Nodesto Caps Condensed", cursive;
 }
 
-.inputlist, .inputlist input, .inputlist select {
+.inputlist, .inputlist input, .inputlist select,
+
+,
+.inputlist button {
   font-family: "Mr Eaves Small Caps", serif;
   font-weight: bold;
   font-size: 1.8rem;
@@ -39,14 +42,18 @@ body {
     justify-content: space-between;
   }
 
-  input, select {
+  input, select, button {
     background: transparent;
     color: $body-color;
     border: 1px dashed $border-color;
-
+    transition: background-color .2s;
+    border-radius: 0;
     &:focus, &:active {
       background: transparent;
       color: $body-color;
+    }
+    &:hover{
+      background: rgba(177, 148, 54, 0.11);
     }
   }
 

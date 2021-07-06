@@ -9,44 +9,7 @@
                 <div id="page-mask" v-if="showIntro || showYtOptIn|| showSeriesSelector"></div>
             </transition>
             <SeriesSelector v-if="showSeriesSelector" :serverData="serverData"></SeriesSelector>
-            <div v-if="showIntro" class="showIntro popup">
-                <div class="title"><h1>Critical Role Search</h1></div>
-                <div>
-                    <p>
-                        This website uses subtitles to allow a full text search through all
-                        <a href="https://critrole.com/">Critical Role</a> episodes.
-                    </p>
-                    <p>Subtitles for Campaign 1 and Campaign 2 up to Episode 54 by the
-                        <a href="https://crtranscript.tumblr.com/" target="_blank" rel="noopener">CR Transcript
-                            Team</a>,
-                        all other subtitles are by the Critical Role team.
-                    </p>
-                    <p>
-                        This website is licensed under the
-                        <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-3.0</a>.
-                        You can find the source <a href="#">here</a>.
-                    </p>
-                    <dl>
-                        <dt>Fonts</dt>
-                        <dd>
-                            <a href="https://github.com/jonathonf/solbera-dnd-fonts" target="_blank" rel="noopener">
-                                by Solbera and Ryrok
-                            </a> (CC BY-SA 4.0)
-                        </dd>
-                        <dt>Design</dt>
-                        <dd>
-                            Inspired by
-                            <a href="https://homebrewery.naturalcrit.com/" target="_blank" rel="noopener">
-                                The Homebrewery
-                            </a>
-                            (MIT License)
-                        </dd>
-                    </dl>
-                </div>
-                <div class="buttonrow">
-                    <button class="btn" @click="showIntro=false">Close</button>
-                </div>
-            </div>
+            <Intro v-if="showIntro"></Intro>
             <div v-if="showYtOptIn" class="ytoptin popup">
                 <div>
                     <p>This play button allows you to watch the exact timestamp of this quote on YouTube.
@@ -70,10 +33,10 @@
             </div>
             <div class="inputlist">
                 <span>Search for</span>
-                <autocomplete :defaultValue="keyword" :search="suggest" @submit="handleSubmit"
+                <autocomplete :defaultValue="this.$route.params.keyword" :search="suggest" @submit="handleSubmit"
                               ref="searchInput"></autocomplete>
-                <span>up to episode </span>
-                <input title="search until episode number"
+                <span v-if="!isOneShot">up to episode </span>
+                <input v-if="!isOneShot" title="search until episode number"
                        class="form-control" type="number" v-model="episode"
                        min="1" max="300">
                 <span>in</span>
@@ -82,8 +45,11 @@
                 <!--                        {{ series.title }}-->
                 <!--                    </option>-->
                 <!--                </select>-->
-                <button class="btn btn-outline-primary" @click="showSeriesSelector=true">
+                <button class="btn seriesSelectorButton" @click="showSeriesSelector=true">
                     {{ seriesTitle }}
+                </button>
+                <button class="btn submit" @click="handleSubmit(undefined)">
+                    !
                 </button>
 
             </div>
@@ -133,6 +99,7 @@ import debounce from "lodash-es/debounce";
 
 import {baseURL} from "@/utils";
 import SeriesSelector from "@/components/SeriesSelector.vue";
+import Intro from "@/components/Intro.vue";
 
 Vue.use(VueYoutube);
 
@@ -140,6 +107,7 @@ Vue.use(VueYoutube);
 export default Vue.extend({
   name: "home",
   components: {
+    Intro,
     SeriesSelector,
     Autocomplete,
     BAlert,
@@ -150,8 +118,6 @@ export default Vue.extend({
     return {
       serverData: {series: []} as ServerData,
       searchResult: [] as Result[],
-      keyword: this.$route.params.keyword,
-      series: this.$route.params.series,
       episode: this.$route.params.episode,
       error: undefined as ServerMessage | undefined,
       ytOptIn: false,
@@ -171,16 +137,13 @@ export default Vue.extend({
     if (localStorage.ytOptIn) {
       this.ytOptIn = localStorage.ytOptIn;
     }
-    if (this.series == null) {
-      this.series = "campaign2";
-    }
     if (this.episode == null) {
       this.episode = "10";
     }
     if (this) {
       document.title = "CR Search";
     }
-    if (this.keyword) {
+    if (this.$route.params.keyword) {
       this.search();
     }
     const max = 640;
@@ -194,7 +157,7 @@ export default Vue.extend({
   },
   methods: {
     suggest(input: string) {
-      const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&series=" + this.series;
+      const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&series=" + this.$route.params.series;
 
       return new Promise((resolve) => {
         if (input.length < 1) {
@@ -209,13 +172,15 @@ export default Vue.extend({
     },
     handleSubmit(result: string) {
       // @ts-ignore
-      this.keyword = result || this.$refs.searchInput.value;
+      const newKeyword = result || this.$refs.searchInput.value;
+      this.$router.push({params: {...this.$route.params, keyword: newKeyword}});
+
     },
     search(): void {
-      if (!this.keyword) {
+      if (!this.$route.params.keyword) {
         return;
       }
-      const url = baseURL + "search?query=" + this.keyword + "&until=" + this.episode + "&series=" + this.series;
+      const url = baseURL + "search?query=" + this.$route.params.keyword + "&until=" + this.episode + "&series=" + this.$route.params.series;
 
       fetch(url)
         .then((response) => response.json())
@@ -310,10 +275,6 @@ export default Vue.extend({
       this.ytVideoID = undefined;
       this.ytResult = undefined;
     },
-    selectSeries(series: Series): void {
-      this.series = series.slug;
-      this.showSeriesSelector = false;
-    }
   },
   computed: {
     ytLink(): string {
@@ -328,11 +289,11 @@ export default Vue.extend({
       return `https://www.youtube.com/watch?v=${id}&t=${min}m${sec}s`;
     },
     seriesFromSlug(): Series | undefined {
-      if (!this.series) {
+      if (!this.$route.params.series) {
         return undefined;
       }
       return this.serverData.series.find((series) => {
-        return series.slug === this.series;
+        return series.slug === this.$route.params.series;
       });
     },
     seriesTitle(): string {
@@ -340,22 +301,26 @@ export default Vue.extend({
       if (series) {
         return series.title;
       } else {
-        return this.series;
+        return this.$route.params.series;
       }
+    },
+    isOneShot(): boolean {
+      console.log(this.episode);
+      return this.episode === "-";
     }
   },
   watch: {
     episode: debounce(function(val: number): void {
       // @ts-ignore
-      this.$router.replace({params: {...this.$route.params, episode: val}});
+      this.$router.push({params: {...this.$route.params, episode: val}});
     }, 300),
-    series(val: string): void {
-      this.$router.replace({params: {...this.$route.params, series: val}});
-    },
-    keyword(val: string): void {
-      this.$router.replace({params: {...this.$route.params, keyword: val}});
+    "$route.params.keyword"(val: string): void {
+      // @ts-ignore
+      this.$refs.searchInput.value = this.$route.params.keyword;
     },
     "$route.params"(val) {
+      // this.series = this.$route.params.series;
+      this.showSeriesSelector = false;
       this.search();
     },
     ytOptIn(value: boolean): void {

@@ -44,6 +44,19 @@ def search(query: str, until: int, series: str, limit: int = 50) -> ModelSelect:
         .limit(limit)
 
 
+def exact_search(query: str, until: int, series: str, limit: int = 50) -> ModelSelect:
+    return Line.select(Line, Person, Episode, Series).where(
+        (Episode.episode_number <= until)
+        &
+        (Episode.series.slug == series)
+        &
+        (Line.text.contains(query))
+    ).order_by(Episode.video_number, Line.order) \
+        .join(Person).switch(Line) \
+        .join(Episode).join(Series) \
+        .limit(limit)
+
+
 global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_imported, Person.series, Episode.title]
 
 
@@ -51,6 +64,8 @@ global_excludes = [Line.search_text, Episode.phrases_imported, Episode.text_impo
 def api_question():
     query: str = request.args.get('query')
     until = request.args.get('until')
+    if until == "-":
+        until = 1000
     series = request.args.get('series')
     if not query or not until or not series:
         return "no suggest query", 400
@@ -64,33 +79,40 @@ def api_question():
 def api_search():
     query = request.args.get('query')
     until = request.args.get('until')
+    if until == "-":
+        until = 1000
     series = request.args.get('series')
+    exact = request.args.get('exact', False)
     if not query or not until or not series:
         return "no suggest query", 400
     if len(query) > 50:
         return "too long query", 400
 
-    results = search(query, until, series)
+    if exact:
+        results = exact_search(query, until, series)
+    else:
+        results = search(query, until, series)
 
-    if len(results) == 0:
-        result: cursor = db.execute_sql("select websearch_to_tsquery('english',%s)", [query])
-        parsed = result.fetchone()[0]
-        if not parsed:
-            return jsonify({
-                "status": "warning",
-                "message": "Only stop words were used. Please try to add a less common word to the search."
-            })
-        else:
-            resp: Response = jsonify({"status": "warning", "message": f"No results were found for \"{parsed}\""})
-            resp.status_code = 404
-            return resp
+        if len(results) == 0:
+            result: cursor = db.execute_sql("select websearch_to_tsquery('english',%s)", [query])
+            parsed = result.fetchone()[0]
+            if not parsed:
+                return jsonify({
+                    "status": "warning",
+                    "message": "Only stop words were used. Please try to add a less common word to the search."
+                })
+            else:
+                resp: Response = jsonify({"status": "warning", "message": f"No results were found for {parsed}"})
+                resp.status_code = 404
+                return resp
 
     data = []
     d: Line
     ri = 0
     for d in results:
-        entry = model_to_dict(d, extra_attrs=["rank"], exclude=global_excludes + [Episode.subtitle_hash])
-        entry["rank"] = float(entry["rank"])
+        entry = model_to_dict(d, extra_attrs=[] if exact else ["rank"] , exclude=global_excludes + [Episode.subtitle_hash])
+        if not exact:
+            entry["rank"] = float(entry["rank"])
         data.append({"centerID": d.id, "resultID": ri, "offset": 1, "lines": [entry]})
         ri += 1
 
