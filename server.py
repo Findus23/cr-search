@@ -71,8 +71,16 @@ def api_question():
         return "no suggest query", 400
     if len(query) > 50:
         return "too long query", 400
+    cache_key = f"suggest_{until}_{series}_{query}"
+    if len(query) < 3:
+        result = cache.get(cache_key)
+        if result:
+            return jsonify(result)
     phrases = suggest(query, until, series)
-    return jsonify([p.text for p in phrases])
+    result = [p.text for p in phrases]
+    if len(query) < 3:
+        cache.set(cache_key, result, timeout=60 * 60 * 24 * 7)
+    return jsonify(result)
 
 
 @app.route("/api/search")

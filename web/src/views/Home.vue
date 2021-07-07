@@ -38,7 +38,7 @@
                 <span v-if="!isOneShot">up to episode </span>
                 <input v-if="!isOneShot" title="search until episode number"
                        class="form-control" type="number" v-model="episode"
-                       min="1" max="300">
+                       min="1" :max="seriesLength">
                 <span>in</span>
                 <!--                <select title="campaign selection" class="custom-select" v-model="series">-->
                 <!--                    <option v-for="series in serverData.series" v-bind:value="series.slug">-->
@@ -91,7 +91,7 @@ import Vue from "vue";
 // @ts-ignore
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 // import "@trevoreyre/autocomplete-vue/dist/style.css";
-import {Line, Result, Series, ServerData, ServerMessage} from "@/interfaces";
+import {Line, Result, SeriesData, ServerData, ServerMessage} from "@/interfaces";
 import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
 // @ts-ignore
 import VueYoutube from "vue-youtube";
@@ -288,7 +288,7 @@ export default Vue.extend({
       const sec = Math.floor(starttime % 60);
       return `https://www.youtube.com/watch?v=${id}&t=${min}m${sec}s`;
     },
-    seriesFromSlug(): Series | undefined {
+    seriesFromSlug(): SeriesData | undefined {
       if (!this.$route.params.series) {
         return undefined;
       }
@@ -303,6 +303,13 @@ export default Vue.extend({
       } else {
         return this.$route.params.series;
       }
+    },
+    seriesLength(): number {
+      const series = this.seriesFromSlug;
+      if (series) {
+        return series.length;
+      }
+      return 300;
     },
     isOneShot(): boolean {
       console.log(this.episode);
