@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 from typing import Optional
 
+from app import cache
 from data import single_speaker
 
 srtdir = Path("./data/subtitles/")
@@ -59,3 +60,7 @@ def pretty_title(title: str) -> str:
         return title.split("-")[0].strip()
     else:
         return title.strip()
+
+
+def clear_cache() -> None:
+    cache.clear()

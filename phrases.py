@@ -9,8 +9,10 @@ from spacy.lang.en import Language
 from spacy.tokens.span import Span
 from spacy.tokens.token import Token
 
-from models import Episode, Line, db, Phrase
+from app import db
+from models import Episode, Line, Phrase
 from stopwords import STOP_WORDS
+from utils import clear_cache
 
 os.nice(15)
 
@@ -81,3 +83,4 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
 
         episode.phrases_imported = True
         episode.save()
+    clear_cache()

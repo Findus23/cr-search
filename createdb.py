@@ -1,6 +1,7 @@
 from sys import argv
 
-from models import db, Series, Phrase, Episode, Person, Line
+from app import db
+from models import  Series, Phrase, Episode, Person, Line
 
 
 def confirm(message: str) -> None:

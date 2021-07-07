@@ -6,7 +6,7 @@ from playhouse.postgres_ext import TS_MATCH
 from playhouse.shortcuts import model_to_dict
 from psycopg2._psycopg import cursor
 
-from app import app
+from app import app, db, cache
 from models import *
 
 
@@ -83,6 +83,7 @@ def api_search():
         until = 1000
     series = request.args.get('series')
     exact = request.args.get('exact', False)
+    exact = False  # don't allow exact searches
     if not query or not until or not series:
         return "no suggest query", 400
     if len(query) > 50:
@@ -110,7 +111,8 @@ def api_search():
     d: Line
     ri = 0
     for d in results:
-        entry = model_to_dict(d, extra_attrs=[] if exact else ["rank"] , exclude=global_excludes + [Episode.subtitle_hash])
+        entry = model_to_dict(d, extra_attrs=[] if exact else ["rank"],
+                              exclude=global_excludes + [Episode.subtitle_hash])
         if not exact:
             entry["rank"] = float(entry["rank"])
         data.append({"centerID": d.id, "resultID": ri, "offset": 1, "lines": [entry]})
@@ -145,6 +147,7 @@ def api_expand():
 
 
 @app.route("/api/series")
+@cache.cached(timeout=60 * 60 * 24)
 def series():
     series_list = []
 
@@ -162,6 +165,7 @@ def series():
 
 
 @app.route("/api/episodes")
+@cache.cached(timeout=60 * 60 * 24)
 def api_episodes():
     all_series: List[Series] = Series.select().order_by(Series.id)
     data = []

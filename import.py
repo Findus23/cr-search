@@ -7,9 +7,10 @@ from alive_progress import alive_bar
 from peewee import fn, chunked
 from srt import parse, Subtitle
 
-from models import Person, Line, Episode, db, Series
+from app import db
+from models import Person, Line, Episode, Series
 from typo import fix_typo
-from utils import td_to_milliseconds, srtdir, episode_speaker
+from utils import td_to_milliseconds, srtdir, episode_speaker, clear_cache
 
 
 def is_invalid_name(name: str) -> bool:
@@ -134,6 +135,7 @@ def main() -> None:
 
                 episode.text_imported = True
                 episode.save()
+            clear_cache()
 
 
 if __name__ == '__main__':

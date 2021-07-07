@@ -1,18 +1,14 @@
 from datetime import datetime
 
-from peewee import PostgresqlDatabase, Model, IntegerField, CharField, BooleanField, ForeignKeyField, DateTimeField, \
+from peewee import IntegerField, CharField, BooleanField, ForeignKeyField, DateTimeField, \
     DateField
 from playhouse.postgres_ext import TSVectorField
 
-from config import dbauth
-
-db = PostgresqlDatabase(**dbauth)
-db.connect()
+from app import flask_db
 
 
-class BaseModel(Model):
-    class Meta:
-        database = db
+class BaseModel(flask_db.Model):
+    ...
 
 
 class Series(BaseModel):

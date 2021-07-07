@@ -7,12 +7,12 @@ from alive_progress import alive_bar
 from peewee import SelectQuery
 from psycopg2._psycopg import cursor
 
-from models import db
-from server import search, suggest
+from app import db
+from server import search, suggest, exact_search
 
 
 def benchmark_query(query: SelectQuery, filename: str = None) -> Tuple[float, float]:
-    query, params = test_search.sql()
+    query, params = query.sql()
 
     query = "EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) " + query
 
@@ -45,12 +45,14 @@ def statistics(query: SelectQuery, filename: str, repeats: int = 500) -> None:
     print(mean(execution_times), stdev(execution_times))
 
 
-test_search = search("hello", 1000, 1, 200)
+test_search = search("hello", 1000, "campaign2", 200)
 statistics(test_search, filename="search_hello")
-test_search = search("a very long search query with a lot of stop word", 1000, 1, 200)
+test_search = exact_search("hello", 1000, "campaign2", 200)
+statistics(test_search, filename="exact_search", repeats=50)
+test_search = search("a very long search query with a lot of stop word", 1000, "campaign2", 200)
 statistics(test_search, filename="search_long")
 
-test_search = suggest("gnoll", 1000, 1)
+test_search = suggest("gnoll", 1000, "campaign2")
 statistics(test_search, filename="suggest_simple")
-test_search = suggest("gu", 1000, 1)
+test_search = suggest("gu", 1000, "campaign2")
 statistics(test_search, filename="suggest_two_letter", repeats=100)

@@ -12,7 +12,7 @@ from peewee import DoesNotExist
 
 from data import series_data
 from models import Episode, Series, Line, Phrase
-from utils import srtdir, pretty_title, title_to_episodenumber
+from utils import srtdir, pretty_title, title_to_episodenumber, clear_cache
 
 static_path = Path("static")
 
@@ -112,7 +112,7 @@ def main(args) -> None:
             except FileNotFoundError:
                 e.downloaded = False
             e.save()
-
+            clear_cache()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="fetch episode data from YouTube")
