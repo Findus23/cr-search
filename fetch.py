@@ -51,6 +51,7 @@ def main(args) -> None:
         }
 
         for nr, url in enumerate(urls, 1):
+            changed = False
             try:
                 e = Episode.select().where((Episode.youtube_id == url)).get()
                 if args.skip_existing and e.downloaded:
@@ -59,6 +60,7 @@ def main(args) -> None:
                 e = Episode()
                 e.series = s
                 e.video_number = nr
+                changed = True
             e.youtube_id = url
             video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
             if nr == 1:
@@ -109,10 +111,13 @@ def main(args) -> None:
                     e.text_imported = False
                     e.subtitle_hash = file_hash.hexdigest()
                     e.last_updated = datetime.now()
+                    changed = True
             except FileNotFoundError:
                 e.downloaded = False
             e.save()
-            clear_cache()
+            if changed:
+                clear_cache()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="fetch episode data from YouTube")

@@ -93,7 +93,7 @@ def api_search():
     exact = request.args.get('exact', False)
     exact = False  # don't allow exact searches
     if not query or not until or not series:
-        return "no suggest query", 400
+        return "no search query", 400
     if len(query) > 50:
         return "too long query", 400
 
