@@ -113,7 +113,10 @@ pre {
 footer {
   display: flex;
   justify-content: space-between;
-
+  flex-wrap: wrap;
+  > * {
+    padding: .5rem;
+  }
   button.btn-link {
     padding: 0;
   }

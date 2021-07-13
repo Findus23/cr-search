@@ -280,6 +280,11 @@ series_data = [
         name="Vox Machina vs. Mighty Nein",
         slug="VoxMachinaVsMightyNein",
         videos=["LpBIQhWAhuM"]
+    ),
+    SeriesData(
+        name="Critical Role and the Club of Misfits",
+        slug="ClubOfMisfits",
+        videos=["PRmVQKOy9Bo"]
     )
 
 ]

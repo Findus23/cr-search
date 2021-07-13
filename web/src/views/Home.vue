@@ -34,6 +34,7 @@
             <div class="inputlist">
                 <span>Search for</span>
                 <autocomplete :defaultValue="this.$route.params.keyword" :search="suggest" @submit="handleSubmit"
+                              :placeholder="placeholderText"
                               ref="searchInput"></autocomplete>
                 <span v-if="!isOneShot">up to episode </span>
                 <input v-if="!isOneShot" title="search until episode number"
@@ -72,14 +73,15 @@
                         v-html="line.text"></span>
                 </p>
             </div>
-            <details>
-                <summary>Raw Data</summary>
-                <pre>{{ searchResult }}</pre>
-            </details>
+            <!--            <details>-->
+            <!--                <summary>Raw Data</summary>-->
+            <!--                <pre>{{ searchResult }}</pre>-->
+            <!--            </details>-->
 
         </div>
         <footer>
             <button @click="showIntro=true" class="btn btn-link">About this website</button>
+            <router-link :to="{name:'episodes'}">Episode overview</router-link>
             <a href="https://lw1.at">My other Projects</a>
             <a href="https://lw1.at/i">Privacy Policy</a>
         </footer>
@@ -127,15 +129,30 @@ export default Vue.extend({
       ytResult: undefined as Result | undefined,
       ytWidth: 640,
       showIntro: true,
-      showSeriesSelector: false
+      showSeriesSelector: false,
+      placeholderText: "",
+      placeholderFullText: "",
+      placeholderTimeout: 0,
+      placeholderInterval: 0
     };
   },
+  created() {
+    fetch(baseURL + "series")
+      .then((response) => response.json())
+      .then((data: ServerData) => {
+        this.serverData = data;
+      });
+    this.placeholderTimeout = setTimeout(this.startTyping, 7 * 1000);
+  },
+  beforeDestroy() {
+    clearTimeout(this.placeholderTimeout);
+  },
   mounted(): void {
-    if (localStorage.showIntro) {
-      this.showIntro = localStorage.showIntro;
+    if (localStorage.getItem("showIntro") !== null) {
+      this.showIntro = localStorage.getItem("showIntro") === "true";
     }
-    if (localStorage.ytOptIn) {
-      this.ytOptIn = localStorage.ytOptIn;
+    if (localStorage.getItem("ytOptIn") !== null) {
+      this.ytOptIn = localStorage.getItem("ytOptIn") === "true";
     }
     if (this.episode == null) {
       this.episode = "10";
@@ -148,16 +165,13 @@ export default Vue.extend({
     }
     const max = 640;
     this.ytWidth = (window.innerWidth < max ? window.innerWidth : max) - 2 * 2;
-    fetch(baseURL + "series")
-      .then((response) => response.json())
-      .then((data: ServerData) => {
-        this.serverData = data;
-      });
-
   },
   methods: {
     suggest(input: string) {
-      const url = baseURL + "suggest?query=" + input + "&until=" + this.episode + "&series=" + this.$route.params.series;
+      const url = baseURL
+        + "suggest?query=" + input
+        + "&until=" + this.episode
+        + "&series=" + this.$route.params.series;
 
       return new Promise((resolve) => {
         if (input.length < 1) {
@@ -173,6 +187,12 @@ export default Vue.extend({
     handleSubmit(result: string) {
       // @ts-ignore
       const newKeyword = result || this.$refs.searchInput.value;
+      if (newKeyword === "" && this.placeholderFullText) {
+        // @ts-ignore
+        this.$refs.searchInput.value = this.placeholderFullText;
+        this.handleSubmit(this.placeholderFullText);
+        return;
+      }
       this.$router.push({params: {...this.$route.params, keyword: newKeyword}});
 
     },
@@ -180,7 +200,10 @@ export default Vue.extend({
       if (!this.$route.params.keyword) {
         return;
       }
-      const url = baseURL + "search?query=" + this.$route.params.keyword + "&until=" + this.episode + "&series=" + this.$route.params.series;
+      const url = baseURL
+        + "search?query=" + this.$route.params.keyword
+        + "&until=" + this.episode
+        + "&series=" + this.$route.params.series;
 
       fetch(url)
         .then((response) => response.json())
@@ -275,6 +298,46 @@ export default Vue.extend({
       this.ytVideoID = undefined;
       this.ytResult = undefined;
     },
+    startTyping(): void {
+      // @ts-ignore
+      if (this.$refs.searchInput.value !== "") {
+        this.placeholderTimeout = setTimeout(this.startTyping, 5000);
+        return;
+      }
+      const url = baseURL
+        + "suggestion"
+        + "?until=" + this.episode
+        + "&series=" + this.$route.params.series;
+
+      fetch(url)
+        .then((response) => response.text())
+        .then((data) => {
+          this.placeholderFullText = data;
+          clearTimeout(this.placeholderTimeout);
+          this.placeholderText = "";
+          this.typing(0);
+          // const waitTime = 150 * this.placeholderFullText.length + 5000;
+          // setTimeout(this.untype, waitTime);
+        });
+    },
+    typing(index: number): void {
+      if (index === this.placeholderFullText.length) {
+        this.placeholderTimeout = setTimeout(this.untype, 5000);
+        return;
+      }
+      this.placeholderText += this.placeholderFullText[index];
+      const offset = Math.random() * 80 - 40;
+      this.placeholderTimeout = setTimeout(this.typing, 70 + offset, index + 1);
+    },
+    untype(): void {
+      if (this.placeholderText.length === 0) {
+        this.placeholderTimeout = setTimeout(this.startTyping, 5000);
+        return;
+      }
+      this.placeholderText = this.placeholderText.slice(0, -1);
+      const offset = Math.random() * 40 - 20;
+      this.placeholderTimeout = setTimeout(this.untype, 35 + offset);
+    }
   },
   computed: {
     ytLink(): string {
@@ -312,7 +375,6 @@ export default Vue.extend({
       return 300;
     },
     isOneShot(): boolean {
-      console.log(this.episode);
       return this.episode === "-";
     }
   },
@@ -331,7 +393,10 @@ export default Vue.extend({
       this.search();
     },
     ytOptIn(value: boolean): void {
-      localStorage.ytOptIn = value;
+      localStorage.setItem("ytOption", value.toString());
+    },
+    showIntro(value: boolean): void {
+      localStorage.setItem("showIntro", value.toString());
     }
   },
 });

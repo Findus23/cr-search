@@ -60,7 +60,7 @@ export default Vue.extend({
       const episode = (series.length === 1) ? "-" : 10;
       return {
         name: "search",
-        params: {series: series.slug, episode: episode}
+        params: {series: series.slug, episode}
       };
     }
   }

@@ -16,7 +16,7 @@ export default new Router({
     {
       path: "/episodes",
       name: "episodes",
-      component: Episodes,
+        component: () => import(/* webpackChunkName: "episodes" */ "./views/Episodes.vue"),
     },
     {
       path: "/:something/",

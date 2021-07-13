@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 from flask import request, jsonify, Response
@@ -8,11 +9,10 @@ from psycopg2._psycopg import cursor
 
 from app import app, db, cache
 from models import *
-
-
 # logger = logging.getLogger('peewee')
 # logger.addHandler(logging.StreamHandler())
 # logger.setLevel(logging.DEBUG)
+from suggestions import suggestions
 
 
 def add_cors(response: Response) -> Response:
@@ -193,6 +193,21 @@ def api_episodes():
         })
 
     return jsonify(data)
+
+
+@app.route("/api/suggestion")
+def api_suggestion():
+    until = request.args.get('until')
+    series = request.args.get('series')
+    if series not in suggestions:
+        return 404
+    all_suggestions = suggestions[series]
+    if until == "-":
+        possible_suggestions = [s.text for s in all_suggestions]
+    else:
+        possible_suggestions = [s.text for s in all_suggestions if s.episode <= int(until)]
+    chosen_suggestion = random.choice(possible_suggestions)
+    return Response(chosen_suggestion, mimetype='text/plain')
 
 
 if __name__ == "__main__":
