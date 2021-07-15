@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from peewee import IntegerField, CharField, BooleanField, ForeignKeyField, DateTimeField, \
-    DateField
+    DateField, TextField
 from playhouse.postgres_ext import TSVectorField
 
 from app import flask_db
@@ -59,7 +59,7 @@ class Person(BaseModel):
 
 
 class Line(BaseModel):
-    text = CharField()
+    text = TextField()
     search_text = TSVectorField()
     person = ForeignKeyField(Person, backref="lines", null=True, on_delete="CASCADE")
     isnote = BooleanField(default=False)

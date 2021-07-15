@@ -1,7 +1,8 @@
 import os
 import re
 from html import unescape
-from typing import List, Optional, Set
+from itertools import groupby
+from typing import List, Optional, Set, Union
 
 from alive_progress import alive_bar
 from peewee import fn, chunked
@@ -27,6 +28,33 @@ def add_to_text(text: str, add: str) -> str:
     if text:
         return text + " " + add
     return add
+
+
+def line_key(line: Line) -> Union[str, Line]:
+    if line.ismeta or line.isnote:
+        return line
+    return line.person
+
+
+def group_lines(dblines: List[Line]) -> List[Line]:
+    final_lines = []
+    order = 0
+    for _, group in groupby(dblines, key=line_key):
+        group = list(group)
+        first_line = group[0]
+        dbline = Line()
+        dbline.text = " ".join([line.text for line in group])
+        dbline.search_text = fn.to_tsvector('english', dbline.text)
+        dbline.person = first_line.person
+        dbline.starttime = first_line.starttime
+        dbline.endtime = group[-1].endtime
+        dbline.episode = first_line.episode
+        dbline.isnote = first_line.isnote
+        dbline.ismeta = first_line.ismeta
+        dbline.order = order
+        order += 1
+        final_lines.append(dbline)
+    return final_lines
 
 
 def insert_subtitle(text: str, person: Optional[Person], subline: Subtitle, episode: Episode, order: int,
@@ -126,6 +154,9 @@ def main() -> None:
                             dblines.append(insert_subtitle(text, person, subline, episode, order=i))
                             text = ""
                             i += 1
+
+                dblines = group_lines(dblines)
+
                 num_per_chunk = 100
                 chunks = chunked(dblines, num_per_chunk)
                 with alive_bar(len(dblines) // num_per_chunk + 1) as bar:

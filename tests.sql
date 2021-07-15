@@ -19,6 +19,10 @@ order by len desc;
 -- delete
 -- from phrase;
 
+delete from line;
+
+update episode set text_imported=False;
+
 EXPLAIN analyse
 SELECT text, sum(count) as total_count
 FROM phrase
@@ -76,3 +80,6 @@ WHERE ((("t1"."search_text" @@ websearch_to_tsquery('english', 'house')) AND ("t
        ("t3"."season" = 1))
 ORDER BY rank DESC
 LIMIT 20;
+
+
+SELECT * FROM ts_stat('SELECT search_text from line') order by nentry desc limit 500;
