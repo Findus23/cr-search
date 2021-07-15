@@ -69,7 +69,7 @@ def api_question():
     series = request.args.get('series')
     if not query or not until or not series:
         return "no suggest query", 400
-    if len(query) > 50:
+    if len(query) > 500:
         return "too long query", 400
     cache_key = f"suggest_{until}_{series}_{query}"
     if len(query) < 3:
@@ -94,7 +94,7 @@ def api_search():
     exact = False  # don't allow exact searches
     if not query or not until or not series:
         return "no search query", 400
-    if len(query) > 50:
+    if len(query) > 500:
         return "too long query", 400
 
     if exact:
