@@ -17,7 +17,7 @@ from utils import srtdir, pretty_title, title_to_episodenumber, clear_cache
 static_path = Path("static")
 
 
-def main(args) -> None:
+def main(args: argparse.Namespace) -> None:
     os.nice(15)
     for series in series_data:
         name = series.name
@@ -36,14 +36,16 @@ def main(args) -> None:
         ydl_opts = {
             'extract_flat': True
         }
-        if series.playlist_id:
+        if playlist_id:
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 playlist = ydl.extract_info("https://www.youtube.com/playlist?list=" + playlist_id, download=False)
                 videos = playlist["entries"]
 
             urls = [v["url"] for v in videos]
-        else:
+        elif series.videos:
             urls = series.videos
+        else:
+            raise ValueError("either set playlist or videos for series")
         ydl_opts_download = {
             "writesubtitles": True,
             "subtitleslangs": ["en", "en-US"],

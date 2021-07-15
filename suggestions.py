@@ -28,13 +28,14 @@ That said, I try to only use phrases that don't contain spoilers themselves.
 #
 """
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
 class Suggestion:
     text: str
     # only show this suggestion to people who have watched at least this episode
-    episode: int = None
+    episode: Optional[int] = None
 
 
 suggestions = {

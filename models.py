@@ -17,7 +17,7 @@ class Series(BaseModel):
     is_campaign = BooleanField()
     single_speaker = BooleanField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<Series: {self.title}>"
 
 
@@ -42,7 +42,7 @@ class Episode(BaseModel):
     def name(self) -> str:
         return f"C{self.season}E{self.episode_number:03d}"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<Episode: {self.title}>"
 
 
@@ -54,7 +54,7 @@ class Person(BaseModel):
     class Meta:
         indexes = ((("name", "series"), True),)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<Person: {self.name}>"
 
 
@@ -72,7 +72,7 @@ class Line(BaseModel):
     class Meta:
         indexes = ((("episode", "order"), True),)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<Line: {self.pk}>"
 
 
@@ -84,5 +84,5 @@ class Phrase(BaseModel):
     class Meta:
         indexes = ((("text", "episode"), True),)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<Line: {self.text} ({self.pk})>"
