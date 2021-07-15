@@ -19,9 +19,12 @@ order by len desc;
 -- delete
 -- from phrase;
 
-delete from line;
+-- delete from line;
 
-update episode set text_imported=False;
+-- update episode
+-- set text_imported= False;
+
+update person set color=null;
 
 EXPLAIN analyse
 SELECT text, sum(count) as total_count
@@ -82,4 +85,7 @@ ORDER BY rank DESC
 LIMIT 20;
 
 
-SELECT * FROM ts_stat('SELECT search_text from line') order by nentry desc limit 500;
+SELECT *
+FROM ts_stat('SELECT search_text from line')
+order by nentry desc
+limit 500;
