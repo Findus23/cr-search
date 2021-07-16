@@ -2,7 +2,7 @@ import random
 from typing import List
 
 from flask import request, jsonify, Response
-from peewee import fn, Alias, SQL, DoesNotExist, Expression, ModelSelect
+from peewee import fn, Alias, SQL, DoesNotExist, Expression, ModelSelect, JOIN
 from playhouse.postgres_ext import TS_MATCH
 from playhouse.shortcuts import model_to_dict
 from psycopg2._psycopg import cursor
@@ -39,7 +39,7 @@ def search(query: str, until: int, series: str, limit: int = 50) -> ModelSelect:
         &
         (Episode.series.slug == series)
     ).order_by(SQL("rank DESC")) \
-        .join(Person).switch(Line) \
+        .join(Person,join_type=JOIN.FULL).switch(Line) \
         .join(Episode).join(Series) \
         .limit(limit)
 
@@ -211,6 +211,10 @@ def api_suggestion():
 
 
 if __name__ == "__main__":
+    import logging
+    logger = logging.getLogger('peewee')
+    logger.addHandler(logging.StreamHandler())
+    logger.setLevel(logging.DEBUG)
     app.debug = True
     app.after_request(add_cors)
     app.run()
