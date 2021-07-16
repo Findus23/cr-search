@@ -1,7 +1,6 @@
 import os
 import re
 from html import unescape
-from itertools import groupby
 from typing import List, Optional, Set, Union
 
 from alive_progress import alive_bar
@@ -39,8 +38,26 @@ def line_key(line: Line) -> Union[str, Line]:
 def group_lines(dblines: List[Line]) -> List[Line]:
     final_lines = []
     order = 0
-    for _, group in groupby(dblines, key=line_key):
-        group = list(group)
+
+    index = 0
+    groups = []
+    group = []
+    last_key = None
+
+    while index < len(dblines):
+        line = dblines[index]
+        key = line_key(line)
+        if last_key != key and group:
+            groups.append(group)
+            group = []
+        last_key = key
+        group.append(line)
+        if line.text[-1] in [".", "!", "?"] and group:
+            groups.append(group)
+            group = []
+        index += 1
+
+    for group in groups:
         first_line = group[0]
         dbline = Line()
         dbline.text = " ".join([line.text for line in group])
@@ -111,7 +128,17 @@ def main() -> None:
                             line = line[1:]
                         if ":" not in line:
                             text = add_to_text(text, line)
+                            if text.startswith("(") and text.endswith(")"):
+                                dblines.append(insert_subtitle(text, None, subline, episode, isnote=True, order=i))
+                                i += 1
+                                text = ""
+
+                            if text.startswith("[") and text.endswith("]"):
+                                dblines.append(insert_subtitle(text, None, subline, episode, ismeta=True, order=i))
+                                text = ""
+                                i += 1
                             continue
+
                         name, resttext = line.split(":", maxsplit=1)
                         if is_invalid_name(name) or not name[-1].isupper():
                             text = add_to_text(text, line)
@@ -121,22 +148,6 @@ def main() -> None:
                             dblines.append(insert_subtitle(text, person, subline, episode, order=i))
                             i += 1
                             text = ""
-
-                        if text.startswith("(") and text.endswith(")"):
-                            text = add_to_text(text, line)
-                            person = None
-                            dblines.append(insert_subtitle(text, person, subline, episode, isnote=True, order=i))
-                            i += 1
-                            text = ""
-                            continue
-
-                        if text.startswith("[") and text.endswith("]"):
-                            text = add_to_text(text, line)
-                            person = None
-                            dblines.append(insert_subtitle(text, person, subline, episode, ismeta=True, order=i))
-                            text = ""
-                            i += 1
-                            continue
 
                         people = []
                         name = name.lower()
@@ -155,7 +166,8 @@ def main() -> None:
                             text = ""
                             i += 1
 
-                dblines = group_lines(dblines)
+                if not series.single_speaker:
+                    dblines = group_lines(dblines)
 
                 num_per_chunk = 100
                 chunks = chunked(dblines, num_per_chunk)
@@ -167,7 +179,6 @@ def main() -> None:
                 episode.text_imported = True
                 episode.save()
             clear_cache()
-
 
 if __name__ == '__main__':
     main()

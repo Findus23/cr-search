@@ -73,7 +73,9 @@ class Line(BaseModel):
         indexes = ((("episode", "order"), True),)
 
     def __str__(self) -> str:
-        return f"<Line: {self.pk}>"
+        if self.is_dirty():
+            return f"<Line: {self.order} (dirty)>"
+        return f"<Line: {self.id}>"
 
 
 class Phrase(BaseModel):

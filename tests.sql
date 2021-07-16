@@ -16,13 +16,16 @@ select text, char_length(phrase.text) as len
 from phrase
 order by len desc;
 
--- delete
--- from phrase;
 
--- delete from line;
+select e.pretty_title, text,char_length(line.text) as len from line join episode e on e.id = line.episode_id order by len desc;
 
--- update episode
--- set text_imported= False;
+delete
+from phrase;
+
+delete from line;
+
+update episode
+set text_imported= False, phrases_imported=False;
 
 update person set color=null;
 
