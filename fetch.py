@@ -53,6 +53,13 @@ def main(args: argparse.Namespace) -> None:
         }
 
         for nr, url in enumerate(urls, 1):
+            if nr == 1:
+                file = static_path / f"{s.slug}.webp"
+                if not file.exists():
+                    r = requests.get(f"https://i.ytimg.com/vi_webp/{url}/maxresdefault.webp")
+                    r.raise_for_status()
+                    with file.open("wb")as f:
+                        f.write(r.content)
             changed = False
             try:
                 e = Episode.select().where((Episode.youtube_id == url)).get()
@@ -65,13 +72,6 @@ def main(args: argparse.Namespace) -> None:
                 changed = True
             e.youtube_id = url
             video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
-            if nr == 1:
-                file = static_path / f"{s.slug}.webp"
-                if not file.exists():
-                    r = requests.get(f"https://i.ytimg.com/vi_webp/{e.youtube_id}/maxresdefault.webp")
-                    r.raise_for_status()
-                    with file.open("wb")as f:
-                        f.write(r.content)
             e.upload_date = datetime.strptime(video_info["upload_date"], "%Y%m%d")
             e.title = video_info["title"]
             e.pretty_title = pretty_title(video_info["title"])
