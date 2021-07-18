@@ -1,7 +1,7 @@
 import random
 from typing import List
 
-from flask import request, jsonify, Response
+from flask import request, jsonify, Response, abort
 from peewee import fn, Alias, SQL, DoesNotExist, Expression, ModelSelect, JOIN
 from playhouse.postgres_ext import TS_MATCH
 from playhouse.shortcuts import model_to_dict
@@ -200,7 +200,7 @@ def api_suggestion():
     until = request.args.get('until')
     series = request.args.get('series')
     if series not in suggestions:
-        return 404
+        abort(404)
     all_suggestions = suggestions[series]
     if until == "-":
         possible_suggestions = [s.text for s in all_suggestions]

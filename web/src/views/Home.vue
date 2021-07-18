@@ -310,15 +310,22 @@ export default Vue.extend({
         + "&series=" + this.$route.params.series;
 
       fetch(url)
-        .then((response) => response.text())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error();
+          }
+          return response.text();
+        })
         .then((data) => {
           this.placeholderFullText = data;
           clearTimeout(this.placeholderTimeout);
           this.placeholderText = "";
           this.typing(0);
-          // const waitTime = 150 * this.placeholderFullText.length + 5000;
-          // setTimeout(this.untype, waitTime);
+        })
+        .catch((error) => {
+          this.placeholderTimeout = setTimeout(this.startTyping, 5000);
         });
+
     },
     typing(index: number): void {
       if (index === this.placeholderFullText.length) {
