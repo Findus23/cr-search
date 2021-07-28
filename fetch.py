@@ -74,6 +74,8 @@ def main(args: argparse.Namespace) -> None:
             video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
             e.upload_date = datetime.strptime(video_info["upload_date"], "%Y%m%d")
             e.title = video_info["title"]
+            if e.title in ["Exandria Unlimited: Meet the Players"]:
+                continue
             e.pretty_title = pretty_title(video_info["title"])
             if s.is_campaign or "Exandria" in e.title:
                 if e.series.id == 1 and ("One-Shot" in e.title or "Search For Bob" in e.title):
