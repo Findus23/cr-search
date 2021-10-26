@@ -20,6 +20,7 @@ sentry-sdk = {extras = ["flask"], version = "^1.0.0"}
 blinker = "^1.4" # tmp workaround to make flask-sentry work
 Flask-Caching = "^1.10.1"
 redis = "^3.5.3"
+prettytable = "^2.2.1"
 
 [tool.poetry.dev-dependencies]
 

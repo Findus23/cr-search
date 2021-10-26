@@ -1,5 +1,5 @@
 <template>
-    <div id="contentwrapper" class="text-page">
+    <div class="text-page">
         <h1>Episode Overview</h1>
         <div v-for="series in series_data" :key="series.meta.id" class="episode-table">
             <h2 :id="seriesID(series.meta)">{{ series.meta.title }}</h2>
@@ -7,6 +7,7 @@
                 <thead>
                 <tr>
                     <th>Title</th>
+                    <th></th>
                     <th>Episode</th>
                     <th>Video</th>
                     <th>Upload Date</th>
@@ -21,9 +22,12 @@
                         {{ episode.pretty_title }}
                     </a>
                     </td>
+                    <td>
+                        <router-link class="btn" :to="transcriptLink(episode,series.meta)">T</router-link>
+                    </td>
                     <td>{{ episode.episode_number }}</td>
                     <td>{{ episode.video_number }}</td>
-                    <td>{{episode.upload_date}}</td>
+                    <td>{{ episode.upload_date }}</td>
                     <td class="text-center">
                         <CheckMark :status="episode.downloaded"></CheckMark>
                     </td>
@@ -45,6 +49,7 @@ import Vue from "vue";
 import {EpisodeDetailed, Series, SeriesData} from "@/interfaces";
 import {baseURL} from "@/utils";
 import CheckMark from "@/components/CheckMark.vue";
+import {Location} from "vue-router";
 
 export default Vue.extend({
   name: "Episodes",
@@ -72,6 +77,16 @@ export default Vue.extend({
     },
     seriesID(series: Series, withHash: boolean) {
       return (withHash ? "#" : "") + `series-${series.id}`;
+    },
+    transcriptLink(episode: EpisodeDetailed, series: Series): Location {
+      console.log(series.slug)
+      return {
+        name: "transcript",
+        params: {
+          episodeNr: episode.episode_number.toString(),
+          series: series.slug
+        }
+      };
     }
   }
 });

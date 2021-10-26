@@ -1,98 +1,90 @@
 <template>
-    <div id="contentwrapper">
-        <div class="home">
-            <div class="title">
-                <h1>Critical Role Search</h1>
-                <span>Find your favourite Critical Role quote!</span>
-            </div>
-            <transition name="fade">
-                <div id="page-mask" v-if="showIntro || showYtOptIn|| showSeriesSelector"></div>
-            </transition>
-            <SeriesSelector v-if="showSeriesSelector" :serverData="serverData"></SeriesSelector>
-            <Intro v-if="showIntro"></Intro>
-            <div v-if="showYtOptIn" class="ytoptin popup">
-                <div>
-                    <p>This play button allows you to watch the exact timestamp of this quote on YouTube.
-                        This means that the YouTube video is loaded on this page and data is sent to YouTube/Google.
-                        (<a href="https://lw1.at/i">Privacy Policy</a>)
-                    </p>
-                    <p>
-                        If you expected this to happen, simply continue and you won't be asked again. Otherwise you can
-                        abort or watch this timestamp directly on YouTube.
-                    </p>
-                </div>
-                <div class="buttonrow">
-                    <button class="btn" @click="showYtOptIn=false">abort</button>
-                    <a class="btn" :href="ytLink" target="youtube" rel="noopener" @click="showYtOptIn=false">YouTube</a>
-                    <button class="btn" @click="doYtOptIn">continue</button>
-                </div>
-            </div>
-            <div v-if="showYT" class="ytwrapper">
-                <button class="btn" @click="closeVideo">Hide</button>
-                <youtube :nocookie="true" ref="youtube" @ready="playVideo(false)" :width="ytWidth"></youtube>
-            </div>
-            <div class="inputlist">
-                <span>Search for</span>
-                <autocomplete :defaultValue="this.$route.params.keyword" :search="suggest" @submit="handleSubmit"
-                              :placeholder="placeholderText"
-                              ref="searchInput"></autocomplete>
-                <span v-if="!isOneShot">up to episode </span>
-                <input v-if="!isOneShot" title="search until episode number"
-                       class="form-control" type="number" v-model="episode"
-                       min="1" :max="seriesLength">
-                <span>in</span>
-                <!--                <select title="campaign selection" class="custom-select" v-model="series">-->
-                <!--                    <option v-for="series in serverData.series" v-bind:value="series.slug">-->
-                <!--                        {{ series.title }}-->
-                <!--                    </option>-->
-                <!--                </select>-->
-                <button class="btn seriesSelectorButton" @click="showSeriesSelector=true">
-                    {{ seriesTitle }}
-                </button>
-                <button class="btn submit" @click="handleSubmit(undefined)">
-                    !
-                </button>
+    <div class="home">
+        <div class="title">
+            <h1>Critical Role Search</h1>
+            <span>Find your favourite Critical Role quote!</span>
+        </div>
+        <transition name="fade">
+            <div id="page-mask" v-if="showYtOptIn|| showSeriesSelector"></div>
+        </transition>
 
-            </div>
-            <b-alert v-if="error" show :variant="error.status">{{ error.message }}</b-alert>
-            <div class="entry" v-for="result in searchResult">
-                <div class="title">
-                    <div>{{ formatTimestamp(firstLine(result).starttime) }} {{ episodeName(firstLine(result)) }}</div>
-                    <div class="buttons">
-                        <router-link :to="transcriptLink(result)" class="btn" target="_blank" v-b-tooltip
-                                     title="Open this line in Transcript">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-blockquote-left" viewBox="0 0 16 16">
-                                <path d="M2.5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1h-11zm5 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6zm0 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6zm-5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1h-11zm.79-5.373c.112-.078.26-.17.444-.275L3.524 6c-.122.074-.272.17-.452.287-.18.117-.35.26-.51.428a2.425 2.425 0 0 0-.398.562c-.11.207-.164.438-.164.692 0 .36.072.65.217.873.144.219.385.328.72.328.215 0 .383-.07.504-.211a.697.697 0 0 0 .188-.463c0-.23-.07-.404-.211-.521-.137-.121-.326-.182-.568-.182h-.282c.024-.203.065-.37.123-.498a1.38 1.38 0 0 1 .252-.37 1.94 1.94 0 0 1 .346-.298zm2.167 0c.113-.078.262-.17.445-.275L5.692 6c-.122.074-.272.17-.452.287-.18.117-.35.26-.51.428a2.425 2.425 0 0 0-.398.562c-.11.207-.164.438-.164.692 0 .36.072.65.217.873.144.219.385.328.72.328.215 0 .383-.07.504-.211a.697.697 0 0 0 .188-.463c0-.23-.07-.404-.211-.521-.137-.121-.326-.182-.568-.182h-.282a1.75 1.75 0 0 1 .118-.492c.058-.13.144-.254.257-.375a1.94 1.94 0 0 1 .346-.3z"/>
-                            </svg>
-                        </router-link>
-                        <button class="btn" @click="playVideo(result)" title="Watch line on YouTube" v-b-tooltip>
-                            <b-icon-play-fill></b-icon-play-fill>
-                        </button>
-                        <button class="btn" v-if="result.offset<10" @click="expand(result)" title="Load more context"
-                                v-b-tooltip>
-                            +
-                        </button>
-                    </div>
-                </div>
-                <p :class="{line:true,note:line.isnote,meta:line.ismeta}" :style="{borderLeftColor:getColor(line)}"
-                   v-for="line in result.lines" :key="line.id">
-                    <span v-if="line.person" class="person">{{ line.person.name }}: </span><span
-                        v-html="line.text"></span>
+        <SeriesSelector v-if="showSeriesSelector" :serverData="serverData"></SeriesSelector>
+        <div v-if="showYtOptIn" class="ytoptin popup">
+            <div>
+                <p>This play button allows you to watch the exact timestamp of this quote on YouTube.
+                    This means that the YouTube video is loaded on this page and data is sent to YouTube/Google.
+                    (<a href="https://lw1.at/i">Privacy Policy</a>)
+                </p>
+                <p>
+                    If you expected this to happen, simply continue and you won't be asked again. Otherwise you can
+                    abort or watch this timestamp directly on YouTube.
                 </p>
             </div>
-            <!--            <details>-->
-            <!--                <summary>Raw Data</summary>-->
-            <!--                <pre>{{ searchResult }}</pre>-->
-            <!--            </details>-->
+            <div class="buttonrow">
+                <button class="btn" @click="showYtOptIn=false">abort</button>
+                <a class="btn" :href="ytLink" target="youtube" rel="noopener" @click="showYtOptIn=false">YouTube</a>
+                <button class="btn" @click="doYtOptIn">continue</button>
+            </div>
+        </div>
+        <div v-if="showYT" class="ytwrapper">
+            <button class="btn" @click="closeVideo">Hide</button>
+            <youtube :nocookie="true" ref="youtube" @ready="playVideo(false)" :width="ytWidth"></youtube>
+        </div>
+        <div class="inputlist">
+            <span>Search for</span>
+            <autocomplete :defaultValue="this.$route.params.keyword" :search="suggest" @submit="handleSubmit"
+                          :placeholder="placeholderText"
+                          ref="searchInput"></autocomplete>
+            <span v-if="!isOneShot">up to episode </span>
+            <input v-if="!isOneShot" title="search until episode number"
+                   class="form-control" type="number" v-model="episode"
+                   min="1" :max="seriesLength">
+            <span>in</span>
+            <!--                <select title="campaign selection" class="custom-select" v-model="series">-->
+            <!--                    <option v-for="series in serverData.series" v-bind:value="series.slug">-->
+            <!--                        {{ series.title }}-->
+            <!--                    </option>-->
+            <!--                </select>-->
+            <button class="btn seriesSelectorButton" @click="showSeriesSelector=true">
+                {{ seriesTitle }}
+            </button>
+            <button class="btn submit" @click="handleSubmit(undefined)">
+                !
+            </button>
 
         </div>
-        <footer>
-            <button @click="showIntro=true" class="btn btn-link">About this website</button>
-            <router-link :to="{name:'episodes'}">Episode overview</router-link>
-            <a href="https://lw1.at">My other Projects</a>
-            <a href="https://lw1.at/i">Privacy Policy</a>
-        </footer>
+        <b-alert v-if="error" show :variant="error.status">{{ error.message }}</b-alert>
+        <div class="entry" v-for="result in searchResult">
+            <div class="title">
+                <div>{{ formatTimestamp(firstLine(result).starttime) }} {{ episodeName(firstLine(result)) }}</div>
+                <div class="buttons">
+                    <router-link :to="transcriptLink(result)" class="btn" target="_blank" v-b-tooltip
+                                 title="Open this line in Transcript">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-blockquote-left" viewBox="0 0 16 16">
+                            <path d="M2.5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1h-11zm5 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6zm0 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6zm-5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1h-11zm.79-5.373c.112-.078.26-.17.444-.275L3.524 6c-.122.074-.272.17-.452.287-.18.117-.35.26-.51.428a2.425 2.425 0 0 0-.398.562c-.11.207-.164.438-.164.692 0 .36.072.65.217.873.144.219.385.328.72.328.215 0 .383-.07.504-.211a.697.697 0 0 0 .188-.463c0-.23-.07-.404-.211-.521-.137-.121-.326-.182-.568-.182h-.282c.024-.203.065-.37.123-.498a1.38 1.38 0 0 1 .252-.37 1.94 1.94 0 0 1 .346-.298zm2.167 0c.113-.078.262-.17.445-.275L5.692 6c-.122.074-.272.17-.452.287-.18.117-.35.26-.51.428a2.425 2.425 0 0 0-.398.562c-.11.207-.164.438-.164.692 0 .36.072.65.217.873.144.219.385.328.72.328.215 0 .383-.07.504-.211a.697.697 0 0 0 .188-.463c0-.23-.07-.404-.211-.521-.137-.121-.326-.182-.568-.182h-.282a1.75 1.75 0 0 1 .118-.492c.058-.13.144-.254.257-.375a1.94 1.94 0 0 1 .346-.3z"/>
+                        </svg>
+                    </router-link>
+                    <button class="btn" @click="playVideo(result)" title="Watch line on YouTube" v-b-tooltip>
+                        <b-icon-play-fill></b-icon-play-fill>
+                    </button>
+                    <button class="btn" v-if="result.offset<10" @click="expand(result)" title="Load more context"
+                            v-b-tooltip>
+                        +
+                    </button>
+                </div>
+            </div>
+            <p :class="{line:true,note:line.isnote,meta:line.ismeta}" :style="{borderLeftColor:getColor(line)}"
+               v-for="line in result.lines" :key="line.id">
+                <span v-if="line.person" class="person">{{ line.person.name }}: </span><span
+                    v-html="line.text"></span>
+            </p>
+        </div>
+        <!--            <details>-->
+        <!--                <summary>Raw Data</summary>-->
+        <!--                <pre>{{ searchResult }}</pre>-->
+        <!--            </details>-->
+
     </div>
 </template>
 
@@ -136,7 +128,6 @@ export default Vue.extend({
       showYT: false,
       ytResult: undefined as Result | undefined,
       ytWidth: 640,
-      showIntro: true,
       showSeriesSelector: false,
       placeholderText: "",
       placeholderFullText: "",
@@ -156,9 +147,6 @@ export default Vue.extend({
     clearTimeout(this.placeholderTimeout);
   },
   mounted(): void {
-    if (localStorage.getItem("showIntro") !== null) {
-      this.showIntro = localStorage.getItem("showIntro") === "true";
-    }
     if (localStorage.getItem("ytOptIn") !== null) {
       this.ytOptIn = localStorage.getItem("ytOptIn") === "true";
     }
@@ -422,9 +410,6 @@ export default Vue.extend({
     ytOptIn(value: boolean): void {
       localStorage.setItem("ytOption", value.toString());
     },
-    showIntro(value: boolean): void {
-      localStorage.setItem("showIntro", value.toString());
-    }
   },
 });
 </script>

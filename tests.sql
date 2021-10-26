@@ -1,22 +1,3 @@
--- number of subtitle lines per person
-select name, count(name) as count, sum(length(text)) as chars
-from line
-         join person p on line.person_id = p.id
-group by name
-order by chars desc;
-
--- most common noun chunks
-select text, sum(count) as count
-from phrase
-group by text
-order by count desc;
-
--- longest noun chunks
-select text, char_length(phrase.text) as len
-from phrase
-order by len desc;
-
-
 select e.pretty_title, text,char_length(line.text) as len from line join episode e on e.id = line.episode_id order by len desc;
 
 delete

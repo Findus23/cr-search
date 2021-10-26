@@ -28,4 +28,4 @@ app.config.from_object(__name__)
 cache = Cache(app)
 flask_db = FlaskDB(app)
 
-db = flask_db.database
+db: PooledPostgresqlDatabase = flask_db.database
