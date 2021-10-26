@@ -16,10 +16,11 @@ if config.sentryDSN:
         integrations=[FlaskIntegration()]
     )
 
-CACHE_TYPE = "RedisCache"
-
 if config.production:
+    CACHE_TYPE = "RedisCache"
     CACHE_REDIS_URL = "unix:///run/redis-crsearch/redis-server.sock"
+else:
+    CACHE_TYPE = "NullCache"
 
 # Create a Flask WSGI app and configure it using values from the module.
 app = Flask(__name__)

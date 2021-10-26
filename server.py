@@ -39,7 +39,7 @@ def search(query: str, until: int, series: str, limit: int = 50) -> ModelSelect:
         &
         (Episode.series.slug == series)
     ).order_by(SQL("rank DESC")) \
-        .join(Person,join_type=JOIN.FULL).switch(Line) \
+        .join(Person, join_type=JOIN.FULL).switch(Line) \
         .join(Episode).join(Series) \
         .limit(limit)
 
@@ -158,12 +158,11 @@ def api_expand():
 @cache.cached(timeout=60 * 60 * 24)
 def series():
     series_list = []
-
-    for series in Series.select():
+    for series in Series.select().order_by(Series.order):
         last_episode: Episode = Episode.select().where(Episode.series == series).order_by(
             Episode.upload_date.desc()).limit(
             1).get()
-        series_data = model_to_dict(series)
+        series_data = model_to_dict(series, exclude=[Series.order])
         series_data["last_upload"] = last_episode.upload_date.strftime("%Y-%m-%d")
         series_data["length"] = Episode.select().where(Episode.series == series).count()
         series_list.append(series_data)
@@ -175,7 +174,7 @@ def series():
 @app.route("/api/episodes")
 @cache.cached(timeout=60 * 60 * 24)
 def api_episodes():
-    all_series: List[Series] = Series.select().order_by(Series.id)
+    all_series: List[Series] = Series.select().order_by(Series.order)
     data = []
     for series in all_series:
 
@@ -212,6 +211,7 @@ def api_suggestion():
 
 if __name__ == "__main__":
     import logging
+
     logger = logging.getLogger('peewee')
     logger.addHandler(logging.StreamHandler())
     logger.setLevel(logging.DEBUG)

@@ -19,7 +19,7 @@ static_path = Path("static")
 
 def main(args: argparse.Namespace) -> None:
     os.nice(15)
-    for series in series_data:
+    for order, series in enumerate(series_data):
         name = series.name
         playlist_id = series.playlist_id
         is_campaign = "Campaign" in name
@@ -32,6 +32,7 @@ def main(args: argparse.Namespace) -> None:
         s.is_campaign = is_campaign
         s.single_speaker = series.single_speaker
         s.slug = series.slug
+        s.order = order
         s.save()
         ydl_opts = {
             'extract_flat': True
@@ -58,7 +59,7 @@ def main(args: argparse.Namespace) -> None:
                 if not file.exists():
                     r = requests.get(f"https://i.ytimg.com/vi_webp/{url}/maxresdefault.webp")
                     r.raise_for_status()
-                    with file.open("wb")as f:
+                    with file.open("wb") as f:
                         f.write(r.content)
             changed = False
             try:

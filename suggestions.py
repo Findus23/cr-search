@@ -237,5 +237,9 @@ suggestions = {
     ],
     "ClubOfMisfits": [
         Suggestion("I'm going to try something weird.")
+    ],
+    "TheNautilusArk": [
+        Suggestion("Rifle with a PhD"),
+        Suggestion("It's got a trigger and a little thing")
     ]
 }

@@ -14,6 +14,7 @@ class BaseModel(flask_db.Model):
 class Series(BaseModel):
     title = CharField(max_length=100)
     slug = CharField(max_length=100)
+    order = IntegerField()
     is_campaign = BooleanField()
     single_speaker = BooleanField()
 
@@ -49,7 +50,7 @@ class Episode(BaseModel):
 class Person(BaseModel):
     name = CharField()
     color = CharField(null=True)
-    series = ForeignKeyField(Series)
+    series = ForeignKeyField(Series, on_delete="CASCADE")
 
     class Meta:
         indexes = ((("name", "series"), True),)

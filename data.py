@@ -12,7 +12,7 @@ colors = {
         "Laura": "#28607d",
         "Orion": "#933326"
     },
-    "campaign2":{
+    "campaign2": {
         "Laura": "#59c3f9",
         "Marisha": "#00146e",
         "Liam": "#fe8413",
@@ -100,6 +100,21 @@ series_data = [
         playlist_id="PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2"
     ),
     SeriesData(
+        name="Campaign 3",
+        slug="campaign3",
+        playlist_id="PL1tiwbzkOjQydg3QOkBLG9OYqWJ0dwlxF"
+    ),
+    SeriesData(
+        name="Exandria Unlimited",
+        slug="ExandriaUnlimited",
+        playlist_id="PL1tiwbzkOjQzSnYHVT8X4pyMIbSX3i4gz"
+    ),
+    SeriesData(
+        name="The Nautilus Ark",
+        slug="TheNautilusArk",
+        videos=["LaKl58BUASo"]
+    ),
+    SeriesData(
         name="Handbooker Helper",
         slug="HandbookerHelper",
         playlist_id="PL1tiwbzkOjQyr6-gqJ8r29j_rJkR49uDN",
@@ -121,11 +136,6 @@ series_data = [
         slug="CritRecapAnimated",
         playlist_id="PL1tiwbzkOjQy8yF8esjgVomDXKD-XmG20",
         initial_speaker="?"
-    ),
-    SeriesData(
-        name="Exandria Unlimited",
-        slug="ExandriaUnlimited",
-        playlist_id="PL1tiwbzkOjQzSnYHVT8X4pyMIbSX3i4gz"
     ),
     SeriesData(
         name="Critter Hug",
