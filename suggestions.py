@@ -139,6 +139,10 @@ suggestions = {
             episode=12
         ),
         Suggestion(
+            text="The metagaming pigeon",
+            episode=12
+        ),
+        Suggestion(
             text="My name is Molly",
             episode=14
         ),
