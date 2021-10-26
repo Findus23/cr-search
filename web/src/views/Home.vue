@@ -21,13 +21,16 @@
                 </p>
             </div>
             <div class="buttonrow">
-                <button class="btn" @click="showYtOptIn=false">abort</button>
-                <a class="btn" :href="ytLink" target="youtube" rel="noopener" @click="showYtOptIn=false">YouTube</a>
-                <button class="btn" @click="doYtOptIn">continue</button>
+                <button class="btn btn-primary" @click="showYtOptIn=false">abort</button>
+                <a class="btn btn-primary" :href="ytLink" target="youtube" rel="noopener" @click="showYtOptIn=false">YouTube</a>
+                <button class="btn btn-primary" @click="doYtOptIn">continue</button>
             </div>
         </div>
-        <div v-if="showYT" class="ytwrapper">
-            <button class="btn" @click="closeVideo">Hide</button>
+        <div v-if="showYT" :class="{ytwrapper:true, ytalignment:YTright}">
+            <div class="buttonrow">
+                <button class="btn-primary small" @click="YTright=!YTright">&larr;</button>
+                <button class="btn btn-primary" @click="closeVideo">Hide</button>
+            </div>
             <youtube :nocookie="true" ref="youtube" @ready="playVideo(false)" :width="ytWidth"></youtube>
         </div>
         <div class="inputlist">
@@ -126,6 +129,7 @@ export default Vue.extend({
       showYtOptIn: false,
       ytVideoID: undefined as string | undefined,
       showYT: false,
+      YTright: true,
       ytResult: undefined as Result | undefined,
       ytWidth: 640,
       showSeriesSelector: false,
@@ -153,9 +157,7 @@ export default Vue.extend({
     if (this.episode == null) {
       this.episode = "10";
     }
-    if (this) {
-      document.title = "CR Search";
-    }
+    document.title = "CR Search";
     if (this.$route.params.keyword) {
       this.search();
     }
@@ -200,6 +202,7 @@ export default Vue.extend({
         + "search?query=" + this.$route.params.keyword
         + "&until=" + this.episode
         + "&series=" + this.$route.params.series;
+      document.title = this.$route.params.keyword + " | CR Search";
 
       fetch(url)
         .then((response) => response.json())
@@ -408,7 +411,7 @@ export default Vue.extend({
       this.search();
     },
     ytOptIn(value: boolean): void {
-      localStorage.setItem("ytOption", value.toString());
+      localStorage.setItem("ytOptIn", value.toString());
     },
   },
 });

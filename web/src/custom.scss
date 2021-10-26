@@ -7,7 +7,7 @@
 
 body {
   background: $background-color;
-  background: url("assets/Old_papertest.jpg");
+  background: $background-image;
   font-family: "Scaly Sans", $font-family-sans-serif;
 }
 
@@ -74,7 +74,7 @@ body {
 .entry {
 
   .title {
-    font-size: .529cm;
+    font-size: 1.3rem;
     border-bottom: 2px solid $border-color;
     margin-top: .2em;
     margin-bottom: .2em;
@@ -196,5 +196,13 @@ footer {
   h1 {
     text-align: center;
     font-weight: 800;
+  }
+}
+
+.footnote-list {
+  margin-top: 1rem;
+  font-size: .75rem;
+  ol {
+    padding-left: 2rem;
   }
 }

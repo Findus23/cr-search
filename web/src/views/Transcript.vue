@@ -42,16 +42,16 @@ export default Vue.extend({
     };
   },
   mounted() {
-    console.log(this.episodeNr);
     fetch(baseURL + "transcript?episode=" + this.episodeNr + "&series=" + this.series)
       .then((response) => response.json())
       .then((data: TranscriptData) => {
         this.episode = data.episode;
         this.lines = data.lines;
         this.loaded = true;
+        document.title = this.episode.pretty_title + " | Transcript | CR Search";
         const hash = this.$route.hash;
         if (hash) {
-          Vue.nextTick(function() {
+          Vue.nextTick(() => {
             document.getElementById(hash.slice(1))?.scrollIntoView({
               behavior: "smooth",
             });

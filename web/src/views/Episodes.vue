@@ -62,6 +62,7 @@ export default Vue.extend({
     };
   },
   mounted() {
+    document.title = "Episode Overview | CR Search";
     fetch(baseURL + "episodes")
       .then((response) => response.json())
       .then((data: SeriesData[]) => {
@@ -79,7 +80,6 @@ export default Vue.extend({
       return (withHash ? "#" : "") + `series-${series.id}`;
     },
     transcriptLink(episode: EpisodeDetailed, series: Series): Location {
-      console.log(series.slug)
       return {
         name: "transcript",
         params: {

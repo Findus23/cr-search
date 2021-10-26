@@ -3,7 +3,7 @@
         <div class="container">
             <div id="contentwrapper">
                 <transition name="fade">
-                    <div id="page-mask" v-if="showIntro"></div>
+                    <div id="page-mask" v-if="showIntro" @click="showIntro=false"></div>
                 </transition>
 
                 <Intro v-if="showIntro"></Intro>
