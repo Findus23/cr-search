@@ -82,5 +82,32 @@ select sum(array_length(regexp_split_to_array(text,'\\s'),1)) from line
 """
 
 
-if __name__ == '__main__':
-    print(TotalWords().as_data())
+class PhraseTableSize(SingleValueStats):
+    query = "SELECT pg_size_pretty(pg_relation_size('phrase'));"
+
+
+class LineTableSize(SingleValueStats):
+    query = "SELECT pg_size_pretty(pg_relation_size('line'));"
+
+
+class TotalVideoTime(SingleValueStats):
+    query = """select (sum(endtime)::float / 1000/60/60) as hours
+from (select distinct on (episode_id) endtime from line order by episode_id, "order" desc) as subquery  
+"""
+
+
+def aggregate_stats(plaintext: bool):
+    text = ""
+    data = {}
+    for stats_class in [TotalWords, PhraseTableSize, LineTableSize, TotalVideoTime, MostCommonNounChunks,
+                        LongestNounChunks, LinesPerPerson]:
+        name = type(stats_class()).__name__
+        if plaintext:
+            text += f" {name} ".center(80, "#") + "\n"
+            text += stats_class().as_plaintext() + "\n\n"
+        else:
+            data[name] = stats_class().as_data()
+    if plaintext:
+        return text
+    else:
+        return data

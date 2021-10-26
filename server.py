@@ -12,7 +12,7 @@ from models import *
 # logger = logging.getLogger('peewee')
 # logger.addHandler(logging.StreamHandler())
 # logger.setLevel(logging.DEBUG)
-from stats import TotalWords, MostCommonNounChunks, LongestNounChunks, LinesPerPerson
+from stats import TotalWords, MostCommonNounChunks, LongestNounChunks, LinesPerPerson, aggregate_stats
 from suggestions import suggestions
 
 
@@ -245,24 +245,13 @@ def transcript():
 @app.route("/api/stats")
 @cache.cached(timeout=60 * 60 * 24)
 def stats():
-    return jsonify({
-        "TotalWords": TotalWords().as_data(),
-        "MostCommonNounChunks": MostCommonNounChunks().as_data(),
-        "LongestNounChunks": LongestNounChunks().as_data(),
-        "LinesPerPerson": LinesPerPerson().as_data()
-    })
+    return jsonify(aggregate_stats(plaintext=False))
 
 
 @app.route("/api/stats/text")
 @cache.cached(timeout=60 * 60 * 24)
 def stats_text():
-    text = ""
-
-    for stats_class in [TotalWords, MostCommonNounChunks, LongestNounChunks, LinesPerPerson]:
-        text += type(stats_class()).__name__.center(100, "#") + "\n"
-        text += stats_class().as_plaintext() + "\n\n"
-
-    return Response(text, mimetype='text/plain')
+    return Response(aggregate_stats(plaintext=True), mimetype='text/plain')
 
 
 if __name__ == "__main__":

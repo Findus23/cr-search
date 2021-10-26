@@ -1,5 +1,8 @@
 select e.pretty_title, text,char_length(line.text) as len from line join episode e on e.id = line.episode_id order by len desc;
 
+
+SELECT pg_size_pretty(pg_relation_size('phrase'));
+
 delete
 from phrase;
 
