@@ -209,6 +209,38 @@ def api_suggestion():
     return Response(chosen_suggestion, mimetype='text/plain')
 
 
+@app.route("/api/transcript")
+@cache.cached(timeout=60 * 60 * 24)
+def transcript():
+    series = request.args.get('series')
+    episode_number = request.args.get('episode')
+
+    episode = Episode.select(Episode, Series).where(
+        (Episode.episode_number == episode_number)
+        &
+        (Episode.series.slug == series)
+    ).join(Series).get()
+
+    lines: List[Line] = Line.select(Line, Person).where(
+        (Episode.episode_number == episode_number)
+        &
+        (Episode.series.slug == series)
+    ).order_by(Line.order) \
+        .join(Person, join_type=JOIN.FULL).switch(Line) \
+        .join(Episode).join(Series)
+
+    line_data = []
+    for line in lines:
+        entry = model_to_dict(line, exclude=global_excludes + [Line.episode])
+
+        line_data.append(entry)
+
+    return jsonify({
+        "episode": model_to_dict(episode, exclude=global_excludes),
+        "lines": line_data
+    })
+
+
 if __name__ == "__main__":
     import logging
 

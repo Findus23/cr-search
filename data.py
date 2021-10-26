@@ -10,7 +10,8 @@ colors = {
         "Sam": "#781485",
         "Liam": "#3d7580",
         "Laura": "#28607d",
-        "Orion": "#933326"
+        "Orion": "#933326",
+        "Matt": "#005d73",  # random color
     },
     "campaign2": {
         "Laura": "#59c3f9",
@@ -22,6 +23,17 @@ colors = {
         "Travis": "#076708",
         "Matt": "#005d73",  # random color
         "Khary": "#bcc9e3"
+    },
+    "campaign3": {
+        "Matt": "#005d73",  # random color
+        "Robbie": "#3b4660",
+        "Laura": "#584f67",
+        "Marisha": "#47343f",
+        "Taliesin": "#512f30",
+        "Sam": "#3f5963",
+        "Ashley": "#855b52",
+        "Liam": "#33413a",
+        "Travis": "#5f283e",
     }
 
 }
