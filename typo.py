@@ -13,7 +13,7 @@ typos = {
                 "Marishia", "Marsiah", "Matisha", "Mraisha", "Amrisha", "<Arisha"},
     "Laura": {"Lauda", "Lauren", "Larua", "Laur", "Lauar", "Vex", "Laira"},
     "Liam": {"Caleb", "Laim", "Vax"},
-    "Ashley": {"Ashly", "Ashely", "Ashey", "Aslhey", "Ahsley"},
+    "Ashley": {"Ashly", "Ashely", "Ashey", "Aslhey", "Ahsley", "Ashlehy"},
     "All": {"Everyone", "Everybody"},
     "Mark": {"Marik"},
     "Brian": {"Brain", "\"Brian"},
@@ -24,8 +24,9 @@ typos = {
     "H. Michael": {"H Michael", "H.Michael"},
     "Allura": {"Alura"},
     "Krystina": {"Krystin"},
-    "Michelle":{"Michlle"},
-    "Alicia":{"Alica"}
+    "Michelle": {"Michlle"},
+    "Alicia": {"Alica"},
+    "Aabria": {"Abria", "Aaabria"}
 }
 replacements = {}
 for correct, typoset in typos.items():
