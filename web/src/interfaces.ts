@@ -17,6 +17,11 @@ export interface SeriesData extends Series {
   "length": number;
 }
 
+export interface TranscriptData {
+  episode: Episode;
+  lines: Line[];
+}
+
 export interface Episode {
   "episode_number": number;
   "id": number;

@@ -59,10 +59,18 @@
                 <div class="title">
                     <div>{{ formatTimestamp(firstLine(result).starttime) }} {{ episodeName(firstLine(result)) }}</div>
                     <div class="buttons">
-                        <button class="btn" @click="playVideo(result)" title="View video on YouTube">
+                        <router-link :to="transcriptLink(result)" class="btn" target="_blank" v-b-tooltip
+                                     title="Open this line in Transcript">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-blockquote-left" viewBox="0 0 16 16">
+                                <path d="M2.5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1h-11zm5 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6zm0 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1h-6zm-5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1h-11zm.79-5.373c.112-.078.26-.17.444-.275L3.524 6c-.122.074-.272.17-.452.287-.18.117-.35.26-.51.428a2.425 2.425 0 0 0-.398.562c-.11.207-.164.438-.164.692 0 .36.072.65.217.873.144.219.385.328.72.328.215 0 .383-.07.504-.211a.697.697 0 0 0 .188-.463c0-.23-.07-.404-.211-.521-.137-.121-.326-.182-.568-.182h-.282c.024-.203.065-.37.123-.498a1.38 1.38 0 0 1 .252-.37 1.94 1.94 0 0 1 .346-.298zm2.167 0c.113-.078.262-.17.445-.275L5.692 6c-.122.074-.272.17-.452.287-.18.117-.35.26-.51.428a2.425 2.425 0 0 0-.398.562c-.11.207-.164.438-.164.692 0 .36.072.65.217.873.144.219.385.328.72.328.215 0 .383-.07.504-.211a.697.697 0 0 0 .188-.463c0-.23-.07-.404-.211-.521-.137-.121-.326-.182-.568-.182h-.282a1.75 1.75 0 0 1 .118-.492c.058-.13.144-.254.257-.375a1.94 1.94 0 0 1 .346-.3z"/>
+                            </svg>
+                        </router-link>
+                        <button class="btn" @click="playVideo(result)" title="Watch line on YouTube" v-b-tooltip>
                             <b-icon-play-fill></b-icon-play-fill>
                         </button>
-                        <button class="btn" v-if="result.offset<10" @click="expand(result)" title="Load more context">
+                        <button class="btn" v-if="result.offset<10" @click="expand(result)" title="Load more context"
+                                v-b-tooltip>
                             +
                         </button>
                     </div>
@@ -98,7 +106,7 @@ import {BAlert, BIcon, BIconPlayFill} from "bootstrap-vue";
 // @ts-ignore
 import VueYoutube from "vue-youtube";
 import debounce from "lodash-es/debounce";
-
+import {Location} from "vue-router";
 import {baseURL} from "@/utils";
 import SeriesSelector from "@/components/SeriesSelector.vue";
 import Intro from "@/components/Intro.vue";
@@ -344,6 +352,18 @@ export default Vue.extend({
       this.placeholderText = this.placeholderText.slice(0, -1);
       const offset = Math.random() * 40 - 20;
       this.placeholderTimeout = setTimeout(this.untype, 35 + offset);
+    },
+    transcriptLink(result: Result): Location {
+      const firstline = this.firstLine(result);
+      const episode = firstline.episode;
+      return {
+        name: "transcript",
+        params: {
+          episodeNr: episode.episode_number.toString(),
+          series: episode.series.slug
+        },
+        hash: "#" + firstline.starttime
+      };
     }
   },
   computed: {

@@ -1,11 +1,6 @@
 <template>
     <div id="contentwrapper" class="text-page">
         <h1>Episode Overview</h1>
-<!--        <div v-for="series in series_data">-->
-<!--            <a :href="seriesID(series.meta,true)">{{ series.meta.title }}</a>-->
-<!--        </div>-->
-
-
         <div v-for="series in series_data" :key="series.meta.id" class="episode-table">
             <h2 :id="seriesID(series.meta)">{{ series.meta.title }}</h2>
             <table>
