@@ -161,10 +161,10 @@ def main() -> None:
                         formatted_name = ", ".join(people)
                         person, created = Person.get_or_create(name=formatted_name, series=series)
                         text = add_to_text(text, resttext.strip())
-                        if text:
-                            dblines.append(insert_subtitle(text, person, subline, episode, order=i))
-                            text = ""
-                            i += 1
+                    if text:
+                        dblines.append(insert_subtitle(text, person, subline, episode, order=i))
+                        text = ""
+                        i += 1
 
                 if not series.single_speaker:
                     dblines = group_lines(dblines)
@@ -179,6 +179,7 @@ def main() -> None:
                 episode.text_imported = True
                 episode.save()
             clear_cache()
+
 
 if __name__ == '__main__':
     main()
