@@ -1,13 +1,17 @@
 <template>
     <div class="seriesSelector popup">
         <h1>Select Series</h1>
-        <input type="checkbox" id="onlyCampaigns" v-model="onlyCampaigns">
-        <label for="onlyCampaigns">show only campaigns</label>
-        <input type="checkbox" id="showOneShots" v-model="showOneShots">
-        <label for="showOneShots">show One-Shots</label>
-        <input type="search" id="search" v-model="search">
-        <label for="search">search</label>
-
+        <form class="form-inline">
+            <div class="form-check mb-2 mr-sm-2">
+                <input class="form-check-input" type="checkbox" id="onlyCampaigns" v-model="onlyCampaigns">
+                <label class="form-check-label" for="onlyCampaigns">show only campaigns</label>
+            </div>
+            <div class="form-check mb-2 mr-sm-2">
+                <input class="form-check-input" type="checkbox" id="showOneShots" v-model="showOneShots">
+                <label class="form-check-label" for="showOneShots">show One-Shots</label>
+            </div>
+            <input class="form-control" type="search" id="search" v-model="search" placeholder="search">
+        </form>
         <transition-group name="flip-list" class="seriesList" tag="div">
             <router-link class="series" v-for="series in sortedSeries" :to="createLink(series)"
                          @click.native="selectSeries" :key="series.id">
@@ -40,7 +44,7 @@ export default Vue.extend({
         if (!series.is_campaign && this.onlyCampaigns) {
           return false;
         }
-        if (series.length === 1 && !this.showOneShots) {
+        if ((series.length === 1 && !series.is_campaign) && !this.showOneShots) {
           return false;
         }
         return this.search === "" || series.title.toLowerCase().includes(this.search.toLowerCase());
@@ -57,7 +61,7 @@ export default Vue.extend({
     },
     createLink(series: SeriesData) {
 
-      const episode = (series.length === 1) ? "-" : 10;
+      const episode = (series.length === 1 && !series.is_campaign) ? "-" : 10;
       return {
         name: "search",
         params: {series: series.slug, episode}
