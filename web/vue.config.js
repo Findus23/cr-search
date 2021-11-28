@@ -2,5 +2,6 @@
  * @type {import('@vue/cli-service').ProjectOptions}
  */
 module.exports = {
-    assetsDir: "assets/"
+    assetsDir: "assets/",
+    outputDir: "../dist/"
 }

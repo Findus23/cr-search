@@ -16,7 +16,7 @@ from models import Episode, Series
 
 ssr_routes = Blueprint("ssr_routes", __name__, template_folder="templates")
 
-with open("./web/dist/index.html") as f:
+with open("./dist/index.html") as f:
     index_html = f.read()
 
 placeholder_token = '<title>CR Search</title>'
@@ -28,7 +28,7 @@ def draw_image(text: str, description: str, subtitle=None) -> BytesIO:
     if subtitle:
         text += "\n" + subtitle
     width, height = (1200, 600)
-    img = Image.open("./web/src/assets/background_small.png")
+    img = Image.open("./src/assets/background_small.png")
 
     mr_eves = ImageFont.truetype("web/fonts/Mr Eaves/Mr Eaves Small Caps.otf", 50)
     title_font = ImageFont.truetype("web/fonts/Nodesto Caps Condensed/Nodesto Caps Condensed.otf", 120)
