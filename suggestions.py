@@ -71,6 +71,22 @@ suggestions = {
         Suggestion(
             text="Your secret is safe with my indifference",
             episode=45
+        ),
+        Suggestion(
+            text="Have you ever had a Blueberry Cupcake",
+            episode=93
+        ),
+        Suggestion(
+            text="Okay Okay Okay Okay",
+            episode=63
+        ),
+        Suggestion(
+            text="I am your god, long may I reign",
+            episode=18
+        ),
+        Suggestion(
+            text="We're running, it's bad",
+            episode=45
         )
     ],
     "campaign2": [
@@ -225,6 +241,28 @@ suggestions = {
         Suggestion(
             text="Captain, we're being followed by a tiny island.",
             episode=99
+        )
+    ],
+    "campaign3": [
+        Suggestion(
+            text="Copper's more of an insult",
+            episode=1
+        ),
+        Suggestion(
+            text="The rug is more dexterous than I am?",
+            episode=1
+        ),
+        Suggestion(
+            text="Optimism is the most optimistic",
+            episode=2
+        ),
+        Suggestion(
+            text="Does anyone know how to make things quiet",
+            episode=3
+        ),
+        Suggestion(
+            text="This isn't even metagaming",
+            episode=4
         )
     ],
     "VoxMachinaVsMightyNein": [
