@@ -28,7 +28,7 @@ def draw_image(text: str, description: str, subtitle=None) -> BytesIO:
     if subtitle:
         text += "\n" + subtitle
     width, height = (1200, 600)
-    img = Image.open("./src/assets/background_small.png")
+    img = Image.open("web/src/assets/background_small.png")
 
     mr_eves = ImageFont.truetype("web/fonts/Mr Eaves/Mr Eaves Small Caps.otf", 50)
     title_font = ImageFont.truetype("web/fonts/Nodesto Caps Condensed/Nodesto Caps Condensed.otf", 120)
