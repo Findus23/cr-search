@@ -7,13 +7,14 @@
                 <a href="https://critrole.com/">Critical Role</a>.
             </p>
             <p>In addition to a plain search there is a text completion from common phrases, a upper episode limit
-                selector to avoid getting spoilered by something that occurs in a later episode<sup>2</sup></p>
+                selector to avoid getting spoilered by something that occurs in a later episode<sup>2</sup> and an
+                experimental transcript view.</p>
             <p>If you have any feedback, ideas for improvements or bugs, feel free to contact me at
                 <a href="mailto:cr@lw1.at">cr@lw1.at</a> or <a href="https://twitter.com/lw1_at">on Twitter</a>.</p>
 
             <div class="footnote-list">
                 <ol>
-                    <li>all episodes with manually subtitles (including Shows and One-Shots)</li>
+                    <li>all episodes with manually created subtitles (including Shows and One-Shots)</li>
                     <li>this also affects search suggestions</li>
                 </ol>
             </div>

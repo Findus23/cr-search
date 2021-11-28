@@ -1,7 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
-import Transcript from "@/views/Transcript.vue";
 
 Vue.use(Router);
 
@@ -22,7 +20,7 @@ export default new Router({
     {
       path: "/transcript/:series/:episodeNr",
       name: "transcript",
-      component: Transcript,
+      component: () => import(/* webpackChunkName: "transcript" */ "./views/Transcript.vue"),
       props: true,
     },
     {
@@ -32,7 +30,7 @@ export default new Router({
     {
       path: "/:series/:episode/:keyword?",
       name: "search",
-      component: Home,
+      component: () => import(/* webpackChunkName: "search" */ "./views/Home.vue"),
       // props: true,
     },
   ],

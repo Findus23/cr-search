@@ -64,3 +64,7 @@ def pretty_title(title: str) -> str:
 
 def clear_cache() -> None:
     cache.clear()
+
+
+if __name__ == '__main__':
+    clear_cache()
