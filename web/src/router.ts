@@ -11,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/campaign2/10/",
+      redirect: "/campaign3/10/",
       name: "home"
     },
     {

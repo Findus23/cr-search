@@ -23,7 +23,7 @@ else:
     CACHE_TYPE = "NullCache"
 
 # Create a Flask WSGI app and configure it using values from the module.
-app = Flask(__name__)
+app = Flask(__name__,static_folder='web/dist/assets/',static_url_path='/assets/')
 app.config.from_object(__name__)
 cache = Cache(app)
 flask_db = FlaskDB(app)

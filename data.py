@@ -310,5 +310,9 @@ series_data = [
         slug="ClubOfMisfits",
         videos=["PRmVQKOy9Bo"]
     )
-
 ]
+
+series_data_by_slug = {}
+
+for series in series_data:
+    series_data_by_slug[series.slug] = series

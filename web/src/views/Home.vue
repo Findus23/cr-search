@@ -42,7 +42,8 @@
             <input v-if="!isOneShot" title="search until episode number"
                    class="form-control" type="number" v-model="episode"
                    min="1" :max="seriesLength">
-            <span>in</span>
+            <span v-if="isOneShot">in</span>
+            <span v-if="!isOneShot">of</span>
             <!--                <select title="campaign selection" class="custom-select" v-model="series">-->
             <!--                    <option v-for="series in serverData.series" v-bind:value="series.slug">-->
             <!--                        {{ series.title }}-->

@@ -12,9 +12,11 @@ from models import *
 # logger = logging.getLogger('peewee')
 # logger.addHandler(logging.StreamHandler())
 # logger.setLevel(logging.DEBUG)
+from ssr import ssr_routes
 from stats import TotalWords, MostCommonNounChunks, LongestNounChunks, LinesPerPerson, aggregate_stats
 from suggestions import suggestions
 
+app.register_blueprint(ssr_routes)
 
 def add_cors(response: Response) -> Response:
     header = response.headers
