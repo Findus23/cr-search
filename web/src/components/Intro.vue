@@ -21,8 +21,9 @@
 
             <hr>
             <p>Subtitles for Campaign 1 and Campaign 2 up to Episode 54 by the
-                <a href="https://crtranscript.tumblr.com/" target="_blank" rel="noopener">CR Transcript
-                    Team</a>,
+                <a href="https://crtranscript.tumblr.com/" target="_blank" rel="noopener">
+                    CR Transcript Team
+                </a>,
                 all other subtitles are by the Critical Role team.
             </p>
             <p>
