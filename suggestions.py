@@ -257,7 +257,7 @@ suggestions = {
             episode=2
         ),
         Suggestion(
-            text="Does anyone know how to make things quiet",
+            text="Do you have any way of making things quiet?",
             episode=3
         ),
         Suggestion(
