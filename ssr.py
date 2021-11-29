@@ -22,7 +22,7 @@ with open("./dist/index.html") as f:
 placeholder_token = '<title>CR Search</title>'
 
 
-def draw_image(text: str, description: str, subtitle=None) -> BytesIO:
+def draw_image(text: str, description: str, subtitle: str = None) -> BytesIO:
     text = text.replace("| CR Search", "").strip()
     text = shorten(text, 25, placeholder=" ...")
     if subtitle:
@@ -66,7 +66,7 @@ def draw_image(text: str, description: str, subtitle=None) -> BytesIO:
 
 @ssr_routes.route("/", defaults={'something': None})
 @ssr_routes.route("/<string:something>/")
-def home_redirect(something):
+def home_redirect(something: str):
     return redirect("/campaign3/10/")
 
 
@@ -90,7 +90,7 @@ def episodes():
 
 @ssr_routes.route("/transcript/<string:series>/<string:episode_number>/")
 @cache.cached(timeout=60 * 60 * 24 * 30, query_string=True)
-def transcript(series, episode_number):
+def transcript(series: str, episode_number: str):
     episode = get_object_or_404(Episode.select(Episode, Series).where(
         (Episode.episode_number == episode_number)
         &
@@ -114,7 +114,7 @@ def transcript(series, episode_number):
 @ssr_routes.route("/<string:series_slug>/<string:episodes>", defaults={'keyword': None})
 @ssr_routes.route("/<string:series_slug>/<string:episodes>/", defaults={'keyword': None})
 @cache.cached(timeout=60 * 60 * 24 * 30, query_string=True)
-def search(series_slug, episodes, keyword):
+def search(series_slug: str, episodes: str, keyword: str):
     one_shot = Episode.select(Episode, Series).where(
         Episode.series.slug == series_slug
     ).join(Series).count() == 1
