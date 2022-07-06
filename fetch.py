@@ -21,6 +21,7 @@ def main(args: argparse.Namespace) -> None:
     os.nice(15)
     for order, series in enumerate(series_data):
         name = series.name
+        print(name)
         playlist_id = series.playlist_id
         is_campaign = "Campaign" in name
         try:
@@ -72,7 +73,8 @@ def main(args: argparse.Namespace) -> None:
                 e.video_number = nr
                 changed = True
             e.youtube_id = url
-            video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
+            with youtube_dl.YoutubeDL(ydl_opts_download) as ydl:
+                video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
             e.upload_date = datetime.strptime(video_info["upload_date"], "%Y%m%d")
             e.title = video_info["title"]
             if e.title in ["Exandria Unlimited: Meet the Players"]:

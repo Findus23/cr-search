@@ -162,9 +162,12 @@ def api_expand():
 def series():
     series_list = []
     for series in Series.select().order_by(Series.order):
-        last_episode: Episode = Episode.select().where(Episode.series == series).order_by(
-            Episode.upload_date.desc()).limit(
-            1).get()
+        try:
+            last_episode: Episode = Episode.select().where(Episode.series == series).order_by(
+                Episode.upload_date.desc()).limit(
+                1).get()
+        except DoesNotExist:
+            continue
         series_data = model_to_dict(series, exclude=[Series.order])
         series_data["last_upload"] = last_episode.upload_date.strftime("%Y-%m-%d")
         series_data["length"] = Episode.select().where(Episode.series == series).count()

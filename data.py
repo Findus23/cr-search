@@ -122,6 +122,16 @@ series_data = [
         playlist_id="PL1tiwbzkOjQzSnYHVT8X4pyMIbSX3i4gz"
     ),
     SeriesData(
+        name="Exandria Unlimited: Kymal",
+        slug="ExandriaUnlimitedKymal",
+        playlist_id="PL1tiwbzkOjQwgI-BPd0nujKfVkCag3xFf"
+    ),
+    SeriesData(
+        name="Exandria Unlimited: Calamity",
+        slug="ExandriaUnlimitedCalamity",
+        playlist_id="PL1tiwbzkOjQwzhdskYekmjr0h2tsbKaZw"
+    ),
+    SeriesData(
         name="The Nautilus Ark",
         slug="TheNautilusArk",
         videos=["LaKl58BUASo"]
@@ -296,9 +306,9 @@ series_data = [
         videos=["yODMT1m85FQ"]
     ),
     SeriesData(
-        name="The Elder Scrolls Online: Blackwood",
+        name="The Elder Scrolls Online",
         slug="TheElderScrollsOnline",
-        videos=["E-YCzpYDIyA"]
+        videos=["E-YCzpYDIyA", "MX5qmiUJYBo", "y6GpnRz6RPo"]
     ),
     SeriesData(
         name="Vox Machina vs. Mighty Nein",
@@ -309,6 +319,37 @@ series_data = [
         name="Critical Role and the Club of Misfits",
         slug="ClubOfMisfits",
         videos=["PRmVQKOy9Bo"]
+    ),
+    SeriesData(
+        name="Guest Battle Royale",
+        slug="GuestBattleRoyale",
+        videos=["jE7wB2JG190"]
+    ),
+    # FIXME: temporarily removed as the video is age-restricted
+    # SeriesData(
+    #     name="Tiny Tina's Wonderlands One-Shot",
+    #     slug="TinyTinasWonderlands",
+    #     videos=["nJrLQHo9rW0"]
+    # ),
+    SeriesData(
+        name="Dignity: An Adventure with Stephen Colbert",
+        slug="Dignity",
+        videos=["FdqcUTNHwyo"]
+    ),
+    SeriesData(
+        name="A Familiar Problem: Sprinkle’s Incredible Journey!",
+        slug="AFamiliarProblem",
+        videos=["dDQTNGvRH4Q"]
+    ),
+    SeriesData(
+        name="Game Masters of Exandria Roundtable",
+        slug="GameMastersOfExandriaRoundtable",
+        videos=["LmZSWKPXhZ4"]
+    ),
+    SeriesData(
+        name="4-Sided Dive",
+        slug="4SidedDive",
+        playlist_id="PL1tiwbzkOjQyUQ7J7Bg_OY6AFybns1pIk"
     )
 ]
 
