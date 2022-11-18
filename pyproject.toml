@@ -5,12 +5,12 @@ description = ""
 authors = ["Lukas Winkler <git@lw1.at>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 peewee = "^3.13.1"
 srt = "^3.0.0"
 psycopg2 = "^2.8.4"
-spacy = "^3.2.0"
-en-core-web-md = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.3.0/en_core_web_md-3.3.0.tar.gz"}
+spacy = "^3.4.3"
+en-core-web-md = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.4.0/en_core_web_md-3.4.0.tar.gz"}
 flask = "^2.0.0"
 gunicorn = "^20.0.4"
 alive-progress = "^2.1.0"
