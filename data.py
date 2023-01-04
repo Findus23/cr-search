@@ -350,7 +350,13 @@ series_data = [
         name="4-Sided Dive",
         slug="4SidedDive",
         playlist_id="PL1tiwbzkOjQyUQ7J7Bg_OY6AFybns1pIk"
-    )
+    ),
+    SeriesData(
+        name="The Mighty Nein Reunited",
+        slug="MightyNeinReunited",
+        playlist_id="PL1tiwbzkOjQxLSFOtwuzl-c6wEkjaqsv5"
+    ),
+
 ]
 
 series_data_by_slug = {}
