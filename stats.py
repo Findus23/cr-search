@@ -82,12 +82,24 @@ select sum(array_length(regexp_split_to_array(text,'\\s'),1)) from line
 """
 
 
+class TotalLines(SingleValueStats):
+    query = """
+select count(1) from line
+"""
+
+
+class TotalPhrases(SingleValueStats):
+    query = """
+select count(1) from phrase
+"""
+
+
 class PhraseTableSize(SingleValueStats):
-    query = "SELECT pg_size_pretty(pg_relation_size('phrase'));"
+    query = "SELECT pg_size_pretty(pg_relation_size('phrase')) as size;"
 
 
 class LineTableSize(SingleValueStats):
-    query = "SELECT pg_size_pretty(pg_relation_size('line'));"
+    query = "SELECT pg_size_pretty(pg_relation_size('line')) as size;"
 
 
 class TotalVideoTime(SingleValueStats):
@@ -99,7 +111,8 @@ from (select distinct on (episode_id) endtime from line order by episode_id, "or
 def aggregate_stats(plaintext: bool):
     text = ""
     data = {}
-    for stats_class in [TotalWords, PhraseTableSize, LineTableSize, TotalVideoTime, MostCommonNounChunks,
+    for stats_class in [TotalLines, TotalWords, TotalPhrases, PhraseTableSize, LineTableSize, TotalVideoTime,
+                        MostCommonNounChunks,
                         LongestNounChunks, LinesPerPerson]:
         name = type(stats_class()).__name__
         if plaintext:
