@@ -1,7 +1,8 @@
 import random
+import time
 from typing import List
 
-from flask import request, jsonify, Response, abort
+from flask import request, jsonify, Response, abort, g
 from peewee import fn, Alias, SQL, DoesNotExist, Expression, ModelSelect, JOIN
 from playhouse.postgres_ext import TS_MATCH
 from playhouse.shortcuts import model_to_dict
@@ -13,7 +14,7 @@ from models import *
 # logger.addHandler(logging.StreamHandler())
 # logger.setLevel(logging.DEBUG)
 from ssr import ssr_routes
-from stats import TotalWords, MostCommonNounChunks, LongestNounChunks, LinesPerPerson, aggregate_stats
+from stats import aggregate_stats
 from suggestions import suggestions
 
 app.register_blueprint(ssr_routes)
@@ -21,6 +22,19 @@ app.register_blueprint(ssr_routes)
 def add_cors(response: Response) -> Response:
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@app.before_request
+def before_request():
+    g.start = time.perf_counter()
+
+
+@app.after_request
+def after_request(response: Response):
+    diff = time.perf_counter() - g.start
+    if response.response:
+        response.headers.set("Server-Timing", f"server;dur={diff *1000 :.5f}")
     return response
 
 
