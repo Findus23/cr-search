@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional, List
 
 colors = {
     "campaign1": {
@@ -94,10 +93,10 @@ assert set(single_speaker["Handbooker Helper"].keys()) == set(range(1, 44 + 1))
 class SeriesData:
     name: str
     slug: str
-    playlist_id: Optional[str] = None
-    videos: Optional[List[str]] = None
+    playlist_id: str | None = None
+    videos: list[str] | None = None
     single_speaker: bool = False
-    initial_speaker: Optional[str] = None
+    initial_speaker: str | None = None
 
 
 series_data = [

@@ -11,7 +11,7 @@
                 experimental transcript view.</p>
             <p>If you have any feedback, ideas for improvements or bugs, feel free to contact me at
                 <a href="mailto:cr@lw1.at">cr@lw1.at</a> or <a href="https://twitter.com/lw1_at">on Twitter</a>.</p>
-
+            <p>You can learn more about this website <a href="https://lw1.at/en/cr-search/">here</a>.</p>
             <div class="footnote-list">
                 <ol>
                     <li>all episodes with manually created subtitles (including Shows and One-Shots)</li>

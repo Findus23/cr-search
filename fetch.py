@@ -64,7 +64,7 @@ def main(args: argparse.Namespace) -> None:
                         f.write(r.content)
             changed = False
             try:
-                e = Episode.select().where((Episode.youtube_id == url)).get()
+                e = Episode.select().where(Episode.youtube_id == url).get()
                 if args.skip_existing and e.downloaded:
                     continue
             except DoesNotExist:

@@ -1,6 +1,5 @@
 import random
 import time
-from typing import List
 
 from flask import request, jsonify, Response, abort, g
 from peewee import fn, Alias, SQL, DoesNotExist, Expression, ModelSelect, JOIN
@@ -19,6 +18,7 @@ from suggestions import suggestions
 
 app.register_blueprint(ssr_routes)
 
+
 def add_cors(response: Response) -> Response:
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
@@ -34,7 +34,7 @@ def before_request():
 def after_request(response: Response):
     diff = time.perf_counter() - g.start
     if response.response:
-        response.headers.set("Server-Timing", f"server;dur={diff *1000 :.5f}")
+        response.headers.set("Server-Timing", f"server;dur={diff * 1000 :.5f}")
     return response
 
 
@@ -194,11 +194,11 @@ def series():
 @app.route("/api/episodes")
 @cache.cached(timeout=60 * 60 * 24)
 def api_episodes():
-    all_series: List[Series] = Series.select().order_by(Series.order)
+    all_series: list[Series] = Series.select().order_by(Series.order)
     data = []
     for series in all_series:
 
-        episodes: List[Episode] = Episode.select().where(Episode.series == series).order_by(Episode.video_number)
+        episodes: list[Episode] = Episode.select().where(Episode.series == series).order_by(Episode.video_number)
 
         series_data = []
         for episode in episodes:
@@ -241,7 +241,7 @@ def transcript():
         (Episode.series.slug == series)
     ).join(Series).get()
 
-    lines: List[Line] = Line.select(Line, Person).where(
+    lines: list[Line] = Line.select(Line, Person).where(
         (Episode.episode_number == episode_number)
         &
         (Episode.series.slug == series)

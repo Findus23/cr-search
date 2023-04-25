@@ -27,7 +27,7 @@ class Stats(ABC):
 
 class MultiColumnStats(Stats):
 
-    def as_data(self) -> List[Dict[str, Any]]:
+    def as_data(self) -> list[dict[str, Any]]:
         data = []
         cur = self.execute()
         column_names = [d.name for d in cur.description]

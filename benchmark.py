@@ -1,7 +1,6 @@
 import json
 import shutil
 from statistics import mean, stdev
-from typing import Tuple
 
 from alive_progress import alive_bar
 from peewee import SelectQuery
@@ -11,7 +10,7 @@ from app import db
 from server import search, suggest, exact_search
 
 
-def benchmark_query(query: SelectQuery, filename: str = None) -> Tuple[float, float]:
+def benchmark_query(query: SelectQuery, filename: str = None) -> tuple[float, float]:
     query, params = query.sql()
 
     query = "EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON) " + query

@@ -1,4 +1,7 @@
-select e.pretty_title, text,char_length(line.text) as len from line join episode e on e.id = line.episode_id order by len desc;
+select e.pretty_title, text, char_length(line.text) as len
+from line
+         join episode e on e.id = line.episode_id
+order by len desc;
 
 
 SELECT pg_size_pretty(pg_relation_size('phrase'));
@@ -6,12 +9,15 @@ SELECT pg_size_pretty(pg_relation_size('phrase'));
 delete
 from phrase;
 
-delete from line;
+delete
+from line;
 
 update episode
-set text_imported= False, phrases_imported=False;
+set text_imported= False,
+    phrases_imported= False;
 
-update person set color=null;
+update person
+set color=null;
 
 EXPLAIN analyse
 SELECT text, sum(count) as total_count
@@ -76,3 +82,20 @@ SELECT *
 FROM ts_stat('SELECT search_text from line')
 order by nentry desc
 limit 500;
+
+SELECT *, ts_rank("search_text", websearch_to_tsquery('english', 'I cast regret')) AS "rank"
+FROM line
+         INNER JOIN person ON (line.person_id = person.id)
+         INNER JOIN episode ON (line.episode_id = episode.id)
+WHERE (
+              (line.search_text @@ websearch_to_tsquery('english', 'I cast regret')) AND
+              (episode.episode_number <= 1000) AND
+              (episode.series_id = 2)
+          )
+ORDER BY rank DESC
+LIMIT 20;
+
+select websearch_to_tsquery('english', 'I cast regret');
+
+INSERT INTO line (text, search_text, ...) values ('This is a longer example text', to_tsvector('english', 'This is a longer example text'));
+select to_tsvector('english', 'This is a longer example text');

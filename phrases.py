@@ -1,6 +1,5 @@
 import os
 from dataclasses import dataclass
-from typing import Dict
 
 import en_core_web_md
 from alive_progress import alive_bar
@@ -23,7 +22,7 @@ class Noun:
     count: int = 1
 
 
-lemma_cache: Dict[str, str] = {}
+lemma_cache: dict[str, str] = {}
 
 nlp: Language = en_core_web_md.load(disable=["ner", "textcat"])
 nlp.Defaults.stop_words = STOP_WORDS
@@ -48,7 +47,7 @@ for episode in Episode.select().where((Episode.phrases_imported == False) & (Epi
     print("run nlp")
     doc = nlp(text)
     print("nlp finished")
-    nouns: Dict[str, Noun] = {}
+    nouns: dict[str, Noun] = {}
     chunk: Span
     noun_chunks = list(doc.noun_chunks)
     with alive_bar(len(noun_chunks), title='lemmatizing and counting') as bar:

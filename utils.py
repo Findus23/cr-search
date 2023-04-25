@@ -1,7 +1,6 @@
 import re
 from datetime import timedelta
 from pathlib import Path
-from typing import Optional
 
 from app import cache
 from data import single_speaker
@@ -17,7 +16,7 @@ def milliseconds_to_td(ms: int) -> timedelta:
     return timedelta(milliseconds=ms)
 
 
-def episode_speaker(series_title: str, episode: int) -> Optional[str]:
+def episode_speaker(series_title: str, episode: int) -> str | None:
     try:
         series = single_speaker[series_title]
     except KeyError:

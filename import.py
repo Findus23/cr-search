@@ -1,7 +1,6 @@
 import os
 import re
 from html import unescape
-from typing import List, Optional, Set, Union
 
 from alive_progress import alive_bar
 from peewee import fn, chunked
@@ -29,13 +28,13 @@ def add_to_text(text: str, add: str) -> str:
     return add
 
 
-def line_key(line: Line) -> Union[str, Line]:
+def line_key(line: Line) -> str | Line:
     if line.ismeta or line.isnote:
         return line
     return line.person
 
 
-def group_lines(dblines: List[Line]) -> List[Line]:
+def group_lines(dblines: list[Line]) -> list[Line]:
     final_lines = []
     order = 0
 
@@ -74,7 +73,7 @@ def group_lines(dblines: List[Line]) -> List[Line]:
     return final_lines
 
 
-def insert_subtitle(text: str, person: Optional[Person], subline: Subtitle, episode: Episode, order: int,
+def insert_subtitle(text: str, person: Person | None, subline: Subtitle, episode: Episode, order: int,
                     isnote: bool = False, ismeta: bool = False) -> Line:
     dbline = Line()
     if not text:
@@ -94,7 +93,7 @@ def insert_subtitle(text: str, person: Optional[Person], subline: Subtitle, epis
 
 def main() -> None:
     os.nice(15)
-    all_people: Set[str] = set()
+    all_people: set[str] = set()
     for series in Series.select().order_by(Series.id):
         for episode in Episode.select().where(
                 (Episode.text_imported == False) & (Episode.series == series) & (Episode.downloaded)
@@ -103,9 +102,9 @@ def main() -> None:
                 f.write("\n".join(sorted(p for p in all_people if "\n" not in p)))
             file = srtdir / f"{episode.id}.srt"
             strtext = file.read_text()
-            subtitlelines: List[Subtitle] = list(parse(strtext))
+            subtitlelines: list[Subtitle] = list(parse(strtext))
             print(episode.video_number, episode.pretty_title)
-            person: Optional[Person] = None
+            person: Person | None = None
             with db.atomic():
                 dblines = []
                 i = 0
