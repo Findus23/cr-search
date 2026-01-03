@@ -7,7 +7,7 @@ from shutil import move
 from subprocess import run
 
 import requests
-import youtube_dl
+import yt_dlp
 from peewee import DoesNotExist
 
 from data import series_data
@@ -39,11 +39,10 @@ def main(args: argparse.Namespace) -> None:
             'extract_flat': True
         }
         if playlist_id:
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 playlist = ydl.extract_info("https://www.youtube.com/playlist?list=" + playlist_id, download=False)
                 videos = playlist["entries"]
-
-            urls = [v["url"] for v in videos]
+            urls = [v["url"].split("=")[-1] for v in videos]
         elif series.videos:
             urls = series.videos
         else:
@@ -73,7 +72,10 @@ def main(args: argparse.Namespace) -> None:
                 e.video_number = nr
                 changed = True
             e.youtube_id = url
-            with youtube_dl.YoutubeDL(ydl_opts_download) as ydl:
+            if e.youtube_id == "gV68IKU2k78":
+                continue  # is private
+
+            with yt_dlp.YoutubeDL(ydl_opts_download) as ydl:
                 video_info = ydl.extract_info(f'https://www.youtube.com/watch?v={e.youtube_id}', download=False)
             e.upload_date = datetime.strptime(video_info["upload_date"], "%Y%m%d")
             e.title = video_info["title"]
@@ -91,7 +93,7 @@ def main(args: argparse.Namespace) -> None:
 
             vttfile = srtdir / str(e.id)
             ydl_opts_download["outtmpl"] = str(vttfile)
-            with youtube_dl.YoutubeDL(ydl_opts_download) as ydl:
+            with yt_dlp.YoutubeDL(ydl_opts_download) as ydl:
                 ydl.download([f'https://www.youtube.com/watch?v={e.youtube_id}'])
             if vttfile.with_suffix(".en-US.vtt").exists():
                 # few videos have en-US as language code instead of en

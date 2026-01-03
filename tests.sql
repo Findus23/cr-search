@@ -60,9 +60,9 @@ SELECT "t1"."id",
        "t2"."id",
        "t2"."name",
        "t2"."color",
-       "t2"."season",
+       "t2"."series_id",
        "t3"."id",
-       "t3"."season",
+       "t3"."series_id",
        "t3"."episode_number",
        "t3"."video_number",
        "t3"."youtube_id",
@@ -73,7 +73,7 @@ FROM "line" AS "t1"
          INNER JOIN "person" AS "t2" ON ("t1"."person_id" = "t2"."id")
          INNER JOIN "episode" AS "t3" ON ("t1"."episode_id" = "t3"."id")
 WHERE ((("t1"."search_text" @@ websearch_to_tsquery('english', 'house')) AND ("t3"."episode_number" <= 1000)) AND
-       ("t3"."season" = 1))
+       ("t3"."series_id" = 1))
 ORDER BY rank DESC
 LIMIT 20;
 

@@ -355,6 +355,11 @@ series_data = [
         slug="MightyNeinReunited",
         playlist_id="PL1tiwbzkOjQxLSFOtwuzl-c6wEkjaqsv5"
     ),
+    SeriesData(
+        name="The Legend of Zelda One-Shot",
+        slug="TheLegendOfZelda",
+        videos=["8SbKt0jcX-I"]
+    )
 
 ]
 
