@@ -1,30 +1,28 @@
-[tool.poetry]
+[project]
 name = "cr-search"
 version = "0.1.0"
 description = ""
-authors = ["Lukas Winkler <git@lw1.at>"]
+authors = [{ name = "Lukas Winkler", email = "git@lw1.at" }]
+requires-python = ">=3.13,<4"
+dependencies = [
+    "peewee>=3.13.1,<4",
+    "srt>=3.0.0,<4",
+    "psycopg2>=2.8.4,<3",
+    "spacy>=3.8.1,<4",
+    "en-core-web-md",
+    "flask>=3.0.0,<4",
+    "gunicorn>=23.0.0",
+    "alive-progress>=3.0.1,<4",
+    "setproctitle>=1.2.1,<2",
+    "blinker>=1.4,<2",
+    "Flask-Caching>=2.0.0,<3",
+    "redis>=7.0.0,<8",
+    "prettytable>=3.0.0,<4",
+    "Pillow>=12.0.0,<13",
+    "yt-dlp",
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-peewee = "^3.13.1"
-srt = "^3.0.0"
-psycopg2 = "^2.8.4"
-spacy = "^3.5.0"
-en-core-web-md = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0.tar.gz"}
-flask = "^2.0.0"
-gunicorn = "^20.0.4"
-alive-progress = "^3.0.1"
-youtube_dl = "^2021.1.3"
-setproctitle = "^1.2.1"
-sentry-sdk = {extras = ["flask"], version = "^1.0.0"}
-blinker = "^1.4" # tmp workaround to make flask-sentry work
-Flask-Caching = "^2.0.0"
-redis = "^4.0.2"
-prettytable = "^3.0.0"
-Pillow = "^9.0.0"
+[tool.uv.sources]
+en-core-web-md = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0.tar.gz" }
+yt-dlp = { git = "https://github.com/yt-dlp/yt-dlp.git" }
 
-[tool.poetry.dev-dependencies]
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"

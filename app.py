@@ -7,14 +7,14 @@ import config
 
 DATABASE = PooledPostgresqlDatabase(**config.dbauth)
 
-if config.sentryDSN:
-    import sentry_sdk
-    from sentry_sdk.integrations.flask import FlaskIntegration
+# if config.sentryDSN:
+#     import sentry_sdk
+#     from sentry_sdk.integrations.flask import FlaskIntegration
 
-    sentry_sdk.init(
-        dsn=config.sentryDSN,
-        integrations=[FlaskIntegration()]
-    )
+#     sentry_sdk.init(
+#         dsn=config.sentryDSN,
+#         integrations=[FlaskIntegration()]
+#     )
 
 if config.production:
     CACHE_TYPE = "RedisCache"

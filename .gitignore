@@ -123,3 +123,4 @@ data/
 runtime/
 web/data.json
 benchmark/
+dist.bak

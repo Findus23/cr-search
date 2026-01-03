@@ -37,5 +37,6 @@
     "> 1% in AT",
     "last 2 versions",
     "not ie <= 11"
-  ]
+  ],
+  "packageManager": "pnpm@10.27.0+sha256.d3c7c3d12d87d177e32f01748d5994fb20cd5becf11670ee60530c374ffeabb3"
 }
